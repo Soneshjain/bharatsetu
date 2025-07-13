@@ -162,6 +162,92 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // === Eligibility Checker Modal Logic ===
+    const eligibilityCta = document.getElementById('eligibility-cta');
+    const eligibilityModal = document.getElementById('eligibility-modal');
+    const eligibilityModalClose = document.getElementById('eligibility-modal-close');
+    const eligibilityForm = document.getElementById('eligibility-form');
+    const eligibilityResults = document.getElementById('eligibility-results');
+
+    if (eligibilityCta && eligibilityModal && eligibilityModalClose) {
+        eligibilityCta.addEventListener('click', () => {
+            eligibilityModal.style.display = 'flex';
+            eligibilityResults.innerHTML = '';
+            eligibilityForm.reset();
+        });
+        eligibilityModalClose.addEventListener('click', () => {
+            eligibilityModal.style.display = 'none';
+        });
+        window.addEventListener('click', (e) => {
+            if (e.target === eligibilityModal) {
+                eligibilityModal.style.display = 'none';
+            }
+        });
+    }
+
+    // Sample schemes data for MVP
+    const schemes = [
+      {
+        name: 'Electricity Duty Reimbursement',
+        eligibility: {
+          msme_type: ['Micro', 'Small', 'Medium'],
+          block: ['A', 'B', 'C', 'D'],
+          commercial_production_after: '2019-02-26',
+          new_connection_after: '2019-02-26'
+        },
+        benefit: '100% reimbursement for 7 years',
+        reference: 'https://cdnbbsr.s3waas.gov.in/s3f48c04ffab49ff0e5d1176244fdfb65c/uploads/2021/01/2021010172.pdf'
+      },
+      {
+        name: 'Stamp Duty Refund',
+        eligibility: {
+          msme_type: ['Micro', 'Small'],
+          block: ['A', 'B', 'C', 'D'],
+          land_purchase_within_years: 5
+        },
+        benefit: '100% refund in D, 75% in C, 50% in A/B blocks',
+        reference: 'https://cdnbbsr.s3waas.gov.in/s3f48c04ffab49ff0e5d1176244fdfb65c/uploads/2020/08/2020081089.pdf'
+      }
+    ];
+
+    if (eligibilityForm) {
+        eligibilityForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            eligibilityResults.innerHTML = '';
+            const msmeType = document.getElementById('msme-type').value;
+            const block = document.getElementById('block').value;
+            const prodDate = document.getElementById('prod-date').value;
+            const elecDate = document.getElementById('elec-date').value;
+
+            // Eligibility logic for MVP
+            const eligibleSchemes = schemes.filter(scheme => {
+                // Electricity Duty Reimbursement
+                if (scheme.name === 'Electricity Duty Reimbursement') {
+                    const afterProd = !scheme.eligibility.commercial_production_after || (prodDate && prodDate >= scheme.eligibility.commercial_production_after);
+                    const afterElec = !scheme.eligibility.new_connection_after || (elecDate && elecDate >= scheme.eligibility.new_connection_after);
+                    return scheme.eligibility.msme_type.includes(msmeType) && scheme.eligibility.block.includes(block) && afterProd && afterElec;
+                }
+                // Stamp Duty Refund (for demo, just check type and block)
+                if (scheme.name === 'Stamp Duty Refund') {
+                    return scheme.eligibility.msme_type.includes(msmeType) && scheme.eligibility.block.includes(block);
+                }
+                return false;
+            });
+
+            if (eligibleSchemes.length === 0) {
+                eligibilityResults.innerHTML = '<div class="alert alert-warning">No eligible schemes found for the provided details. Please check your inputs or contact us for more guidance.</div>';
+            } else {
+                eligibilityResults.innerHTML = '<h3>Eligible Schemes:</h3>' + eligibleSchemes.map(s => `
+                    <div class="scheme-result">
+                        <h4>${s.name}</h4>
+                        <p><strong>Benefit:</strong> ${s.benefit}</p>
+                        <a href="${s.reference}" target="_blank">View Details</a>
+                    </div>
+                `).join('');
+            }
+        });
+    }
+
     // Navbar scroll effect
     const navbar = document.querySelector('.navbar');
     
