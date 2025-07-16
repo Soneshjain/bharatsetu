@@ -17,6 +17,12 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/eligibility-questionnaire.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/auth-flow.css">
+    <link rel="stylesheet" href="css/profile.css">
+    
+    <!-- Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <!-- Hero Section -->
@@ -32,7 +38,21 @@
                             <span class="navbar__logo-text">BharatSetu</span>
                         </div>
                         <div class="navbar__cta">
-                            <a href="#contact" class="btn btn--primary">Apply Now</a>
+                            <!-- Authentication Section -->
+                            <div id="auth-section" style="display: none;">
+                                <div id="google-signin-button"></div>
+                            </div>
+                            
+                            <!-- User Section -->
+                            <div id="user-section" style="display: none;">
+                                <div class="user-info">
+                                    <img id="user-picture" class="user-picture" style="display: none;" alt="User">
+                                    <span id="user-name"></span>
+                                    <button id="logout-btn" class="btn btn--secondary">Logout</button>
+                                </div>
+                            </div>
+                            
+                            <a href="dashboard.html" class="btn btn--primary">Apply Now</a>
                         </div>
                     </div>
                 </div>
@@ -60,7 +80,7 @@
                         </span>
                     </div>
                     <div class="hero__cta">
-                        <a href="#contact" class="btn btn--primary">
+                        <a href="dashboard.html" class="btn btn--primary">
                             Apply Now <i class="fas fa-arrow-right"></i>
                         </a>
                         <button id="eligibility-cta" class="btn btn--secondary" type="button">
@@ -162,7 +182,7 @@
                 </div>
                 
                 <div class="problems__cta">
-                    <a href="#contact" class="btn btn--primary">
+                    <a href="dashboard.html" class="btn btn--primary">
                         Get Started Today <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -285,7 +305,7 @@
                     </div>
                 </div>
                 <div class="subsidies__cta">
-                    <a href="#contact" class="btn btn--primary">
+                    <a href="eligibility-check.html" class="btn btn--primary">
                         Check Your Eligibility <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -448,6 +468,9 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     
     <!-- JavaScript -->
+    <script src="js/auth-service.js"></script>
+    <script src="js/auth-flow.js"></script>
+    <script src="js/company-profile.js"></script>
     <script src="js/main.js"></script>
     <script src="js/eligibility-engine.js?v=2"></script>
     <script src="js/eligibility-questionnaire.js?v=5"></script>

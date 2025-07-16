@@ -855,6 +855,8 @@ class EligibilityEngine {
     calculateTotalBenefits(eligibleSchemes, userData) {
         let totalValue = 0;
         const benefits = [];
+        
+        console.log('Calculating benefits with user data:', userData);
 
         eligibleSchemes.forEach(scheme => {
             let schemeValue = 0;
@@ -915,7 +917,7 @@ class EligibilityEngine {
                 // PADMA SCHEME CALCULATIONS
                 else if (scheme.scheme.name.includes('PADMA Interest Subsidy')) {
                     if (userData.has_term_loan && userData.term_loan_amount && userData.interest_rate) {
-                        const loanAmount = userData.term_loan_amount * 100000; // Convert lakhs to rupees
+                        const loanAmount = userData.term_loan_amount; // Already in rupees
                         const interestRate = userData.interest_rate / 100;
                         const subsidyRate = 0.06; // 6% subsidy
                         const years = 5;
@@ -927,9 +929,10 @@ class EligibilityEngine {
                     }
                 } else if (scheme.scheme.name.includes('PADMA Designing, Branding, Marketing')) {
                     if (userData.marketing_export_expenses) {
-                        const expenses = userData.marketing_export_expenses * 100000; // Convert lakhs to rupees
+                        // Values are already in rupees
+                        const expenses = userData.marketing_export_expenses;
                         schemeValue = Math.min(expenses * 0.5, 1000000); // 50% subsidy, max 10L
-                        benefitDescription = `50% subsidy on ₹${userData.marketing_export_expenses}L marketing expenses`;
+                        benefitDescription = `50% subsidy on ₹${(expenses/100000).toFixed(2)}L marketing expenses`;
                     } else {
                         schemeValue = 1000000; // Default 10L
                         benefitDescription = "50% subsidy (max ₹10L/year) for branding, marketing, and export promotion";
@@ -948,7 +951,7 @@ class EligibilityEngine {
                 else if (scheme.scheme.name.includes('Employment Generation')) {
                     if (userData.total_employees) {
                         const scWomenEmployees = (userData.sc_st_employees || 0) + (userData.women_employees || 0);
-                        const generalEmployees = userData.total_employees - scWomenEmployees;
+                        const generalEmployees = Math.max(0, userData.total_employees - scWomenEmployees);
                         const scWomenBenefit = scWomenEmployees * 36000 * 7; // ₹36K/year for 7 years
                         const generalBenefit = generalEmployees * 30000 * 7; // ₹30K/year for 7 years
                         schemeValue = scWomenBenefit + generalBenefit;
@@ -1001,8 +1004,10 @@ class EligibilityEngine {
                 // TECHNOLOGY ACQUISITION CALCULATIONS
                 else if (scheme.scheme.name.includes('Technology Acquisition')) {
                     if (userData.technology_equipment_cost) {
-                        schemeValue = userData.technology_equipment_cost * 0.75 * 100000; // 75% subsidy
-                        benefitDescription = `75% subsidy on ₹${userData.technology_equipment_cost}L technology cost`;
+                        // Values are already in rupees
+                        const techCost = userData.technology_equipment_cost;
+                        schemeValue = Math.min(techCost * 0.75, 5000000); // 75% subsidy, max 50L
+                        benefitDescription = `75% subsidy on ₹${(techCost/100000).toFixed(2)}L technology cost`;
                     } else {
                         schemeValue = 5000000; // Default 50L
                         benefitDescription = "75% of the cost for adopting/acquiring technology";
@@ -1011,8 +1016,10 @@ class EligibilityEngine {
                 // TESTING EQUIPMENT CALCULATIONS
                 else if (scheme.scheme.name.includes('Testing Equipment')) {
                     if (userData.testing_equipment_cost) {
-                        schemeValue = userData.testing_equipment_cost * 0.5 * 100000; // 50% subsidy
-                        benefitDescription = `50% subsidy on ₹${userData.testing_equipment_cost}L testing equipment`;
+                        // Values are already in rupees
+                        const equipmentCost = userData.testing_equipment_cost;
+                        schemeValue = Math.min(equipmentCost * 0.5, 1000000); // 50% subsidy, max 10L
+                        benefitDescription = `50% subsidy on ₹${(equipmentCost/100000).toFixed(2)}L testing equipment`;
                     } else {
                         schemeValue = 1000000; // Default 10L
                         benefitDescription = "50% subsidy on testing equipment";
@@ -1021,8 +1028,10 @@ class EligibilityEngine {
                 // QUALITY CERTIFICATION CALCULATIONS
                 else if (scheme.scheme.name.includes('Quality Certification')) {
                     if (userData.quality_certification_cost) {
-                        schemeValue = userData.quality_certification_cost * 0.75 * 100000; // 75% reimbursement
-                        benefitDescription = `75% reimbursement of ₹${userData.quality_certification_cost}L certification cost`;
+                        // Values are already in rupees
+                        const certCost = userData.quality_certification_cost;
+                        schemeValue = Math.min(certCost * 0.75, 500000); // 75% reimbursement, max 5L
+                        benefitDescription = `75% reimbursement of ₹${(certCost/100000).toFixed(2)}L certification cost`;
                     } else {
                         schemeValue = 500000; // Default 5L
                         benefitDescription = "75% reimbursement of certification costs";
@@ -1097,6 +1106,12 @@ class EligibilityEngine {
             // Apply reasonable caps to prevent unrealistic benefits
             const maxSchemeValue = 100000000; // 10 Cr maximum per scheme
             schemeValue = Math.min(schemeValue, maxSchemeValue);
+            
+            // Additional validation for unrealistic input values
+            if (schemeValue > 1000000000) { // If somehow we get more than 100 Cr
+                console.warn(`Unrealistic scheme value for ${scheme.scheme.name}: ${schemeValue}`);
+                schemeValue = 100000000; // Cap at 10 Cr
+            }
             
             benefits.push({
                 scheme_name: scheme.scheme.name,

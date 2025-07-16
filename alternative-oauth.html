@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternative Google OAuth Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .btn { padding: 10px 20px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-primary { background: #4285f4; color: white; }
+        .btn-secondary { background: #f1f1f1; color: #333; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Alternative Google OAuth Test</h1>
+        
+        <div id="status" class="status"></div>
+        
+        <div>
+            <button class="btn btn-primary" onclick="testAlternativeOAuth()">Test Alternative OAuth</button>
+            <button class="btn btn-secondary" onclick="clearStatus()">Clear Status</button>
+        </div>
+        
+        <!-- Method 1: Using data attributes -->
+        <div style="margin: 20px 0;">
+            <h3>Method 1: Data Attributes</h3>
+            <div id="g_id_onload"
+                 data-client_id="314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse">
+            </div>
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-size="large"
+                 data-theme="outline"
+                 data-text="sign_in_with"
+                 data-shape="rectangular"
+                 data-logo_alignment="left">
+            </div>
+        </div>
+        
+        <!-- Method 2: Manual button -->
+        <div style="margin: 20px 0;">
+            <h3>Method 2: Manual Button</h3>
+            <button class="btn btn-primary" onclick="manualGoogleSignIn()">
+                <i class="fab fa-google"></i> Sign in with Google (Manual)
+            </button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const CLIENT_ID = '314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com';
+        
+        function showStatus(message, type = 'success') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+        
+        function clearStatus() {
+            document.getElementById('status').textContent = '';
+            document.getElementById('status').className = 'status';
+        }
+        
+        function testAlternativeOAuth() {
+            showStatus('Testing alternative OAuth methods...', 'warning');
+            
+            // Check if Google library is available
+            if (!window.google || !window.google.accounts) {
+                showStatus('Google library not loaded. Please refresh the page.', 'error');
+                return;
+            }
+            
+            showStatus('Google library available, methods should work', 'success');
+        }
+        
+        function manualGoogleSignIn() {
+            showStatus('Initiating manual Google Sign-In...', 'warning');
+            
+            if (!window.google || !window.google.accounts) {
+                showStatus('Google library not available for manual sign-in', 'error');
+                return;
+            }
+            
+            try {
+                // Use prompt() method instead of renderButton
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        showStatus('Google Sign-In prompt not displayed or skipped', 'error');
+                    } else {
+                        showStatus('Google Sign-In prompt displayed successfully', 'success');
+                    }
+                });
+            } catch (error) {
+                showStatus('Manual sign-in failed: ' + error.message, 'error');
+                console.error('Manual sign-in error:', error);
+            }
+        }
+        
+        function handleCredentialResponse(response) {
+            try {
+                console.log('Google Sign-In Response:', response);
+                showStatus('Google Sign-In successful!', 'success');
+                
+                // Display response details
+                const results = document.getElementById('results');
+                results.innerHTML = `
+                    <h3>Sign-In Successful!</h3>
+                    <p><strong>Credential:</strong> ${response.credential.substring(0, 50)}...</p>
+                    <p><strong>Select By:</strong> ${response.select_by}</p>
+                    <p><strong>Client ID:</strong> ${response.client_id}</p>
+                `;
+                
+            } catch (error) {
+                showStatus('Error handling sign-in response: ' + error.message, 'error');
+                console.error('Response handling error:', error);
+            }
+        }
+        
+        // Auto-test when page loads
+        window.addEventListener('load', function() {
+            showStatus('Page loaded, testing OAuth methods...', 'warning');
+            
+            setTimeout(() => {
+                testAlternativeOAuth();
+            }, 2000);
+        });
+        
+        // Handle window errors
+        window.addEventListener('error', function(event) {
+            if (event.message.includes('postMessage') || event.message.includes('null')) {
+                showStatus('Detected postMessage error, trying alternative methods...', 'warning');
+            }
+        });
+    </script>
+    
+    <!-- Load Google OAuth script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+</html> 

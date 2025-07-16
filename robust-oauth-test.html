@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robust Google OAuth Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .btn { padding: 10px 20px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-primary { background: #4285f4; color: white; }
+        .btn-secondary { background: #f1f1f1; color: #333; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Robust Google OAuth Test</h1>
+        
+        <div id="status" class="status"></div>
+        
+        <div>
+            <button class="btn btn-primary" onclick="initializeOAuth()">Initialize OAuth</button>
+            <button class="btn btn-secondary" onclick="clearStatus()">Clear Status</button>
+            <button class="btn btn-secondary" onclick="reloadPage()">Reload Page</button>
+        </div>
+        
+        <div id="google-signin-robust" style="margin: 20px 0;"></div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const CLIENT_ID = '314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com';
+        let googleInitialized = false;
+        
+        function showStatus(message, type = 'success') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+        
+        function clearStatus() {
+            document.getElementById('status').textContent = '';
+            document.getElementById('status').className = 'status';
+        }
+        
+        function reloadPage() {
+            window.location.reload();
+        }
+        
+        function initializeOAuth() {
+            showStatus('Initializing Google OAuth...', 'warning');
+            
+            // Check if Google library is available
+            if (!window.google) {
+                showStatus('Google library not loaded. Loading now...', 'error');
+                loadGoogleLibrary();
+                return;
+            }
+            
+            if (!window.google.accounts) {
+                showStatus('Google accounts library not available. Please refresh the page.', 'error');
+                return;
+            }
+            
+            try {
+                // Clear any existing initialization
+                if (googleInitialized) {
+                    showStatus('Reinitializing Google OAuth...', 'warning');
+                }
+                
+                // Initialize with error handling
+                google.accounts.id.initialize({
+                    client_id: CLIENT_ID,
+                    callback: handleCredentialResponse,
+                    auto_select: false,
+                    cancel_on_tap_outside: true,
+                    prompt_parent_id: 'google-signin-robust'
+                });
+                
+                googleInitialized = true;
+                showStatus('Google OAuth initialized successfully', 'success');
+                
+                // Render button with error handling
+                renderGoogleButton();
+                
+            } catch (error) {
+                showStatus('Failed to initialize Google OAuth: ' + error.message, 'error');
+                console.error('OAuth initialization error:', error);
+            }
+        }
+        
+        function renderGoogleButton() {
+            try {
+                const container = document.getElementById('google-signin-robust');
+                if (!container) {
+                    showStatus('Container not found for Google button', 'error');
+                    return;
+                }
+                
+                // Clear container first
+                container.innerHTML = '';
+                
+                google.accounts.id.renderButton(container, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left'
+                });
+                
+                showStatus('Google Sign-In button rendered successfully', 'success');
+                
+            } catch (error) {
+                showStatus('Failed to render Google button: ' + error.message, 'error');
+                console.error('Button rendering error:', error);
+            }
+        }
+        
+        function loadGoogleLibrary() {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                showStatus('Google library loaded, initializing OAuth...', 'success');
+                setTimeout(initializeOAuth, 1000);
+            };
+            script.onerror = () => {
+                showStatus('Failed to load Google library', 'error');
+            };
+            document.head.appendChild(script);
+        }
+        
+        function handleCredentialResponse(response) {
+            try {
+                console.log('Google Sign-In Response:', response);
+                showStatus('Google Sign-In successful!', 'success');
+                
+                // Display response details
+                const results = document.getElementById('results');
+                results.innerHTML = `
+                    <h3>Sign-In Successful!</h3>
+                    <p><strong>Credential:</strong> ${response.credential.substring(0, 50)}...</p>
+                    <p><strong>Select By:</strong> ${response.select_by}</p>
+                    <p><strong>Client ID:</strong> ${response.client_id}</p>
+                `;
+                
+            } catch (error) {
+                showStatus('Error handling sign-in response: ' + error.message, 'error');
+                console.error('Response handling error:', error);
+            }
+        }
+        
+        // Auto-initialize when page loads
+        window.addEventListener('load', function() {
+            showStatus('Page loaded, waiting for Google library...', 'warning');
+            
+            // Wait for Google library
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            const checkGoogle = setInterval(() => {
+                attempts++;
+                
+                if (window.google && window.google.accounts) {
+                    clearInterval(checkGoogle);
+                    showStatus('Google library detected, initializing...', 'success');
+                    setTimeout(initializeOAuth, 500);
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkGoogle);
+                    showStatus('Google library failed to load after ' + maxAttempts + ' attempts', 'error');
+                }
+            }, 1000);
+        });
+        
+        // Handle window errors
+        window.addEventListener('error', function(event) {
+            if (event.message.includes('postMessage') || event.message.includes('null')) {
+                showStatus('Detected postMessage error, trying to reinitialize...', 'warning');
+                setTimeout(() => {
+                    googleInitialized = false;
+                    initializeOAuth();
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html> 

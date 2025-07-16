@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>127.0.0.1 Test</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .info { background: #f0f8ff; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .btn { padding: 10px 20px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; background: #4285f4; color: white; }
+    </style>
+</head>
+<body>
+    <h1>127.0.0.1 Access Test</h1>
+    
+    <div class="info">
+        <h3>Current Page Information:</h3>
+        <p><strong>URL:</strong> <span id="current-url"></span></p>
+        <p><strong>Origin:</strong> <span id="current-origin"></span></p>
+        <p><strong>Protocol:</strong> <span id="protocol"></span></p>
+        <p><strong>Hostname:</strong> <span id="hostname"></span></p>
+        <p><strong>Port:</strong> <span id="port"></span></p>
+    </div>
+
+    <div class="info">
+        <h3>Expected Origins (from Google Cloud Console):</h3>
+        <ul>
+            <li>http://localhost:3000</li>
+            <li>http://127.0.0.1:3000</li>
+            <li>http://localhost:8080</li>
+            <li>http://127.0.0.1:8080</li>
+        </ul>
+    </div>
+
+    <div>
+        <button class="btn" onclick="testGoogleAuth()">Test Google Auth</button>
+        <button class="btn" onclick="checkOrigin()">Check Origin Match</button>
+    </div>
+
+    <div id="google-signin-test"></div>
+    <div id="results"></div>
+
+    <script>
+        const CLIENT_ID = '314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com';
+        
+        // Display current page info
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('current-origin').textContent = window.location.origin;
+        document.getElementById('protocol').textContent = window.location.protocol;
+        document.getElementById('hostname').textContent = window.location.hostname;
+        document.getElementById('port').textContent = window.location.port || '80/443';
+
+        function checkOrigin() {
+            const currentOrigin = window.location.origin;
+            const expectedOrigins = [
+                'http://localhost:3000',
+                'http://127.0.0.1:3000',
+                'http://localhost:8080',
+                'http://127.0.0.1:8080'
+            ];
+            
+            console.log('Current Origin:', currentOrigin);
+            console.log('Expected Origins:', expectedOrigins);
+            console.log('Origin Match:', expectedOrigins.includes(currentOrigin));
+            
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="info">
+                    <h3>Origin Check Results:</h3>
+                    <p><strong>Current Origin:</strong> ${currentOrigin}</p>
+                    <p><strong>Expected Origins:</strong> ${expectedOrigins.join(', ')}</p>
+                    <p><strong>Match:</strong> ${expectedOrigins.includes(currentOrigin) ? '✅ Yes' : '❌ No'}</p>
+                </div>
+            `;
+        }
+
+        function testGoogleAuth() {
+            console.log('Testing Google Auth...');
+            
+            if (!window.google || !window.google.accounts) {
+                console.error('Google library not loaded');
+                alert('Google library not loaded. Please refresh the page.');
+                return;
+            }
+
+            try {
+                google.accounts.id.initialize({
+                    client_id: CLIENT_ID,
+                    callback: function(response) {
+                        console.log('Google Sign-In successful!');
+                        console.log('Response:', response);
+                        alert('Google OAuth is working! Check console for details.');
+                    }
+                });
+
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed()) {
+                        console.log('Google Sign-In prompt not displayed');
+                        alert('Google Sign-In not available');
+                    } else if (notification.isSkippedMoment()) {
+                        console.log('Google Sign-In prompt skipped');
+                        alert('Google Sign-In was skipped');
+                    } else if (notification.isDismissedMoment()) {
+                        console.log('Google Sign-In prompt dismissed');
+                    } else if (notification.isDisplayed()) {
+                        console.log('Google Sign-In prompt displayed');
+                    }
+                });
+
+                console.log('Google OAuth test initiated');
+            } catch (error) {
+                console.error('Failed to test Google OAuth:', error);
+                alert('Failed to test Google OAuth: ' + error.message);
+            }
+        }
+
+        // Auto-check when page loads
+        window.addEventListener('load', function() {
+            setTimeout(checkOrigin, 1000);
+        });
+    </script>
+</body>
+</html> 

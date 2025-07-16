@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Google OAuth Test</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .btn { padding: 10px 20px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-primary { background: #4285f4; color: white; }
+        .btn-secondary { background: #f1f1f1; color: #333; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Google OAuth Test</h1>
+        
+        <div id="status" class="status"></div>
+        
+        <div>
+            <button class="btn btn-primary" onclick="testSimpleOAuth()">Test Simple OAuth</button>
+            <button class="btn btn-secondary" onclick="clearStatus()">Clear Status</button>
+        </div>
+        
+        <div id="google-signin-simple"></div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const CLIENT_ID = '314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com';
+        
+        function showStatus(message, type = 'success') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+        
+        function clearStatus() {
+            document.getElementById('status').textContent = '';
+            document.getElementById('status').className = 'status';
+        }
+        
+        function testSimpleOAuth() {
+            showStatus('Testing Google OAuth...', 'success');
+            
+            if (!window.google || !window.google.accounts) {
+                showStatus('Google library not loaded. Please refresh the page.', 'error');
+                return;
+            }
+            
+            try {
+                // Initialize with minimal configuration
+                google.accounts.id.initialize({
+                    client_id: CLIENT_ID,
+                    callback: handleCredentialResponse,
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+                
+                // Render button with minimal options
+                google.accounts.id.renderButton(
+                    document.getElementById('google-signin-simple'),
+                    {
+                        type: 'standard',
+                        theme: 'outline',
+                        size: 'large',
+                        text: 'signin_with',
+                        shape: 'rectangular',
+                        logo_alignment: 'left'
+                    }
+                );
+                
+                showStatus('Google OAuth initialized successfully. Try clicking the sign-in button.', 'success');
+                
+            } catch (error) {
+                showStatus('Failed to initialize Google OAuth: ' + error.message, 'error');
+                console.error('OAuth initialization error:', error);
+            }
+        }
+        
+        function handleCredentialResponse(response) {
+            console.log('Google Sign-In Response:', response);
+            showStatus('Google Sign-In successful! Check console for details.', 'success');
+            
+            // Display response details
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <h3>Sign-In Successful!</h3>
+                <p><strong>Credential:</strong> ${response.credential.substring(0, 50)}...</p>
+                <p><strong>Select By:</strong> ${response.select_by}</p>
+                <p><strong>Client ID:</strong> ${response.client_id}</p>
+            `;
+        }
+        
+        // Auto-initialize when page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (window.google && window.google.accounts) {
+                    testSimpleOAuth();
+                } else {
+                    showStatus('Waiting for Google library to load...', 'success');
+                    setTimeout(testSimpleOAuth, 2000);
+                }
+            }, 1000);
+        });
+        
+        // Monitor for Google library
+        let checkCount = 0;
+        const checkGoogle = setInterval(() => {
+            checkCount++;
+            if (window.google && window.google.accounts) {
+                console.log('Google library loaded after', checkCount, 'checks');
+                clearInterval(checkGoogle);
+            }
+            if (checkCount > 10) {
+                showStatus('Google library failed to load after 10 seconds', 'error');
+                clearInterval(checkGoogle);
+            }
+        }, 1000);
+    </script>
+</body>
+</html> 

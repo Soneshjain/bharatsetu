@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google OAuth Debug</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-info { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Google OAuth Debug Tool</h1>
+    
+    <div class="debug-info">
+        <h3>Current Page Information:</h3>
+        <p><strong>URL:</strong> <span id="current-url"></span></p>
+        <p><strong>Origin:</strong> <span id="current-origin"></span></p>
+        <p><strong>Protocol:</strong> <span id="protocol"></span></p>
+        <p><strong>Hostname:</strong> <span id="hostname"></span></p>
+        <p><strong>Port:</strong> <span id="port"></span></p>
+        <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+    </div>
+
+    <div class="debug-info">
+        <h3>Google OAuth Status:</h3>
+        <p><strong>Google Library Loaded:</strong> <span id="google-loaded"></span></p>
+        <p><strong>Client ID:</strong> <span id="client-id"></span></p>
+    </div>
+
+    <div class="debug-info">
+        <h3>Expected Authorized Origins:</h3>
+        <ul>
+            <li>http://localhost:3000</li>
+            <li>http://127.0.0.1:3000</li>
+            <li>http://localhost:8080</li>
+            <li>http://127.0.0.1:8080</li>
+        </ul>
+    </div>
+
+    <div>
+        <button onclick="runDiagnostics()">Run Full Diagnostics</button>
+        <button onclick="testGoogleAuth()">Test Google Auth</button>
+        <button onclick="clearConsole()">Clear Console</button>
+    </div>
+
+    <div id="google-signin-container" style="margin: 20px 0;"></div>
+
+    <div id="results" class="debug-info"></div>
+
+    <script>
+        const CLIENT_ID = '314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com';
+        
+        // Display current page info
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('current-origin').textContent = window.location.origin;
+        document.getElementById('protocol').textContent = window.location.protocol;
+        document.getElementById('hostname').textContent = window.location.hostname;
+        document.getElementById('port').textContent = window.location.port || '80/443';
+        document.getElementById('user-agent').textContent = navigator.userAgent;
+        document.getElementById('client-id').textContent = CLIENT_ID;
+
+        function updateGoogleStatus() {
+            const isLoaded = !!(window.google && window.google.accounts);
+            document.getElementById('google-loaded').textContent = isLoaded ? 'Yes' : 'No';
+            document.getElementById('google-loaded').className = isLoaded ? 'success' : 'error';
+        }
+
+        function runDiagnostics() {
+            console.log('=== GOOGLE OAUTH DIAGNOSTICS ===');
+            console.log('Current URL:', window.location.href);
+            console.log('Current Origin:', window.location.origin);
+            console.log('Protocol:', window.location.protocol);
+            console.log('Hostname:', window.location.hostname);
+            console.log('Port:', window.location.port);
+            console.log('User Agent:', navigator.userAgent);
+            console.log('Google Library Available:', !!(window.google && window.google.accounts));
+            console.log('Client ID:', CLIENT_ID);
+            
+            // Check if origin matches expected patterns
+            const currentOrigin = window.location.origin;
+            const expectedOrigins = [
+                'http://localhost:3000',
+                'http://127.0.0.1:3000',
+                'http://localhost:8080',
+                'http://127.0.0.1:8080'
+            ];
+            
+            console.log('Expected Origins:', expectedOrigins);
+            console.log('Current Origin Matches Expected:', expectedOrigins.includes(currentOrigin));
+            
+            if (!expectedOrigins.includes(currentOrigin)) {
+                console.error('❌ Current origin is NOT in the expected list!');
+                console.error('Please add this origin to Google Cloud Console:', currentOrigin);
+            } else {
+                console.log('✅ Current origin is in the expected list');
+            }
+            
+            updateGoogleStatus();
+            
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <h3>Diagnostic Results:</h3>
+                <p><strong>Origin Match:</strong> ${expectedOrigins.includes(currentOrigin) ? '✅ Yes' : '❌ No'}</p>
+                <p><strong>Google Library:</strong> ${window.google && window.google.accounts ? '✅ Loaded' : '❌ Not Loaded'}</p>
+                <p><strong>Recommendation:</strong> ${expectedOrigins.includes(currentOrigin) ? 'Check Google Cloud Console settings' : 'Add current origin to Google Cloud Console'}</p>
+            `;
+        }
+
+        function testGoogleAuth() {
+            console.log('=== TESTING GOOGLE AUTH ===');
+            
+            if (!window.google || !window.google.accounts) {
+                console.error('Google library not loaded');
+                alert('Google library not loaded. Please refresh the page.');
+                return;
+            }
+
+            try {
+                google.accounts.id.initialize({
+                    client_id: CLIENT_ID,
+                    callback: function(response) {
+                        console.log('✅ Google Sign-In successful!');
+                        console.log('Response:', response);
+                        alert('Google OAuth is working! Check console for details.');
+                    }
+                });
+
+                google.accounts.id.renderButton(
+                    document.getElementById('google-signin-container'),
+                    { theme: 'outline', size: 'large', text: 'signin_with' }
+                );
+
+                console.log('✅ Google OAuth initialized successfully');
+            } catch (error) {
+                console.error('❌ Failed to initialize Google OAuth:', error);
+                alert('Failed to initialize Google OAuth: ' + error.message);
+            }
+        }
+
+        function clearConsole() {
+            console.clear();
+            console.log('Console cleared');
+        }
+
+        // Auto-run diagnostics when page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                updateGoogleStatus();
+                runDiagnostics();
+            }, 1000);
+        });
+
+        // Monitor for Google library loading
+        let checkCount = 0;
+        const checkGoogle = setInterval(() => {
+            checkCount++;
+            updateGoogleStatus();
+            
+            if (window.google && window.google.accounts) {
+                console.log('Google library loaded after', checkCount, 'checks');
+                clearInterval(checkGoogle);
+            }
+            
+            if (checkCount > 10) {
+                console.error('Google library failed to load after 10 seconds');
+                clearInterval(checkGoogle);
+            }
+        }, 1000);
+    </script>
+</body>
+</html> 

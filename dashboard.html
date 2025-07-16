@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - BharatSetu</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    
+    <!-- Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar__content">
+                <div class="navbar__logo">
+                    <a href="index.html">
+                        <i class="fas fa-bridge"></i>
+                        <span class="navbar__logo-text">BharatSetu</span>
+                    </a>
+                </div>
+                <div class="navbar__cta">
+                    <!-- Authentication Section -->
+                    <div id="auth-section" style="display: none;">
+                        <div id="google-signin-button"></div>
+                    </div>
+                    
+                    <!-- User Section -->
+                    <div id="user-section" style="display: none;">
+                        <div class="user-info">
+                            <img id="user-picture" class="user-picture" style="display: none;" alt="User">
+                            <span id="user-name"></span>
+                            <button id="logout-btn" class="btn btn--secondary">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Welcome to Your Dashboard</h1>
+                <p>Manage your companies, check eligibility, and track applications</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Quick Actions -->
+                <div class="dashboard-section">
+                    <h2>Quick Actions</h2>
+                    <div class="action-cards">
+                        <a href="eligibility-check.html" class="action-card">
+                            <i class="fas fa-search"></i>
+                            <h3>Check Eligibility</h3>
+                            <p>See which schemes you're eligible for</p>
+                        </a>
+                        <a href="add-company.html" class="action-card">
+                            <i class="fas fa-plus"></i>
+                            <h3>Add Company</h3>
+                            <p>Register a new company</p>
+                        </a>
+                        <a href="applications.html" class="action-card">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>My Applications</h3>
+                            <p>Track your submitted applications</p>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- My Companies -->
+                <div class="dashboard-section">
+                    <h2>My Companies</h2>
+                    <div id="companies-list">
+                        <p>Loading companies...</p>
+                    </div>
+                    <a href="add-company.html" class="btn btn--primary">Add New Company</a>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dashboard-section">
+                    <h2>Recent Activity</h2>
+                    <div id="recent-activity">
+                        <p>Loading recent activity...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/auth-service.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html> 

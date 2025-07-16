@@ -152,9 +152,9 @@ class EligibilityQuestionnaire {
                         </div>
 
                         <div class="form-group">
-                            <label for="term-loan-amount">Term Loan Amount (INR Lakhs)</label>
+                            <label for="term-loan-amount">Term Loan Amount (INR)</label>
                             <input type="number" id="term-loan-amount" name="term-loan-amount" step="0.01" min="0">
-                            <small>Required for accurate interest subsidy calculations</small>
+                            <small>Enter amount in rupees (e.g., 500000 for ₹5L)</small>
                         </div>
 
                         <div class="form-group">
@@ -184,9 +184,9 @@ class EligibilityQuestionnaire {
                         </div>
 
                         <div class="form-group">
-                            <label for="export-turnover">Export Turnover (INR Lakhs)</label>
+                            <label for="export-turnover">Export Turnover (INR)</label>
                             <input type="number" id="export-turnover" name="export-turnover" step="0.01" min="0">
-                            <small>For export promotion schemes</small>
+                            <small>Enter amount in rupees (e.g., 1000000 for ₹10L)</small>
                         </div>
 
                         <div class="form-group">
@@ -202,27 +202,27 @@ class EligibilityQuestionnaire {
                         </div>
 
                         <div class="form-group">
-                            <label for="technology-equipment-cost">Technology/Equipment Cost (INR Lakhs)</label>
+                            <label for="technology-equipment-cost">Technology/Equipment Cost (INR)</label>
                             <input type="number" id="technology-equipment-cost" name="technology-equipment-cost" step="0.01" min="0">
-                            <small>For technology acquisition and upgradation schemes</small>
+                            <small>Enter amount in rupees (e.g., 500000 for ₹5L)</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="marketing-export-expenses">Marketing/Export Expenses (INR Lakhs)</label>
+                            <label for="marketing-export-expenses">Marketing/Export Expenses (INR)</label>
                             <input type="number" id="marketing-export-expenses" name="marketing-export-expenses" step="0.01" min="0">
-                            <small>For PADMA designing, branding, marketing scheme</small>
+                            <small>Enter amount in rupees (e.g., 200000 for ₹2L)</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="testing-equipment-cost">Testing Equipment Cost (INR Lakhs)</label>
+                            <label for="testing-equipment-cost">Testing Equipment Cost (INR)</label>
                             <input type="number" id="testing-equipment-cost" name="testing-equipment-cost" step="0.01" min="0">
-                            <small>For testing equipment subsidy</small>
+                            <small>Enter amount in rupees (e.g., 100000 for ₹1L)</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="quality-certification-cost">Quality Certification Cost (INR Lakhs)</label>
+                            <label for="quality-certification-cost">Quality Certification Cost (INR)</label>
                             <input type="number" id="quality-certification-cost" name="quality-certification-cost" step="0.01" min="0">
-                            <small>For quality certification reimbursement</small>
+                            <small>Enter amount in rupees (e.g., 50000 for ₹50K)</small>
                         </div>
                     </div>
 
@@ -423,20 +423,82 @@ class EligibilityQuestionnaire {
         console.log('Collected form data:', this.userData);
     }
 
-    submitQuestionnaire() {
+    async submitQuestionnaire() {
         if (this.validateForm()) {
             this.collectFormData();
-            this.processResults();
+            await this.processResults();
         }
     }
 
-    processResults() {
+    async processResults() {
         // Convert form data to engine format
         const engineData = this.convertToEngineFormat(this.userData);
         
         // Check eligibility
         const results = this.engine.checkAllEligibility(engineData);
         const benefits = this.engine.calculateTotalBenefits(results.eligible_schemes, engineData);
+        
+        // Store results in database if user is authenticated
+        if (window.authService && window.authService.isAuthenticated()) {
+            try {
+                // Create or get company
+                const companyData = {
+                    name: this.userData['company-name'] || 'MSME Unit',
+                    registration_number: this.userData['registration-number'] || '',
+                    enterprise_type: 'MSME',
+                    sector: this.userData['primary-sector'],
+                    district: this.userData['district'],
+                    block: this.userData['block'],
+                    block_category: this.userData['block-category'],
+                    commercial_production_date: this.userData['commercial-production-date'],
+                    electricity_connection_date: this.userData['electricity-connection-date'],
+                    project_type: this.userData['project-type'],
+                    land_investment: parseFloat(this.userData['land-investment']) || 0,
+                    machinery_investment: parseFloat(this.userData['machinery-investment']) || 0,
+                    total_project_cost: parseFloat(this.userData['total-project-cost']) || 0,
+                    land_purchase_years: parseInt(this.userData['land-purchase-years']) || 0,
+                    has_term_loan: this.userData['has-term-loan'] === 'true',
+                    term_loan_amount: parseFloat(this.userData['term-loan-amount']) || 0,
+                    interest_rate: parseFloat(this.userData['interest-rate']) || 0,
+                    requires_listing: this.userData['requires-listing'] === 'true',
+                    annual_turnover: parseFloat(this.userData['annual-turnover']) || 0,
+                    export_turnover: parseFloat(this.userData['export-turnover']) || 0,
+                    connected_load: parseFloat(this.userData['connected-load']) || 0,
+                    annual_electricity_consumption: parseInt(this.userData['annual-electricity-consumption']) || 0,
+                    technology_equipment_cost: parseFloat(this.userData['technology-equipment-cost']) || 0,
+                    marketing_export_expenses: parseFloat(this.userData['marketing-export-expenses']) || 0,
+                    testing_equipment_cost: parseFloat(this.userData['testing-equipment-cost']) || 0,
+                    quality_certification_cost: parseFloat(this.userData['quality-certification-cost']) || 0,
+                    total_employees: parseInt(this.userData['total-employees']) || 0,
+                    sc_st_employees: parseInt(this.userData['sc-st-employees']) || 0,
+                    women_employees: parseInt(this.userData['women-employees']) || 0,
+                    promoter_category: this.userData['promoter-category'] || '',
+                    is_startup_registered: this.userData['is-startup-registered'] === 'true',
+                    dpiit_recognition: this.userData['dpiit-recognition'] === 'true',
+                    cluster_location: this.userData['cluster-location'] || '',
+                    rural_area: this.userData['rural-area'] === 'true'
+                };
+
+                // Create company first
+                const companyResult = await window.authService.createCompany(companyData);
+                
+                // Store eligibility test result
+                await window.authService.storeEligibilityTest(
+                    companyResult.companyId,
+                    this.userData,
+                    {
+                        total_eligible: results.eligible_schemes.length,
+                        total_value: benefits.total_value,
+                        benefits_breakdown: benefits.benefits_breakdown
+                    }
+                );
+
+                console.log('Eligibility test results stored in database');
+            } catch (error) {
+                console.error('Failed to store results in database:', error);
+                // Continue with displaying results even if database storage fails
+            }
+        }
         
         // Display results
         this.displayResults(results, benefits);

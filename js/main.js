@@ -1,5 +1,35 @@
 // Initialize Swiper carousels
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Initialize authentication
+    console.log('Checking for authService:', !!window.authService);
+    if (window.authService) {
+        console.log('AuthService found, initializing Google Auth...');
+        try {
+            await window.authService.initGoogleAuth();
+            
+            // Check if user is already authenticated
+            if (window.authService.isAuthenticated()) {
+                window.authService.updateUIForAuthenticatedUser();
+            } else {
+                window.authService.updateUIForUnauthenticatedUser();
+            }
+            
+            // Bind logout button
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    window.authService.logout();
+                });
+            }
+            
+            // Initialize auth flow
+            if (window.authFlow) {
+                window.authFlow.updateApplyButtons();
+            }
+        } catch (error) {
+            console.error('Failed to initialize authentication:', error);
+        }
+    }
     // State Schemes Swiper
     const stateSwiper = new Swiper('.state-swiper', {
         slidesPerView: 1,
@@ -97,6 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const targetId = this.getAttribute('href');
+            
+            // Skip if href is just '#'
+            if (targetId === '#' || !targetId) {
+                return;
+            }
+            
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {

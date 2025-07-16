@@ -1,0 +1,236 @@
+/* Authentication Flow Styles */
+
+/* Auth Modal */
+.auth-modal {
+    max-width: 500px;
+    width: 90%;
+}
+
+.auth-modal-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.auth-modal-content h2 {
+    color: #2d3748;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.auth-modal-content p {
+    color: #718096;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+/* Auth Options */
+.auth-options {
+    margin: 30px 0;
+}
+
+#google-signin-modal {
+    margin-bottom: 20px;
+}
+
+.auth-divider {
+    position: relative;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.auth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.auth-divider span {
+    background: #fff;
+    padding: 0 15px;
+    color: #718096;
+    font-size: 14px;
+}
+
+/* Auth Benefits */
+.auth-benefits {
+    margin-top: 30px;
+    text-align: left;
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.auth-benefits h3 {
+    color: #2d3748;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.auth-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.auth-benefits li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+.auth-benefits i {
+    color: #3182ce;
+    margin-right: 10px;
+    width: 16px;
+}
+
+/* Application Modal */
+.application-modal {
+    max-width: 800px;
+    width: 90%;
+}
+
+.application-modal-content {
+    padding: 20px;
+}
+
+.application-modal-content h2 {
+    color: #2d3748;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.application-modal-content p {
+    color: #718096;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+#user-name-display {
+    font-weight: 600;
+    color: #3182ce;
+}
+
+/* Application Steps */
+.application-steps {
+    display: grid;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.step.active {
+    border-color: #3182ce;
+    background: #ebf8ff;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #718096;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.step.active .step-number {
+    background: #3182ce;
+    color: #fff;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h3 {
+    color: #2d3748;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.step-content p {
+    color: #718096;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.step-content button {
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .auth-modal,
+    .application-modal {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .step {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .step-number {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .auth-benefits {
+        padding: 15px;
+    }
+}
+
+/* Button States */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Loading States */
+.auth-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Success States */
+.step.completed {
+    border-color: #38a169;
+    background: #f0fff4;
+}
+
+.step.completed .step-number {
+    background: #38a169;
+    color: #fff;
+}
+
+/* Error States */
+.auth-error {
+    background: #fed7d7;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-size: 14px;
+} 

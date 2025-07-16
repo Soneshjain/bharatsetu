@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google OAuth Test</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <h1>Google OAuth Test</h1>
+    <div id="g_id_onload"
+         data-client_id="314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            console.log("Google Sign-In successful!");
+            console.log("Credential:", response.credential);
+            alert("Google OAuth is working! Check console for details.");
+        }
+
+        // Check if Google library loaded
+        window.addEventListener('load', function() {
+            if (window.google && window.google.accounts) {
+                console.log("Google OAuth library loaded successfully");
+            } else {
+                console.error("Google OAuth library failed to load");
+            }
+        });
+    </script>
+</body>
+</html> 

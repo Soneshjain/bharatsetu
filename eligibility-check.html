@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Eligibility - BharatSetu</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/eligibility-questionnaire.css">
+    
+    <!-- Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar__content">
+                <div class="navbar__logo">
+                    <a href="index.html">
+                        <i class="fas fa-bridge"></i>
+                        <span class="navbar__logo-text">BharatSetu</span>
+                    </a>
+                </div>
+                <div class="navbar__cta">
+                    <!-- Authentication Section -->
+                    <div id="auth-section" style="display: none;">
+                        <div id="google-signin-button"></div>
+                    </div>
+                    
+                    <!-- User Section -->
+                    <div id="user-section" style="display: none;">
+                        <div class="user-info">
+                            <img id="user-picture" class="user-picture" style="display: none;" alt="User">
+                            <span id="user-name"></span>
+                            <button id="logout-btn" class="btn btn--secondary">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Eligibility Check Content -->
+    <main class="eligibility-main">
+        <div class="container">
+            <div class="eligibility-header">
+                <h1>Check Your Eligibility</h1>
+                <p>Fill in your details to check eligibility for Haryana and National MSME schemes</p>
+            </div>
+
+            <!-- Company Selection -->
+            <div class="company-selection" id="company-selection" style="display: none;">
+                <h3>Select Company for Eligibility Check</h3>
+                <div id="companies-dropdown">
+                    <select id="selected-company" required>
+                        <option value="">Select a company</option>
+                    </select>
+                </div>
+                <button class="btn btn--primary" onclick="startEligibilityCheck()">Start Eligibility Check</button>
+            </div>
+
+            <!-- Eligibility Questionnaire -->
+            <div id="eligibility-modal" class="eligibility-questionnaire-container">
+                <div class="questionnaire-form">
+                    <h2>MSME Eligibility Check</h2>
+                    <p class="form-description">Fill in your details to check eligibility for Haryana and National MSME schemes</p>
+                    
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="commercial-production-date">Date of Commercial Production *</label>
+                            <input type="date" id="commercial-production-date" name="commercial-production-date" required>
+                            <small>Date when commercial production started</small>
+                        </div>
+                    </div>
+
+                    <!-- Location Information -->
+                    <div class="form-section">
+                        <h3>Location Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="district">District *</label>
+                            <select id="district" name="district" required onchange="updateBlocks()">
+                                <option value="">Select District</option>
+                                <option value="ambala">Ambala</option>
+                                <option value="bhiwani">Bhiwani</option>
+                                <option value="charkhi-dadri">Charkhi Dadri</option>
+                                <option value="faridabad">Faridabad</option>
+                                <option value="fatehabad">Fatehabad</option>
+                                <option value="gurugram">Gurugram</option>
+                                <option value="hisar">Hisar</option>
+                                <option value="jhajjar">Jhajjar</option>
+                                <option value="jind">Jind</option>
+                                <option value="kaithal">Kaithal</option>
+                                <option value="karnal">Karnal</option>
+                                <option value="kurukshetra">Kurukshetra</option>
+                                <option value="mahendragarh">Mahendragarh</option>
+                                <option value="mewat">Mewat</option>
+                                <option value="palwal">Palwal</option>
+                                <option value="panchkula">Panchkula</option>
+                                <option value="panipat">Panipat</option>
+                                <option value="rewari">Rewari</option>
+                                <option value="rohtak">Rohtak</option>
+                                <option value="sirsa">Sirsa</option>
+                                <option value="sonipat">Sonipat</option>
+                                <option value="yamunanagar">Yamunanagar</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="block">Block *</label>
+                            <select id="block" name="block" required>
+                                <option value="">First select a district</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="electricity-connection-date">Date of Electricity Connection</label>
+                            <input type="date" id="electricity-connection-date" name="electricity-connection-date">
+                            <small>Required for electricity duty reimbursement schemes</small>
+                        </div>
+                    </div>
+
+                    <!-- Sector Information -->
+                    <div class="form-section">
+                        <h3>Sector Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="primary-sector">Primary Sector *</label>
+                            <select id="primary-sector" name="primary-sector" required>
+                                <option value="">Select Primary Sector</option>
+                                <option value="textile">Textile & Apparel</option>
+                                <option value="food-processing">Food Processing</option>
+                                <option value="renewable-energy">Renewable Energy</option>
+                                <option value="ict">Information & Communication Technology</option>
+                                <option value="traditional">Traditional Industries</option>
+                                <option value="general">General Manufacturing</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Project Information -->
+                    <div class="form-section">
+                        <h3>Project Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="project-type">Project Type *</label>
+                            <select id="project-type" name="project-type" required>
+                                <option value="">Select Project Type</option>
+                                <option value="new">New Unit</option>
+                                <option value="expansion">Expansion</option>
+                                <option value="diversification">Diversification</option>
+                                <option value="modernization">Modernization</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="land-investment">Land Investment (INR Cr.) *</label>
+                            <input type="number" id="land-investment" name="land-investment" step="0.01" required>
+                            <small>Investment in land and building</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="machinery-investment">Machinery & Plant Setup (INR Cr.) *</label>
+                            <input type="number" id="machinery-investment" name="machinery-investment" step="0.01" required>
+                            <small>Investment in plant and machinery</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total-project-cost">Total Project Cost (INR Cr.) *</label>
+                            <input type="number" id="total-project-cost" name="total-project-cost" step="0.01" required>
+                            <small>Total project cost (land + machinery + other expenses)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="land-purchase-years">Years since land purchase</label>
+                            <input type="number" id="land-purchase-years" name="land-purchase-years" min="0" max="50">
+                            <small>Required for stamp duty refund schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="has-term-loan">Do you have a term loan from bank/financial institution?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="has-term-loan" value="true"> Yes</label>
+                                <label><input type="radio" name="has-term-loan" value="false"> No</label>
+                            </div>
+                            <small>Required for interest subsidy schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="term-loan-amount">Term Loan Amount (INR)</label>
+                            <input type="number" id="term-loan-amount" name="term-loan-amount" step="0.01" min="0">
+                            <small>Enter amount in rupees (e.g., 500000 for ₹5L)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="interest-rate">Interest Rate on Term Loan (%)</label>
+                            <input type="number" id="interest-rate" name="interest-rate" step="0.1" min="0" max="20">
+                            <small>Required for interest subsidy calculations</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="requires-listing">Are you planning to list on SME Exchange?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="requires-listing" value="true"> Yes</label>
+                                <label><input type="radio" name="requires-listing" value="false"> No</label>
+                            </div>
+                            <small>Required for SME Exchange Equity Scheme</small>
+                        </div>
+                    </div>
+
+                    <!-- Financial & Operational Details -->
+                    <div class="form-section">
+                        <h3>Financial & Operational Details</h3>
+                        
+                        <div class="form-group">
+                            <label for="annual-turnover">Annual Turnover (INR Cr.)</label>
+                            <input type="number" id="annual-turnover" name="annual-turnover" step="0.01" min="0">
+                            <small>For schemes with turnover-based calculations</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="export-turnover">Export Turnover (INR)</label>
+                            <input type="number" id="export-turnover" name="export-turnover" step="0.01" min="0">
+                            <small>Enter amount in rupees (e.g., 1000000 for ₹10L)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="connected-load">Connected Load (KW)</label>
+                            <input type="number" id="connected-load" name="connected-load" step="0.1" min="0">
+                            <small>For power tariff subsidy calculations</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="annual-electricity-consumption">Annual Electricity Consumption (Units)</label>
+                            <input type="number" id="annual-electricity-consumption" name="annual-electricity-consumption" min="0">
+                            <small>For electricity duty reimbursement</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="technology-equipment-cost">Technology & Equipment Cost (INR)</label>
+                            <input type="number" id="technology-equipment-cost" name="technology-equipment-cost" step="0.01" min="0">
+                            <small>For technology upgradation schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="marketing-export-expenses">Marketing & Export Expenses (INR)</label>
+                            <input type="number" id="marketing-export-expenses" name="marketing-export-expenses" step="0.01" min="0">
+                            <small>For marketing and export promotion schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testing-equipment-cost">Testing Equipment Cost (INR)</label>
+                            <input type="number" id="testing-equipment-cost" name="testing-equipment-cost" step="0.01" min="0">
+                            <small>For testing and certification schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quality-certification-cost">Quality Certification Cost (INR)</label>
+                            <input type="number" id="quality-certification-cost" name="quality-certification-cost" step="0.01" min="0">
+                            <small>For quality certification schemes</small>
+                        </div>
+                    </div>
+
+                    <!-- Employee Information -->
+                    <div class="form-section">
+                        <h3>Employee Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="total-employees">Total Employees</label>
+                            <input type="number" id="total-employees" name="total-employees" min="0">
+                            <small>For employment-based schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sc-st-employees">SC/ST Employees</label>
+                            <input type="number" id="sc-st-employees" name="sc-st-employees" min="0">
+                            <small>For SC/ST employment schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="women-employees">Women Employees</label>
+                            <input type="number" id="women-employees" name="women-employees" min="0">
+                            <small>For women employment schemes</small>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <h3>Additional Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="promoter-category">Promoter Category</label>
+                            <select id="promoter-category" name="promoter-category">
+                                <option value="">Select Category</option>
+                                <option value="sc">SC</option>
+                                <option value="st">ST</option>
+                                <option value="obc">OBC</option>
+                                <option value="general">General</option>
+                                <option value="women">Women</option>
+                                <option value="differently-abled">Differently Abled</option>
+                            </select>
+                            <small>For category-based schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="is-startup-registered">Are you registered as a Startup?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="is-startup-registered" value="true"> Yes</label>
+                                <label><input type="radio" name="is-startup-registered" value="false"> No</label>
+                            </div>
+                            <small>For startup-specific schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dpiit-recognition">Do you have DPIIT recognition?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="dpiit-recognition" value="true"> Yes</label>
+                                <label><input type="radio" name="dpiit-recognition" value="false"> No</label>
+                            </div>
+                            <small>For DPIIT recognized startup schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rural-area">Is your unit located in a rural area?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="rural-area" value="true"> Yes</label>
+                                <label><input type="radio" name="rural-area" value="false"> No</label>
+                            </div>
+                            <small>For rural development schemes</small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">Check Eligibility</button>
+                        <a href="dashboard.html" class="btn btn--secondary">Cancel</a>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="eligibility-results" style="display: none;">
+                    <div id="results-content"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/auth-service.js"></script>
+    <script src="js/eligibility-engine.js"></script>
+    <script src="js/eligibility-questionnaire.js"></script>
+    <script src="js/eligibility-check.js"></script>
+</body>
+</html> 
