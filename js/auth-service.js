@@ -198,7 +198,8 @@ class AuthService {
 
     // Get user's companies
     async getCompanies() {
-        return await this.apiCall('/companies');
+        const response = await this.apiCall('/companies');
+        return response.companies || [];
     }
 
     // Create new company
@@ -223,7 +224,8 @@ class AuthService {
 
     // Get eligibility test history
     async getEligibilityTests() {
-        return await this.apiCall('/eligibility-tests');
+        const response = await this.apiCall('/eligibility-tests');
+        return response.tests || [];
     }
 
     // Create scheme application
@@ -241,7 +243,8 @@ class AuthService {
 
     // Get applications
     async getApplications() {
-        return await this.apiCall('/applications');
+        const response = await this.apiCall('/applications');
+        return response.applications || [];
     }
 
     // Logout

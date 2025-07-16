@@ -49,7 +49,16 @@ class Dashboard {
             const companies = await this.authService.getCompanies();
             const companiesList = document.getElementById('companies-list');
             
-            if (!companies || companies.length === 0) {
+            console.log('Companies response:', companies);
+            
+            // Check if companies is an array
+            if (!Array.isArray(companies)) {
+                console.error('Companies is not an array:', companies);
+                companiesList.innerHTML = '<p>No companies added yet. <a href="add-company.html">Add your first company</a> to get started!</p>';
+                return;
+            }
+            
+            if (companies.length === 0) {
                 companiesList.innerHTML = '<p>No companies added yet. <a href="add-company.html">Add your first company</a> to get started!</p>';
                 return;
             }

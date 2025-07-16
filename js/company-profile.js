@@ -168,16 +168,8 @@ class CompanyProfile {
         const modal = document.getElementById('profile-modal');
         if (modal) modal.remove();
         
-        // Open eligibility modal to add new company
-        const eligibilityModal = document.getElementById('eligibility-modal');
-        if (eligibilityModal) {
-            eligibilityModal.style.display = 'flex';
-        }
-        
-        // Initialize eligibility questionnaire
-        if (!window.eligibilityQuestionnaire) {
-            window.eligibilityQuestionnaire = new EligibilityQuestionnaire();
-        }
+        // Navigate to add company page
+        window.location.href = 'add-company.html';
     }
 
     editCompany(companyId) {

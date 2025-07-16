@@ -809,104 +809,7 @@ p {
     opacity: 0.6;
 }
 
-/* === Eligibility Checker Modal Styles === */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.4);
-  align-items: center;
-  justify-content: center;
-}
-.modal[style*="display: flex"] {
-  display: flex !important;
-}
-.modal-content {
-  background: #fff;
-  padding: 2.5rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-  max-width: 420px;
-  width: 100%;
-  position: relative;
-  text-align: left;
-}
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
-  color: #888;
-  cursor: pointer;
-}
-#eligibility-form .form-group {
-  margin-bottom: 1.2rem;
-}
-#eligibility-form label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-}
-#eligibility-form input,
-#eligibility-form select {
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 1rem;
-  background: #f8fafc;
-  margin-bottom: 0.2rem;
-}
-#eligibility-form button[type="submit"] {
-  width: 100%;
-  margin-top: 0.5rem;
-}
-.btn--highlight {
-    background: linear-gradient(135deg, #1fa2ff 0%, #0fd9d6 100%);
-    color: #fff;
-    border: none;
-}
-.btn--highlight:hover {
-    background: linear-gradient(135deg, #0fd9d6 0%, #1fa2ff 100%);
-    color: #fff;
-}
-.scheme-result {
-  background: #f8fafc;
-  border-radius: 8px;
-  padding: 1rem 1.2rem;
-  margin-bottom: 1.2rem;
-  box-shadow: 0 2px 8px rgba(45,63,231,0.04);
-}
-.scheme-result h4 {
-  margin: 0 0 0.3em 0;
-  color: #2D3FE7;
-}
-.scheme-result a {
-  color: #2D3FE7;
-  text-decoration: underline;
-  font-size: 0.98em;
-}
-.alert {
-  padding: 1rem 1.2rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-.alert-warning {
-  background: #fffbe6;
-  color: #b38f00;
-  border: 1px solid #ffe066;
-}
-@media (max-width: 600px) {
-  .modal-content {
-    padding: 1.2rem 0.5rem;
-    max-width: 98vw;
-  }
-}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -1081,6 +984,14 @@ p {
     padding: 4px 12px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(31,162,255,0.10);
+}
+
+.scheme-card__badge--haryana {
+    background: #10b981;
+}
+
+.scheme-card__badge--national {
+    background: #1fa2ff;
 }
 
 .scheme-card__body {

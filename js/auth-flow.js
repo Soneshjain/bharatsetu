@@ -11,12 +11,12 @@ class AuthFlow {
     }
 
     bindEvents() {
-        // Bind all "Apply Now" buttons
+        // Bind only buttons that should show auth modal (those without proper href)
         document.addEventListener('click', (e) => {
             if (e.target.matches('.btn--primary[href="#contact"]') || 
                 e.target.matches('.btn--primary[href="#"]') ||
                 (e.target.classList.contains('btn--primary') && 
-                 (e.target.textContent.includes('Apply Now') || e.target.textContent.includes('Sign In to Apply')))) {
+                 e.target.textContent.includes('Sign In to Apply'))) {
                 e.preventDefault();
                 this.handleApplyNow();
             }
@@ -216,16 +216,8 @@ class AuthFlow {
         const modal = document.getElementById('application-modal');
         if (modal) modal.remove();
         
-        // Open eligibility modal
-        const eligibilityModal = document.getElementById('eligibility-modal');
-        if (eligibilityModal) {
-            eligibilityModal.style.display = 'flex';
-        }
-        
-        // Initialize eligibility questionnaire if not already done
-        if (!window.eligibilityQuestionnaire) {
-            window.eligibilityQuestionnaire = new EligibilityQuestionnaire();
-        }
+        // Navigate to eligibility check page
+        window.location.href = 'eligibility-check.html';
     }
 
     showEligibilityFirst() {
@@ -233,24 +225,25 @@ class AuthFlow {
         const modal = document.getElementById('auth-modal');
         if (modal) modal.remove();
         
-        // Open eligibility modal
-        const eligibilityModal = document.getElementById('eligibility-modal');
-        if (eligibilityModal) {
-            eligibilityModal.style.display = 'flex';
-        }
+        // Navigate to eligibility check page
+        window.location.href = 'eligibility-check.html';
     }
 
     updateApplyButtons() {
         const isAuthenticated = this.authService && this.authService.isAuthenticated();
+        // Only update buttons that don't have proper href attributes
         const applyButtons = document.querySelectorAll('.btn--primary[href="#contact"], .btn--primary[href="#"]');
         
         applyButtons.forEach(button => {
-            if (isAuthenticated) {
-                button.textContent = 'Apply Now';
-                button.href = '#';
-            } else {
-                button.textContent = 'Sign In to Apply';
-                button.href = '#';
+            // Don't update buttons that already have proper href attributes
+            if (button.href === '#' || button.href === '#contact') {
+                if (isAuthenticated) {
+                    button.textContent = 'Apply Now';
+                    button.href = '#';
+                } else {
+                    button.textContent = 'Sign In to Apply';
+                    button.href = '#';
+                }
             }
         });
     }
