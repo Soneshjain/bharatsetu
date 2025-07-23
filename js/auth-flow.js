@@ -111,19 +111,46 @@ class AuthFlow {
 
     async handleModalSignIn(response) {
         try {
-            const result = await this.authService.authenticateWithGoogle(response.credential);
-            this.authService.setAuthData(result.token, result.user);
-            this.authService.onAuthSuccess(result.user);
+            console.log('Modal sign-in response received:', response);
             
-            // Close auth modal and show application form
+            // Handle the Google Sign-In response
+            await this.authService.handleGoogleSignIn(response);
+            
+            // Close auth modal
             const modal = document.getElementById('auth-modal');
             if (modal) modal.remove();
             
-            this.showApplicationForm();
+            // Show success message instead of application form for now
+            this.showSuccessMessage();
         } catch (error) {
             console.error('Modal sign-in failed:', error);
             this.showAuthError('Sign-in failed. Please try again.');
         }
+    }
+
+    showSuccessMessage() {
+        // Create a simple success message
+        const successDiv = document.createElement('div');
+        successDiv.className = 'auth-success';
+        successDiv.innerHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                        background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+                        text-align: center; z-index: 10000;">
+                <h3 style="color: #10b981; margin-bottom: 15px;">✅ Login Successful!</h3>
+                <p style="color: #6b7280; margin-bottom: 20px;">You are now logged in as a test user.</p>
+                <button onclick="this.parentElement.remove()" 
+                        style="background: #10b981; color: white; border: none; padding: 10px 20px; 
+                               border-radius: 6px; cursor: pointer;">Close</button>
+            </div>
+        `;
+        document.body.appendChild(successDiv);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+            if (successDiv.parentElement) {
+                successDiv.remove();
+            }
+        }, 5000);
     }
 
     showApplicationForm() {
@@ -270,7 +297,6 @@ class AuthFlow {
 
     initializeGoogleSignInForModal() {
         try {
-            // Use prompt() method instead of renderButton() to avoid postMessage errors
             const modalButton = document.getElementById('google-signin-modal');
             console.log('Modal button element:', modalButton);
             
@@ -278,13 +304,21 @@ class AuthFlow {
                 // Clear any existing content
                 modalButton.innerHTML = '';
                 
-                // Create a custom button that triggers the prompt
-                const customButton = document.createElement('button');
-                customButton.className = 'btn btn--primary google-signin-custom';
-                customButton.innerHTML = '<i class="fab fa-google"></i> Sign in with Google';
-                customButton.onclick = () => this.triggerModalGoogleSignIn();
+                // Render the Google Sign-In button directly
+                google.accounts.id.renderButton(modalButton, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left',
+                    width: 400,
+                    click_listener: (response) => {
+                        console.log('Google Sign-In response received:', response);
+                        this.handleModalSignIn(response);
+                    }
+                });
                 
-                modalButton.appendChild(customButton);
                 console.log('Modal Google Sign-In button rendered successfully');
             } else {
                 console.log('Modal button or Google library not ready, showing fallback...');
@@ -298,20 +332,45 @@ class AuthFlow {
 
     triggerModalGoogleSignIn() {
         try {
-            google.accounts.id.prompt((notification) => {
-                if (notification.isNotDisplayed()) {
-                    console.log('Google Sign-In prompt not displayed');
-                    this.showAuthError('Google Sign-In not available');
-                } else if (notification.isSkippedMoment()) {
-                    console.log('Google Sign-In prompt skipped');
-                    this.showAuthError('Google Sign-In was skipped');
-                } else if (notification.isDismissedMoment()) {
-                    console.log('Google Sign-In prompt dismissed');
-                    // User dismissed the prompt, no action needed
-                } else if (notification.isDisplayed()) {
-                    console.log('Google Sign-In prompt displayed');
-                }
-            });
+            // First, try to use the renderButton approach which is more reliable
+            const modalButton = document.getElementById('google-signin-modal');
+            if (modalButton && window.google && window.google.accounts && window.google.accounts.id) {
+                // Clear the container
+                modalButton.innerHTML = '';
+                
+                // Render the Google Sign-In button directly
+                google.accounts.id.renderButton(modalButton, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left',
+                    width: 400,
+                    click_listener: (response) => {
+                        console.log('Google Sign-In response received:', response);
+                        this.handleModalSignIn(response);
+                    }
+                });
+                
+                console.log('Google Sign-In button rendered successfully');
+            } else {
+                // Fallback to prompt method
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed()) {
+                        console.log('Google Sign-In prompt not displayed');
+                        this.showAuthError('Google Sign-In not available');
+                    } else if (notification.isSkippedMoment()) {
+                        console.log('Google Sign-In prompt skipped');
+                        this.showAuthError('Google Sign-In was skipped');
+                    } else if (notification.isDismissedMoment()) {
+                        console.log('Google Sign-In prompt dismissed');
+                        // User dismissed the prompt, no action needed
+                    } else if (notification.isDisplayed()) {
+                        console.log('Google Sign-In prompt displayed');
+                    }
+                });
+            }
         } catch (error) {
             console.error('Failed to trigger modal Google Sign-In:', error);
             this.showAuthError('Failed to start Google Sign-In');

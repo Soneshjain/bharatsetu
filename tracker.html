@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BharatSetu Project Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            text-align: center;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+        
+        .progress-fill.danger {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+        
+        .progress-text {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .task-item.completed {
+            border-left-color: #27ae60;
+            background: #d5f4e6;
+        }
+        
+        .task-item.in-progress {
+            border-left-color: #f39c12;
+            background: #fef9e7;
+        }
+        
+        .task-item.pending {
+            border-left-color: #e74c3c;
+            background: #fdf2f2;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .task-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-completed {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .status-in-progress {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .status-pending {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .task-description {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .scheme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .scheme-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .scheme-card.completed {
+            border-left-color: #27ae60;
+            background: #d5f4e6;
+        }
+        
+        .scheme-card.pending {
+            border-left-color: #e74c3c;
+            background: #fdf2f2;
+        }
+        
+        .scheme-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .scheme-status {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+        
+        .priority-high {
+            border-left-color: #e74c3c !important;
+        }
+        
+        .priority-medium {
+            border-left-color: #f39c12 !important;
+        }
+        
+        .priority-low {
+            border-left-color: #27ae60 !important;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🚀 BharatSetu Project Tracker</h1>
+            <p>Comprehensive tracking of MSME scheme implementation progress</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Project Status Overview -->
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>Database Implementation</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 24%"></div>
+                </div>
+                <div class="progress-text">24% Complete - 6/25 schemes in database</div>
+            </div>
+            
+            <div class="status-card">
+                <h3>Scheme Pages</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 24%"></div>
+                </div>
+                <div class="progress-text">24% Complete - 6/25 schemes have pages</div>
+            </div>
+            
+            <div class="status-card">
+                <h3>Form Implementation</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 24%"></div>
+                </div>
+                <div class="progress-text">24% Complete - 6/25 schemes have forms</div>
+            </div>
+            
+            <div class="status-card">
+                <h3>API Development</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 80%"></div>
+                </div>
+                <div class="progress-text">80% Complete - Core endpoints ready</div>
+            </div>
+        </div>
+
+        <!-- Current Status -->
+        <div class="section">
+            <h2>📊 Current Project Status</h2>
+            <div class="task-list">
+                <div class="task-item completed">
+                    <div class="task-header">
+                        <span class="task-title">Database Schema Design</span>
+                        <span class="task-status status-completed">Completed</span>
+                    </div>
+                    <div class="task-description">SQLite database with schemes, documents, forms, and applications tables</div>
+                </div>
+                
+                <div class="task-item completed">
+                    <div class="task-header">
+                        <span class="task-title">6 Haryana Schemes Implementation</span>
+                        <span class="task-status status-completed">Completed</span>
+                    </div>
+                    <div class="task-description">ICT Promotion, SME Exchange Equity, Lean Manufacturing, Mini-SFURTI, Electricity Duty Reimbursement, Stamp Duty Refund</div>
+                </div>
+                
+                <div class="task-item completed">
+                    <div class="task-header">
+                        <span class="task-title">Stamp Duty Refund Scheme</span>
+                        <span class="task-status status-completed">Completed</span>
+                    </div>
+                    <div class="task-description">Database entry, page creation, form fields, and frontend integration complete</div>
+                </div>
+                
+                <div class="task-item pending">
+                    <div class="task-header">
+                        <span class="task-title">Form Submission Integration</span>
+                        <span class="task-status status-pending">Pending</span>
+                    </div>
+                    <div class="task-description">Connect frontend forms to backend API for actual submissions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheme Implementation Status -->
+        <div class="section">
+            <h2>📋 Scheme Implementation Status</h2>
+            <div class="scheme-grid">
+                <div class="scheme-card completed">
+                    <div class="scheme-name">ICT Promotion Scheme</div>
+                    <div class="scheme-status">✅ Database + Page + Forms Complete</div>
+                </div>
+                
+                <div class="scheme-card completed">
+                    <div class="scheme-name">SME Exchange Equity</div>
+                    <div class="scheme-status">✅ Database + Page + Forms Complete</div>
+                </div>
+                
+                <div class="scheme-card completed">
+                    <div class="scheme-name">Lean Manufacturing</div>
+                    <div class="scheme-status">✅ Database + Page + Forms Complete</div>
+                </div>
+                
+                <div class="scheme-card completed">
+                    <div class="scheme-name">Mini-SFURTI</div>
+                    <div class="scheme-status">✅ Database + Page + Forms Complete</div>
+                </div>
+                
+                <div class="scheme-card completed">
+                    <div class="scheme-name">Electricity Duty Reimbursement</div>
+                    <div class="scheme-status">✅ Database + Page + Forms Complete</div>
+                </div>
+                
+                <div class="scheme-card completed">
+                    <div class="scheme-name">Stamp Duty Refund</div>
+                    <div class="scheme-status">✅ Database + Page + Forms Complete</div>
+                </div>
+                <tr style="background: #d5f4e6;">
+                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Promoting Green and Sustainable Production</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                    <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">16</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">19</td>
+                    <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                    <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                    <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                </tr>
+            </div>
+        </div>
+
+        <!-- Missing Schemes - High Priority -->
+        <div class="section">
+            <h2>🚨 Missing Implementation - High Priority</h2>
+            <p class="section-subtitle">National MSME schemes that need database and form implementation</p>
+            <div class="scheme-grid">
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Testing & Measuring Equipment</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Zero Defect Zero Effect</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Technology Adoption</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Quality Certifications</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Productivity Improvement</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Barcode Implementation</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Patent Filing</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Design Centre</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Exhibition Support</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">SME Exchange Support</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Missing Schemes - Medium Priority -->
+        <div class="section">
+            <h2>⚠️ Missing Implementation - Medium Priority</h2>
+            <p class="section-subtitle">Haryana schemes that need database and form implementation</p>
+            <div class="scheme-grid">
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Power Tariff Subsidy</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Haryana Startup Policy</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+                
+                <div class="scheme-card pending">
+                    <div class="scheme-name">Padma Cluster</div>
+                    <div class="scheme-status">❌ Page Only - Need Database & Forms</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Immediate To-Do List -->
+        <div class="section">
+            <h2>🎯 Immediate To-Do List</h2>
+            <div class="task-list">
+                <div class="task-item completed">
+                    <div class="task-header">
+                        <span class="task-title">Complete Stamp Duty Refund Scheme</span>
+                        <span class="task-status status-completed">Completed</span>
+                    </div>
+                    <div class="task-description">
+                        ✅ Add required documents to database<br>
+                        ✅ Create stamp-duty-refund.html page<br>
+                        ✅ Add form fields (9 fields as specified)<br>
+                        ✅ Update index.html to include new scheme card
+                    </div>
+                </div>
+                
+                <div class="task-item pending priority-high">
+                    <div class="task-header">
+                        <span class="task-title">Form Submission Backend</span>
+                        <span class="task-status status-pending">High Priority</span>
+                    </div>
+                    <div class="task-description">
+                        - Create API endpoint for form submissions<br>
+                        - Add form validation on backend<br>
+                        - Connect frontend forms to API<br>
+                        - Add file upload handling for documents
+                    </div>
+                </div>
+                
+                <div class="task-item pending priority-medium">
+                    <div class="task-header">
+                        <span class="task-title">User Authentication Integration</span>
+                        <span class="task-status status-pending">Medium Priority</span>
+                    </div>
+                    <div class="task-description">
+                        - Connect Google OAuth to form submissions<br>
+                        - Add user profile management<br>
+                        - Implement application tracking<br>
+                        - Add user dashboard functionality
+                    </div>
+                </div>
+                
+                <div class="task-item pending priority-medium">
+                    <div class="task-header">
+                        <span class="task-title">Email Notifications</span>
+                        <span class="task-status status-pending">Medium Priority</span>
+                    </div>
+                    <div class="task-description">
+                        - Set up email service for application confirmations<br>
+                        - Add status update notifications<br>
+                        - Implement reminder emails for incomplete applications
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Debt & Improvements -->
+        <div class="section">
+            <h2>🔧 Technical Debt & Improvements</h2>
+            <div class="task-list">
+                <div class="task-item pending priority-low">
+                    <div class="task-header">
+                        <span class="task-title">Code Optimization</span>
+                        <span class="task-status status-pending">Low Priority</span>
+                    </div>
+                    <div class="task-description">
+                        - Refactor duplicate CSS styles<br>
+                        - Optimize JavaScript functions<br>
+                        - Add error handling and logging<br>
+                        - Implement proper loading states
+                    </div>
+                </div>
+                
+                <div class="task-item pending priority-low">
+                    <div class="task-header">
+                        <span class="task-title">SEO & Performance</span>
+                        <span class="task-status status-pending">Low Priority</span>
+                    </div>
+                    <div class="task-description">
+                        - Add meta descriptions for all pages<br>
+                        - Optimize images and assets<br>
+                        - Implement caching strategies<br>
+                        - Add structured data for better SEO
+                    </div>
+                </div>
+                
+                <div class="task-item pending priority-low">
+                    <div class="task-header">
+                        <span class="task-title">Testing & Quality Assurance</span>
+                        <span class="task-status status-pending">Low Priority</span>
+                    </div>
+                    <div class="task-description">
+                        - Add unit tests for API endpoints<br>
+                        - Implement integration tests<br>
+                        - Add form validation tests<br>
+                        - Cross-browser compatibility testing
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Structure Overview -->
+        <div class="section">
+            <h2>📁 Current File Structure</h2>
+            <div class="task-list">
+                <div class="task-item completed">
+                    <div class="task-header">
+                        <span class="task-title">Database Files</span>
+                        <span class="task-status status-completed">Complete</span>
+                    </div>
+                    <div class="task-description">
+                        ✅ database/seed-schemes.js<br>
+                        ✅ init-database.js<br>
+                        ✅ server/scheme-api.js
+                    </div>
+                </div>
+                
+                <div class="task-item completed">
+                    <div class="task-header">
+                        <span class="task-title">Scheme Pages</span>
+                        <span class="task-status status-completed">6/6 Complete</span>
+                    </div>
+                    <div class="task-description">
+                        ✅ schemes/ict-promotion-scheme.html<br>
+                        ✅ schemes/sme-exchange-equity.html<br>
+                        ✅ schemes/lean-manufacturing-competitiveness.html<br>
+                        ✅ schemes/mini-sfurti.html<br>
+                        ✅ schemes/electricity-duty-reimbursement.html<br>
+                        ✅ schemes/stamp-duty-refund.html
+                    </div>
+                </div>
+                
+                <div class="task-item completed">
+                    <div class="task-header">
+                        <span class="task-title">Core Files</span>
+                        <span class="task-status status-completed">Complete</span>
+                    </div>
+                    <div class="task-description">
+                        ✅ index.html (updated with new schemes)<br>
+                        ✅ server.js (API integration)<br>
+                        ✅ package.json (scripts updated)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheme Inventory Table -->
+        <div class="section">
+            <h2>📊 Complete Scheme Inventory (25 Total Schemes)</h2>
+            <div class="table-container" style="overflow-x: auto; margin-top: 20px;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Scheme Name</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">National/State</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Landing Page</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Attachments</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Form Fields</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Application Flow</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Database</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Haryana State Schemes - Complete -->
+                        <tr style="background: #d5f4e6;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">ICT Promotion Scheme</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">9</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">15</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                        </tr>
+                        <tr style="background: #d5f4e6;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">SME Exchange Equity</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">12</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">16</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                        </tr>
+                        <tr style="background: #d5f4e6;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Lean Manufacturing Competitiveness</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">6</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">11</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                        </tr>
+                        <tr style="background: #d5f4e6;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Mini-SFURTI</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">6</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">12</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                        </tr>
+                        <tr style="background: #d5f4e6;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Electricity Duty Reimbursement</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">8</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">13</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                        </tr>
+                        <tr style="background: #d5f4e6;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Stamp Duty Refund</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">6</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">9</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                        </tr>
+                        <tr style="background: #d5f4e6;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Promoting Green and Sustainable Production</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">16</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">19</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">Complete</td>
+                        </tr>
+                        
+                        <!-- Haryana State Schemes - Missing -->
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Power Tariff Subsidy</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Haryana Startup Policy</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Padma Cluster</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #27ae60;">✅ Yes</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        
+                        <!-- National Schemes - Missing -->
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">PMEGP</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-national">National</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">PMMY (Mudra)</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-national">National</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">CGTMSE</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-national">National</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">CLCSS</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-national">National</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">MSE-CDP</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-national">National</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">MSME Innovative Scheme</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-national">National</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">ZED Certification</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-national">National</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        
+                        <!-- Additional Haryana Schemes - Missing -->
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Investment Subsidy (SGST)</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Interest Subsidy</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Employment Generation</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Testing Equipment</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Technology Acquisition</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Patent Cost Reimbursement</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Quality Certification</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Environment Compliance</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Energy Conservation</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Water Conservation</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">HSJUY</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                        <tr style="background: #fdf2f2;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: 600;">Gramin Udyogik Vikas</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><span class="badge badge-haryana">Haryana</span></td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">0</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">❌ No</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; color: #e74c3c;">Missing</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary-grid" style="margin-top: 30px;">
+                <div class="summary-card priority-low">
+                    <h3>✅ Complete Schemes</h3>
+                    <p>7 Haryana schemes fully implemented</p>
+                </div>
+                <div class="summary-card priority-high">
+                    <h3>❌ Missing Implementation</h3>
+                    <p>18 schemes need full implementation</p>
+                </div>
+                <div class="summary-card">
+                    <h3>📊 Total Schemes</h3>
+                    <p>25 schemes identified (7 complete + 18 missing)</p>
+                </div>
+                <div class="summary-card">
+                    <h3>🎯 Implementation Rate</h3>
+                    <p>28% complete (7/25 schemes)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="last-updated">
+            Last Updated: December 2024 | Project Status: 28% Complete | 7/25 Schemes Fully Implemented | 25 Total Schemes Identified
+        </div>
+    </div>
+</body>
+</html> 

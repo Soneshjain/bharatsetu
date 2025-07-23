@@ -9,6 +9,9 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
+// Import scheme API routes
+const schemeApi = require('./server/scheme-api');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -60,6 +63,9 @@ app.use('/api/', limiter);
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
+
+// Mount scheme API routes
+app.use('/api/schemes', schemeApi);
 
 // Google OAuth client
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);

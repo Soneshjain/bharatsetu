@@ -1,305 +1,412 @@
-// Initialize Swiper carousels
-document.addEventListener('DOMContentLoaded', async function() {
-    // Initialize authentication
-    console.log('Checking for authService:', !!window.authService);
-    if (window.authService) {
-        console.log('AuthService found, initializing Google Auth...');
-        try {
-            await window.authService.initGoogleAuth();
+/* ===== BHARATSETU MAIN JAVASCRIPT ===== */
+/* Optimized main JavaScript using centralized utilities */
+
+// ===== NAVBAR SCROLL HANDLER =====
+const handleNavbarScroll = () => {
+    const navbar = $('.navbar');
+    if (!navbar) return;
+    
+    if (window.scrollY > 50) {
+        addClass(navbar, 'navbar--scrolled');
+        removeClass(navbar, 'navbar--transparent');
+    } else {
+        addClass(navbar, 'navbar--transparent');
+        removeClass(navbar, 'navbar--scrolled');
+    }
+};
+
+// ===== MOBILE MENU HANDLER =====
+const initMobileMenu = () => {
+    const hamburgerBtn = $('#hamburger-btn');
+    const mobileMenu = $('#mobile-menu');
+    const mobileLoginBtn = $('#mobile-login-btn');
+    const mobileLogoutBtn = $('#mobile-logout-btn');
+    
+    if (!hamburgerBtn || !mobileMenu) return;
+    
+    // Toggle mobile menu
+    hamburgerBtn.addEventListener('click', () => {
+        toggleClass(hamburgerBtn, 'active');
+        toggleClass(mobileMenu, 'active');
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!hamburgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+            removeClass(hamburgerBtn, 'active');
+            removeClass(mobileMenu, 'active');
+        }
+    });
+    
+    // Handle mobile login/logout
+    if (mobileLoginBtn) {
+        mobileLoginBtn.addEventListener('click', () => {
+            // Close mobile menu first
+            removeClass(hamburgerBtn, 'active');
+            removeClass(mobileMenu, 'active');
             
-            // Check if user is already authenticated
-            if (window.authService.isAuthenticated()) {
-                window.authService.updateUIForAuthenticatedUser();
-            } else {
-                window.authService.updateUIForUnauthenticatedUser();
-            }
-            
-            // Bind logout button
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    window.authService.logout();
-                });
-            }
-            
-            // Initialize auth flow
+            // Trigger Google Auth login flow
             if (window.authFlow) {
-                window.authFlow.updateApplyButtons();
-            }
-        } catch (error) {
-            console.error('Failed to initialize authentication:', error);
-        }
-    }
-    // State Schemes Swiper
-    const stateSwiper = new Swiper('.state-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.state-swiper .swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-            },
-            768: {
-                slidesPerView: 3,
-            },
-            1024: {
-                slidesPerView: 4,
-            },
-        }
-    });
-
-    // Sector Schemes Swiper
-    const sectorSwiper = new Swiper('.sector-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 3500,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.sector-swiper .swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-            },
-            768: {
-                slidesPerView: 3,
-            },
-            1024: {
-                slidesPerView: 4,
-            },
-        }
-    });
-
-    // Problem Focused Schemes Swiper
-    const problemSwiper = new Swiper('.problem-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: {
-            delay: 4000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.problem-swiper .swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-            },
-            768: {
-                slidesPerView: 3,
-            },
-            1024: {
-                slidesPerView: 4,
-            },
-        }
-    });
-
-    // Mobile Navigation Toggle
-    const navbarToggle = document.querySelector('.navbar__toggle');
-    const navbarMenu = document.querySelector('.navbar__menu');
-    
-    if (navbarToggle && navbarMenu) {
-        navbarToggle.addEventListener('click', function() {
-            navbarMenu.classList.toggle('active');
-            navbarToggle.classList.toggle('active');
-        });
-    }
-
-    // Smooth scrolling for navigation links
-    const navLinks = document.querySelectorAll('.navbar__link, .btn[href^="#"]');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            
-            // Skip if href is just '#'
-            if (targetId === '#' || !targetId) {
-                return;
-            }
-            
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                const offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
-                
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
+                window.authFlow.showAuthModal();
+            } else if (window.initiateLogin) {
+                window.initiateLogin();
+            } else {
+                // Fallback test login for demo
+                const testUserData = {
+                    name: 'Test User',
+                    email: 'test@example.com',
+                    picture: null
+                };
+                updateMobileMenuForAuth(true, testUserData);
             }
         });
-    });
-
-    // Form submission handling
-    const contactForm = document.querySelector('.contact__form');
+    }
     
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', () => {
+            // Close mobile menu first
+            removeClass(hamburgerBtn, 'active');
+            removeClass(mobileMenu, 'active');
             
-            // Get form data
-            const formData = new FormData(this);
-            const companyName = this.querySelector('input[type="text"]').value;
-            const email = this.querySelector('input[type="email"]').value;
-            const phone = this.querySelector('input[type="tel"]').value;
-            const service = this.querySelector('select').value;
-            const message = this.querySelector('textarea').value;
-            
-            // Basic validation
-            if (!companyName || !email || !phone || !service || !message) {
-                alert('Please fill in all required fields.');
-                return;
+            // Trigger Google Auth logout flow
+            if (window.authService) {
+                window.authService.logout();
+            } else if (window.logout) {
+                window.logout();
+            } else {
+                // Fallback test logout for demo
+                updateMobileMenuForAuth(false);
             }
-            
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address.');
-                return;
-            }
-            
-            // Phone validation
-            const phoneRegex = /^[0-9+\-\s()]+$/;
-            if (!phoneRegex.test(phone)) {
-                alert('Please enter a valid phone number.');
-                return;
-            }
-            
-            // Simulate form submission
-            const submitButton = this.querySelector('button[type="submit"]');
-            const originalText = submitButton.innerHTML;
-            
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-            submitButton.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                alert('Thank you! Your application has been submitted. We will contact you within 24 hours.');
-                this.reset();
-                submitButton.innerHTML = originalText;
-                submitButton.disabled = false;
-            }, 2000);
         });
     }
+};
 
-    // === Eligibility Checker Navigation ===
-    const eligibilityCta = document.getElementById('eligibility-cta');
+// ===== MOBILE MENU AUTH STATE UPDATER =====
+const updateMobileMenuForAuth = (isAuthenticated, userData = null) => {
+    const mobileUserPicture = $('#mobile-user-picture');
+    const mobileUserName = $('#mobile-user-name');
+    const mobileUserEmail = $('#mobile-user-email');
+    const mobileLoginBtn = $('#mobile-login-btn');
+    const mobileLogoutBtn = $('#mobile-logout-btn');
     
-    if (eligibilityCta) {
-        eligibilityCta.addEventListener('click', () => {
-            window.location.href = 'eligibility-check.html';
-        });
+    if (isAuthenticated && userData) {
+        // Update user info
+        if (mobileUserPicture) {
+            // If user has a picture, replace the icon with an image
+            if (userData.picture) {
+                mobileUserPicture.innerHTML = `<img src="${userData.picture}" alt="${userData.name || 'User'}" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">`;
+            } else {
+                mobileUserPicture.innerHTML = '<i class="fas fa-user"></i>';
+            }
+        }
+        
+        if (mobileUserName) {
+            mobileUserName.textContent = userData.name || 'User';
+        }
+        
+        if (mobileUserEmail) {
+            mobileUserEmail.textContent = userData.email || '';
+        }
+        
+        // Show logout, hide login
+        if (mobileLoginBtn) mobileLoginBtn.style.display = 'none';
+        if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'flex';
+        
+    } else {
+        // Reset to guest state
+        if (mobileUserPicture) {
+            mobileUserPicture.innerHTML = '<i class="fas fa-user"></i>';
+        }
+        
+        if (mobileUserName) {
+            mobileUserName.textContent = 'Guest';
+        }
+        
+        if (mobileUserEmail) {
+            mobileUserEmail.textContent = 'Not logged in';
+        }
+        
+        // Show login, hide logout
+        if (mobileLoginBtn) mobileLoginBtn.style.display = 'flex';
+        if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'none';
     }
+};
 
-
-
-    // Navbar scroll effect
-    const navbar = document.querySelector('.navbar');
-    
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 100) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+// ===== SMOOTH SCROLLING =====
+const initSmoothScrolling = () => {
+    addEventListeners('a[href^="#"]', 'click', (e) => {
+        e.preventDefault();
+        const target = $(e.target.getAttribute('href'));
+        if (target && window.BharatSetuUtils && window.BharatSetuUtils.scroll) {
+            window.BharatSetuUtils.scroll.to(target, 80);
         }
     });
+};
 
-    // Animate elements on scroll
+// ===== ANIMATION ON SCROLL =====
+const initScrollAnimations = () => {
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-
-    const observer = new IntersectionObserver(function(entries) {
+    
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
+                addClass(entry.target, 'animate-in');
             }
         });
     }, observerOptions);
-
-    // Observe elements for animation
-    const animateElements = document.querySelectorAll('.service-card, .problem-card, .success-card, .subsidy-card');
-    animateElements.forEach(el => observer.observe(el));
-
-    // Add loading animation
-    window.addEventListener('load', function() {
-        document.body.classList.add('loaded');
+    
+    // Observe elements with animation classes
+    $$('.problem-card, .consultant-card, .scheme-card, .service-card').forEach(el => {
+        observer.observe(el);
     });
+};
+
+// ===== FORM VALIDATION =====
+const initFormValidation = () => {
+    const forms = $$('form');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', (e) => {
+            const formData = window.BharatSetuUtils?.formUtils?.getFormData(form);
+            
+            // Basic validation rules
+            const rules = {
+                email: ['email'],
+                phone: ['phone'],
+                name: ['required', { validator: 'minLength', message: 'Name must be at least 2 characters', params: [2] }],
+                message: ['required', { validator: 'minLength', message: 'Message must be at least 10 characters', params: [10] }]
+            };
+            
+            const errors = window.BharatSetuUtils?.formUtils?.validateForm(form, rules);
+            
+            if (Object.keys(errors).length > 0) {
+                e.preventDefault();
+                window.BharatSetuUtils?.formUtils?.showFormErrors(form, errors);
+                return false;
+            }
+            
+            window.BharatSetuUtils?.formUtils?.clearFormErrors(form);
+        });
+        
+        // Real-time validation
+        form.querySelectorAll('input, textarea, select').forEach(field => {
+            field.addEventListener('blur', () => {
+                const fieldName = field.name;
+                if (!fieldName) return;
+                
+                const fieldRules = {
+                    email: ['email'],
+                    phone: ['phone'],
+                    name: ['required'],
+                    message: ['required']
+                };
+                
+                if (fieldRules[fieldName]) {
+                    const errors = window.BharatSetuUtils?.formUtils?.validateForm(form, { [fieldName]: fieldRules[fieldName] });
+                    if (errors[fieldName]) {
+                        window.BharatSetuUtils?.formUtils?.showFormErrors(form, errors);
+                    } else {
+                        window.BharatSetuUtils?.formUtils?.clearFormErrors(form);
+                    }
+                }
+            });
+        });
+    });
+};
+
+// ===== LAZY LOADING =====
+const initLazyLoading = () => {
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    $$('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+};
+
+// ===== PERFORMANCE OPTIMIZATION =====
+const initPerformanceOptimizations = () => {
+    // Throttle scroll events
+    const throttledScrollHandler = throttle(handleNavbarScroll, 16);
+    window.addEventListener('scroll', throttledScrollHandler);
+    
+    // Debounce resize events
+    const debouncedResizeHandler = debounce(() => {
+        // Handle responsive layout changes
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            addClass(document.body, 'mobile-view');
+        } else {
+            removeClass(document.body, 'mobile-view');
+        }
+    }, 250);
+    
+    window.addEventListener('resize', debouncedResizeHandler);
+};
+
+// ===== ACCESSIBILITY IMPROVEMENTS =====
+const initAccessibility = () => {
+    // Skip to main content
+    const skipLink = document.createElement('a');
+    skipLink.href = '#main-content';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.className = 'skip-link';
+    document.body.insertBefore(skipLink, document.body.firstChild);
+    
+    // Keyboard navigation for mobile menu
+    const mobileMenu = $('#mobile-menu');
+    if (mobileMenu) {
+        const focusableElements = mobileMenu.querySelectorAll('a, button, input, textarea, select');
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        mobileMenu.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                if (e.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        });
+    }
+    
+    // ARIA labels for interactive elements
+    $$('button[aria-label], a[aria-label]').forEach(element => {
+        if (!element.getAttribute('aria-label')) {
+            const text = element.textContent.trim();
+            if (text) {
+                element.setAttribute('aria-label', text);
+            }
+        }
+    });
+};
+
+// ===== ERROR HANDLING =====
+const initErrorHandling = () => {
+    window.addEventListener('error', (e) => {
+        console.error('Global error:', e.error);
+        // Could send to error tracking service here
+    });
+    
+    window.addEventListener('unhandledrejection', (e) => {
+        console.error('Unhandled promise rejection:', e.reason);
+        // Could send to error tracking service here
+    });
+};
+
+// ===== ANALYTICS =====
+const initAnalytics = () => {
+    // Track page views
+    const trackPageView = () => {
+        if (typeof gtag !== 'undefined') {
+            gtag('config', 'GA_MEASUREMENT_ID', {
+                page_title: document.title,
+                page_location: window.location.href
+            });
+        }
+    };
+    
+    // Track events
+    const trackEvent = (eventName, parameters = {}) => {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', eventName, parameters);
+        }
+    };
+    
+    // Track form submissions
+    addEventListeners('form', 'submit', () => {
+        trackEvent('form_submit', {
+            form_name: 'contact_form',
+            page_location: window.location.pathname
+        });
+    });
+    
+    // Track button clicks
+    addEventListeners('.btn', 'click', (e) => {
+        const buttonText = e.target.textContent.trim();
+        trackEvent('button_click', {
+            button_text: buttonText,
+            page_location: window.location.pathname
+        });
+    });
+    
+    // Initial page view
+    trackPageView();
+};
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize all modules
+    initMobileMenu();
+    initSmoothScrolling();
+    initScrollAnimations();
+    initFormValidation();
+    initLazyLoading();
+    initPerformanceOptimizations();
+    initAccessibility();
+    initErrorHandling();
+    initAnalytics();
+    
+    // Initial navbar state
+    handleNavbarScroll();
+    
+    // Set initial mobile menu state (guest mode)
+    updateMobileMenuForAuth(false);
+    
+    // Listen for auth state changes
+    if (window.authService) {
+        // Update mobile menu when auth state changes
+        const originalOnAuthSuccess = window.authService.onAuthSuccess.bind(window.authService);
+        window.authService.onAuthSuccess = function(user) {
+            updateMobileMenuForAuth(true, user);
+            originalOnAuthSuccess.call(this, user);
+        };
+        
+        const originalOnLogout = window.authService.onLogout.bind(window.authService);
+        window.authService.onLogout = function() {
+            updateMobileMenuForAuth(false);
+            originalOnLogout.call(this);
+        };
+    }
+    
+    // Expose functions for external use
+    window.updateMobileMenuForAuth = updateMobileMenuForAuth;
+    window.handleNavbarScroll = handleNavbarScroll;
+    
+    console.log('BharatSetu main.js initialized successfully');
 });
 
-// Add CSS for animations
-const style = document.createElement('style');
-style.textContent = `
-    .navbar.scrolled {
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-    
-    .navbar__menu.active {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .navbar__toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-    
-    .navbar__toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-    
-    .navbar__toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
-    }
-    
-    .service-card, .problem-card, .success-card, .subsidy-card {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .service-card.animate-in, .problem-card.animate-in, .success-card.animate-in, .subsidy-card.animate-in {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    body:not(.loaded) {
-        opacity: 0;
-    }
-    
-    body.loaded {
-        opacity: 1;
-        transition: opacity 0.3s ease;
-    }
-    
-    @media (max-width: 768px) {
-        .navbar__menu {
-            display: none;
-        }
-    }
-`;
-document.head.appendChild(style); 
+// ===== EXPORT FOR MODULE USE =====
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        handleNavbarScroll,
+        initMobileMenu,
+        updateMobileMenuForAuth,
+        initSmoothScrolling,
+        initScrollAnimations,
+        initFormValidation,
+        initLazyLoading,
+        initPerformanceOptimizations,
+        initAccessibility,
+        initErrorHandling,
+        initAnalytics
+    };
+} 
