@@ -1,4 +1,112 @@
 // Company Form Management
+// Handles company registration and profile management
+
+// District-Block Mapping for Haryana (shared with eligibility questionnaire)
+const DISTRICT_BLOCK_MAPPING = {
+    'ambala': ['Ambala', 'Barara', 'Naraingarh'],
+    'bhiwani': ['Bhiwani', 'Tosham', 'Siwani', 'Loharu'],
+    'charkhi-dadri': ['Charkhi Dadri', 'Badhra', 'Bawani Khera'],
+    'faridabad': ['Faridabad', 'Ballabgarh', 'Badkhal'],
+    'fatehabad': ['Fatehabad', 'Ratia', 'Tohana', 'Jakhal'],
+    'gurugram': ['Gurugram', 'Pataudi', 'Sohna', 'Farrukhnagar'],
+    'hisar': ['Hisar', 'Adampur', 'Narnaund', 'Hansi'],
+    'jhajjar': ['Jhajjar', 'Beri', 'Matanhail'],
+    'jind': ['Jind', 'Narwana', 'Julana', 'Safidon'],
+    'kaithal': ['Kaithal', 'Guhla', 'Kalayat'],
+    'karnal': ['Karnal', 'Gharaunda', 'Nilokheri', 'Indri'],
+    'kurukshetra': ['Kurukshetra', 'Ladwa', 'Pehowa', 'Shahbad'],
+    'mahendragarh': ['Mahendragarh', 'Narnaul', 'Ateli', 'Kanina'],
+    'mewat': ['Mewat', 'Nuh', 'Firozpur Jhirka', 'Punahana'],
+    'palwal': ['Palwal', 'Hodal', 'Hathin'],
+    'panchkula': ['Panchkula', 'Kalka', 'Pinjore'],
+    'panipat': ['Panipat', 'Samalkha', 'Israna'],
+    'rewari': ['Rewari', 'Bawal', 'Jatusana'],
+    'rohtak': ['Rohtak', 'Sampla', 'Lakhanmajra'],
+    'sirsa': ['Sirsa', 'Ellenabad', 'Dabwali', 'Rania'],
+    'sonipat': ['Sonipat', 'Gohana', 'Kharkhauda', 'Ganaur'],
+    'yamunanagar': ['Yamunanagar', 'Jagadhri', 'Chhachhrauli', 'Bilaspur']
+};
+
+// Block Category Mapping for Haryana
+const BLOCK_CATEGORY_MAPPING = {
+    // Block A (Most developed areas)
+    'gurugram': 'A',
+    'faridabad': 'A',
+    'panchkula': 'A',
+    'panipat': 'A',
+    'sonipat': 'A',
+    'rohtak': 'A',
+    
+    // Block B (Moderately developed areas)
+    'ambala': 'B',
+    'karnal': 'B',
+    'hisar': 'B',
+    'jind': 'B',
+    'kaithal': 'B',
+    'kurukshetra': 'B',
+    'rewari': 'B',
+    'bhiwani': 'B',
+    'jhajjar': 'B',
+    'palwal': 'B',
+    'mahendragarh': 'B',
+    
+    // Block C (Less developed areas)
+    'fatehabad': 'C',
+    'sirsa': 'C',
+    'yamunanagar': 'C',
+    'charkhi-dadri': 'C',
+    
+    // Block D (Least developed areas)
+    'mewat': 'D'
+};
+
+// Function to get block category based on district
+function getBlockCategory(district) {
+    return BLOCK_CATEGORY_MAPPING[district] || 'B'; // Default to B if not found
+}
+
+// Make the function globally available
+window.getBlockCategory = getBlockCategory;
+
+// Function to update blocks based on selected district
+function updateBlocks() {
+    const districtSelect = document.getElementById('district');
+    const blockSelect = document.getElementById('block');
+    
+    console.log('updateBlocks function called (company form)');
+    console.log('District select element:', districtSelect);
+    console.log('Block select element:', blockSelect);
+    
+    if (!districtSelect || !blockSelect) {
+        console.error('District or Block select elements not found');
+        return;
+    }
+    
+    const selectedDistrict = districtSelect.value;
+    console.log('Selected district:', selectedDistrict);
+    
+    // Clear existing options
+    blockSelect.innerHTML = '<option value="">Select Block</option>';
+    
+    if (selectedDistrict && DISTRICT_BLOCK_MAPPING[selectedDistrict]) {
+        // Add blocks for the selected district
+        DISTRICT_BLOCK_MAPPING[selectedDistrict].forEach(block => {
+            const option = document.createElement('option');
+            option.value = block.toLowerCase().replace(/\s+/g, '-');
+            option.textContent = block;
+            blockSelect.appendChild(option);
+        });
+        
+        console.log(`Updated blocks for district: ${selectedDistrict}`);
+        console.log('Available blocks:', DISTRICT_BLOCK_MAPPING[selectedDistrict]);
+    } else {
+        console.log('No blocks found for district:', selectedDistrict);
+    }
+}
+
+// Make the function globally available
+window.updateBlocks = updateBlocks;
+
 class CompanyForm {
     constructor() {
         this.authService = window.authService;
@@ -64,8 +172,8 @@ class CompanyForm {
                 sector: formData['primary-sector'],
                 district: formData['district'],
                 block: formData['block'],
-                block_category: this.getBlockCategory(formData['district'], formData['block']),
-                commercial_production_date: formData['commercial-production-date'],
+                block_category: getBlockCategory(formData['district']),
+                commercial_production_date: formData['commercial-production-month'],
                 electricity_connection_date: formData['electricity-connection-date'] || null,
                 project_type: formData['project-type'],
                 land_investment: parseFloat(formData['land-investment']) || 0,
@@ -123,7 +231,7 @@ class CompanyForm {
             'primary-sector',
             'district',
             'block',
-            'commercial-production-date',
+            'commercial-production-month',
             'project-type',
             'land-investment',
             'machinery-investment',
@@ -147,12 +255,6 @@ class CompanyForm {
         }
 
         return true;
-    }
-
-    getBlockCategory(district, block) {
-        // This would need to be implemented based on your district-block mapping
-        // For now, return a default value
-        return 'B';
     }
 
     showSuccess(message) {

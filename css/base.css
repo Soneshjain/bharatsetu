@@ -138,6 +138,7 @@ html {
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
 body {
@@ -147,6 +148,8 @@ body {
     color: var(--gray-900);
     background-color: var(--white);
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
 }
 
 /* ===== TYPOGRAPHY SYSTEM (21px Grid) ===== */

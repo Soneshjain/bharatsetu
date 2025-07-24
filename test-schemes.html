@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheme Test Cases - Bharat Setu</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .test-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .test-header p {
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .test-case {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+        }
+        
+        .test-case h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .test-scenario {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .test-scenario h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .field-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .field-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .field-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .field-value {
+            color: #28a745;
+            font-weight: 500;
+        }
+        
+        .expected-outcomes {
+            background: #e8f5e8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .expected-outcomes h4 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        .outcome-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid #28a745;
+        }
+        
+        .scheme-name {
+            font-weight: 600;
+            color: #155724;
+        }
+        
+        .benefit-amount {
+            color: #28a745;
+            font-weight: 500;
+        }
+        
+        .test-roadmap {
+            background: #fff3cd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .test-roadmap h4 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .roadmap-step {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ffc107;
+        }
+        
+        .step-number {
+            font-weight: 600;
+            color: #856404;
+        }
+        
+        .copy-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .copy-btn:hover {
+            background: #5a6268;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar__content">
+            <div class="navbar__left">
+                <a href="index.html" class="navbar__logo">
+                    <img src="assets/images/logo.png" alt="Bharat Setu" class="navbar__logo-img">
+                    <span class="navbar__logo-text">Bharat Setu</span>
+                </a>
+            </div>
+            <div class="navbar__right">
+                <button id="hamburger-btn" class="navbar__hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu__header">
+            <img src="assets/images/logo.png" alt="Bharat Setu" class="mobile-menu__logo">
+            <span class="mobile-menu__title">Bharat Setu</span>
+            <button id="close-menu-btn" class="mobile-menu__close">&times;</button>
+        </div>
+        <div class="mobile-menu__content">
+            <a href="index.html" class="mobile-menu__link">Home</a>
+            <a href="eligibility-check.html" class="mobile-menu__link">Check Eligibility</a>
+            <a href="dashboard.html" class="mobile-menu__link">Dashboard</a>
+            <div id="mobile-auth-section" class="mobile-menu__auth hidden">
+                <div class="mobile-menu__user-info">
+                    <img id="mobile-user-picture" src="" alt="Profile" class="mobile-menu__user-picture">
+                    <div class="mobile-menu__user-details">
+                        <span id="mobile-user-name" class="mobile-menu__user-name"></span>
+                        <span id="mobile-user-email" class="mobile-menu__user-email"></span>
+                    </div>
+                </div>
+                <button id="mobile-signout-btn" class="mobile-menu__signout">Sign Out</button>
+            </div>
+            <div id="mobile-login-section" class="mobile-menu__login">
+                <button id="mobile-login-btn" class="mobile-menu__login-btn">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="test-container">
+            <div class="test-header">
+                <h1>Scheme Eligibility Test Cases</h1>
+                <p>Generate random test scenarios to validate the eligibility calculator</p>
+            </div>
+
+            <button id="generate-test-btn" class="generate-btn">Generate a Random Test Case</button>
+
+            <div id="test-results"></div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="js/auth-service.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/eligibility-engine.js"></script>
+    
+    <script>
+        class TestCaseGenerator {
+            constructor() {
+                this.districts = [
+                    'ambala', 'bhiwani', 'charkhi-dadri', 'faridabad', 'fatehabad',
+                    'gurugram', 'hisar', 'jhajjar', 'jind', 'kaithal', 'karnal',
+                    'kurukshetra', 'mahendragarh', 'mewat', 'palwal', 'panchkula',
+                    'panipat', 'rewari', 'rohtak', 'sirsa', 'sonipat', 'yamunanagar'
+                ];
+                
+                this.sectors = [
+                    'textile', 'food-processing', 'renewable-energy', 'ict',
+                    'traditional', 'general', 'other'
+                ];
+                
+                this.promoterCategories = [
+                    'sc', 'st', 'obc', 'general', 'women', 'differently-abled'
+                ];
+                
+                this.startupStatuses = ['yes', 'no', 'applied'];
+                
+                this.testScenarios = [
+                    {
+                        name: "High-Value Manufacturing Unit",
+                        description: "Large manufacturing unit with significant investment",
+                        probability: 0.2
+                    },
+                    {
+                        name: "Startup with DPIIT Recognition",
+                        description: "New startup with government recognition",
+                        probability: 0.15
+                    },
+                    {
+                        name: "SC/ST Promoter Unit",
+                        description: "Unit promoted by SC/ST entrepreneur",
+                        probability: 0.15
+                    },
+                    {
+                        name: "Women Entrepreneur Unit",
+                        description: "Unit promoted by women entrepreneur",
+                        probability: 0.15
+                    },
+                    {
+                        name: "Technology Upgradation Unit",
+                        description: "Existing unit upgrading technology",
+                        probability: 0.15
+                    },
+                    {
+                        name: "Export-Oriented Unit",
+                        description: "Unit focused on exports",
+                        probability: 0.1
+                    },
+                    {
+                        name: "Rural Area Unit",
+                        description: "Unit located in rural area (Block C/D)",
+                        probability: 0.1
+                    }
+                ];
+            }
+
+            generateRandomTestCase() {
+                const scenario = this.selectRandomScenario();
+                const testCase = this.generateTestCaseData(scenario);
+                const roadmap = this.generateTestRoadmap(testCase);
+                
+                return {
+                    scenario: scenario,
+                    data: testCase,
+                    roadmap: roadmap
+                };
+            }
+
+            selectRandomScenario() {
+                const random = Math.random();
+                let cumulative = 0;
+                
+                for (const scenario of this.testScenarios) {
+                    cumulative += scenario.probability;
+                    if (random <= cumulative) {
+                        return scenario;
+                    }
+                }
+                
+                return this.testScenarios[0]; // Fallback
+            }
+
+            generateTestCaseData(scenario) {
+                const district = this.getRandomItem(this.districts);
+                const block = this.generateBlockForDistrict(district);
+                const blockCategory = this.getBlockCategory(block);
+                
+                const baseData = {
+                    // Basic Information
+                    commercial_production_date: this.generateRandomDate(2020, 2024),
+                    electricity_connection_date: this.generateRandomDate(2020, 2024),
+                    
+                    // Location
+                    district: district,
+                    block: block,
+                    block_category: blockCategory,
+                    
+                    // Sector
+                    primary_sector: this.getRandomItem(this.sectors),
+                    
+                    // Project Information
+                    project_type: Math.random() > 0.5 ? 'new' : 'upgrading',
+                    land_investment: this.generateRandomAmount(5, 50), // 5-50 Lakhs
+                    machinery_investment: this.generateRandomAmount(10, 100), // 10-100 Lakhs
+                    total_project_cost: 0, // Will be calculated
+                    land_purchase_years: Math.floor(Math.random() * 10) + 1,
+                    interest_rate: this.generateRandomAmount(8, 15), // 8-15%
+                    requires_listing: Math.random() > 0.8 ? true : false, // 20% chance
+                    
+                    // Financial Details
+                    annual_turnover: this.generateRandomAmount(20, 200), // 20-200 Lakhs
+                    export_turnover: this.generateRandomAmount(0, 50), // 0-50 Lakhs
+                    connected_load: this.generateRandomAmount(10, 40), // 10-40 KW
+                    annual_electricity_consumption: this.generateRandomAmount(50000, 200000), // 50K-200K units
+                    technology_equipment_cost: this.generateRandomAmount(5, 30), // 5-30 Lakhs
+                    marketing_export_expenses: this.generateRandomAmount(2, 15), // 2-15 Lakhs
+                    testing_equipment_cost: this.generateRandomAmount(1, 8), // 1-8 Lakhs
+                    quality_certification_cost: this.generateRandomAmount(1, 5), // 1-5 Lakhs
+                    
+                    // Employee Information
+                    total_employees: Math.floor(Math.random() * 50) + 5, // 5-55 employees
+                    sc_st_employees: 0,
+                    women_employees: 0,
+                    
+                    // Additional Information
+                    promoter_category: this.getRandomItem(this.promoterCategories),
+                    startup_status: this.getRandomItem(this.startupStatuses)
+                };
+                
+                // Calculate total project cost
+                baseData.total_project_cost = baseData.land_investment + baseData.machinery_investment + 
+                                           this.generateRandomAmount(5, 20); // Additional costs
+                
+                // Adjust based on scenario
+                this.adjustDataForScenario(baseData, scenario);
+                
+                return baseData;
+            }
+
+            adjustDataForScenario(data, scenario) {
+                switch (scenario.name) {
+                    case "High-Value Manufacturing Unit":
+                        data.total_project_cost = this.generateRandomAmount(100, 500); // 100-500 Lakhs
+                        data.annual_turnover = this.generateRandomAmount(200, 1000); // 200-1000 Lakhs
+                        data.total_employees = Math.floor(Math.random() * 100) + 50; // 50-150 employees
+                        break;
+                        
+                    case "Startup with DPIIT Recognition":
+                        data.startup_status = 'yes';
+                        data.project_type = 'new';
+                        data.total_project_cost = this.generateRandomAmount(20, 100); // 20-100 Lakhs
+                        data.commercial_production_date = this.generateRandomDate(2023, 2024);
+                        break;
+                        
+                    case "SC/ST Promoter Unit":
+                        data.promoter_category = Math.random() > 0.5 ? 'sc' : 'st';
+                        data.sc_st_employees = Math.floor(data.total_employees * 0.3); // 30% SC/ST employees
+                        break;
+                        
+                    case "Women Entrepreneur Unit":
+                        data.promoter_category = 'women';
+                        data.women_employees = Math.floor(data.total_employees * 0.4); // 40% women employees
+                        break;
+                        
+                    case "Technology Upgradation Unit":
+                        data.project_type = 'upgrading';
+                        data.technology_equipment_cost = this.generateRandomAmount(20, 80); // 20-80 Lakhs
+                        data.commercial_production_date = this.generateRandomDate(2018, 2022);
+                        break;
+                        
+                    case "Export-Oriented Unit":
+                        data.export_turnover = this.generateRandomAmount(30, 150); // 30-150 Lakhs
+                        data.marketing_export_expenses = this.generateRandomAmount(10, 30); // 10-30 Lakhs
+                        break;
+                        
+                    case "Rural Area Unit":
+                        // Force rural blocks (C/D category)
+                        const ruralDistricts = ['fatehabad', 'sirsa', 'jind', 'kaithal', 'mewat'];
+                        data.district = this.getRandomItem(ruralDistricts);
+                        data.block = this.generateBlockForDistrict(data.district);
+                        data.block_category = this.getBlockCategory(data.block);
+                        break;
+                }
+            }
+
+            generateTestRoadmap(testCase) {
+                const roadmap = [];
+                
+                // Step 1: Basic Eligibility Check
+                roadmap.push({
+                    step: 1,
+                    title: "Basic Eligibility Validation",
+                    description: "Check if unit meets basic MSME criteria and location requirements",
+                    expectedSchemes: ["Basic MSME Support", "PADMA schemes (if applicable)"]
+                });
+                
+                // Step 2: Category-Based Schemes
+                if (testCase.promoter_category === 'sc' || testCase.promoter_category === 'st') {
+                    roadmap.push({
+                        step: 2,
+                        title: "SC/ST Promoter Benefits",
+                        description: "Enhanced subsidies for SC/ST promoters",
+                        expectedSchemes: ["PADMA Capital Investment (35% subsidy)", "Employment Generation (SC/ST rates)"]
+                    });
+                }
+                
+                if (testCase.promoter_category === 'women') {
+                    roadmap.push({
+                        step: 2,
+                        title: "Women Entrepreneur Benefits",
+                        description: "Enhanced subsidies for women entrepreneurs",
+                        expectedSchemes: ["PADMA Capital Investment (35% subsidy)", "Women Employment schemes"]
+                    });
+                }
+                
+                // Step 3: Project Type Based
+                if (testCase.project_type === 'new') {
+                    roadmap.push({
+                        step: 3,
+                        title: "New Unit Schemes",
+                        description: "Schemes for new manufacturing units",
+                        expectedSchemes: ["PMEGP", "Startup schemes", "PADMA Entrepreneurship"]
+                    });
+                } else {
+                    roadmap.push({
+                        step: 3,
+                        title: "Technology Upgradation",
+                        description: "Schemes for existing unit modernization",
+                        expectedSchemes: ["CLCSS", "Technology Acquisition", "Quality Certification"]
+                    });
+                }
+                
+                // Step 4: Investment-Based Schemes
+                if (testCase.total_project_cost > 50) { // More than 50 Lakhs
+                    roadmap.push({
+                        step: 4,
+                        title: "High Investment Benefits",
+                        description: "Schemes for units with significant investment",
+                        expectedSchemes: ["PADMA Capital Investment", "SGST Reimbursement"]
+                    });
+                }
+                
+                // Step 5: Sector-Specific Schemes
+                if (testCase.primary_sector === 'ict') {
+                    roadmap.push({
+                        step: 5,
+                        title: "ICT Sector Benefits",
+                        description: "Technology and ICT-specific schemes",
+                        expectedSchemes: ["ICT Promotion", "Cloud ERP reimbursement"]
+                    });
+                }
+                
+                if (testCase.primary_sector === 'renewable-energy') {
+                    roadmap.push({
+                        step: 5,
+                        title: "Renewable Energy Benefits",
+                        description: "Green energy and sustainability schemes",
+                        expectedSchemes: ["Renewable Energy Interest Subsidy", "Environment Compliance"]
+                    });
+                }
+                
+                // Step 6: Employment-Based Schemes
+                if (testCase.total_employees > 20) {
+                    roadmap.push({
+                        step: 6,
+                        title: "Employment Generation",
+                        description: "Benefits for employment generation",
+                        expectedSchemes: ["Employment Generation Scheme"]
+                    });
+                }
+                
+                // Step 7: Infrastructure Benefits
+                roadmap.push({
+                    step: 7,
+                    title: "Infrastructure Benefits",
+                    description: "Power and electricity-related schemes",
+                    expectedSchemes: ["Power Tariff Subsidy", "Electricity Duty Reimbursement"]
+                });
+                
+                // Step 8: Quality & Certification
+                if (testCase.quality_certification_cost > 0) {
+                    roadmap.push({
+                        step: 8,
+                        title: "Quality & Certification",
+                        description: "Quality improvement and certification schemes",
+                        expectedSchemes: ["Quality Certification", "Testing Equipment"]
+                    });
+                }
+                
+                // Step 9: Export & Marketing
+                if (testCase.export_turnover > 0) {
+                    roadmap.push({
+                        step: 9,
+                        title: "Export Promotion",
+                        description: "Export and marketing support schemes",
+                        expectedSchemes: ["PADMA Marketing", "Export Promotion"]
+                    });
+                }
+                
+                // Step 10: Startup Benefits
+                if (testCase.startup_status === 'yes') {
+                    roadmap.push({
+                        step: 10,
+                        title: "Startup Benefits",
+                        description: "DPIIT recognized startup schemes",
+                        expectedSchemes: ["Startup Policy schemes", "Innovation schemes"]
+                    });
+                }
+                
+                return roadmap;
+            }
+
+            // Helper methods
+            getRandomItem(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+
+            generateRandomAmount(min, max) {
+                return Math.round((Math.random() * (max - min) + min) * 100) / 100;
+            }
+
+            generateRandomDate(startYear, endYear) {
+                const year = Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
+                const month = Math.floor(Math.random() * 12) + 1;
+                const day = Math.floor(Math.random() * 28) + 1;
+                return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            }
+
+            generateBlockForDistrict(district) {
+                // Simplified block generation - in real implementation, use DISTRICT_BLOCK_MAPPING
+                const blocks = ['Block A', 'Block B', 'Block C', 'Block D'];
+                return this.getRandomItem(blocks);
+            }
+
+            getBlockCategory(block) {
+                if (block.includes('A')) return 'A';
+                if (block.includes('B')) return 'B';
+                if (block.includes('C')) return 'C';
+                if (block.includes('D')) return 'D';
+                return 'B'; // Default
+            }
+
+            formatAmount(amount) {
+                return `₹${amount}L`;
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-IN');
+            }
+
+            displayTestCase(testCase) {
+                const resultsDiv = document.getElementById('test-results');
+                
+                const html = `
+                    <div class="test-case">
+                        <h3>${testCase.scenario.name}</h3>
+                        <p><strong>Description:</strong> ${testCase.scenario.description}</p>
+                        
+                        <div class="test-scenario">
+                            <h4>Generated Test Data</h4>
+                            <div class="field-group">
+                                <div class="field-item">
+                                    <div class="field-label">District & Block</div>
+                                    <div class="field-value">${testCase.data.district} - ${testCase.data.block} (Category ${testCase.data.block_category})</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Primary Sector</div>
+                                    <div class="field-value">${testCase.data.primary_sector}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Project Type</div>
+                                    <div class="field-value">${testCase.data.project_type === 'new' ? 'New Unit' : 'Upgrading Unit'}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Total Project Cost</div>
+                                    <div class="field-value">${this.formatAmount(testCase.data.total_project_cost)}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Promoter Category</div>
+                                    <div class="field-value">${testCase.data.promoter_category.toUpperCase()}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Startup Status</div>
+                                    <div class="field-value">${testCase.data.startup_status === 'yes' ? 'DPIIT Recognized' : testCase.data.startup_status === 'applied' ? 'Applied' : 'No'}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Annual Turnover</div>
+                                    <div class="field-value">${this.formatAmount(testCase.data.annual_turnover)}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Total Employees</div>
+                                    <div class="field-value">${testCase.data.total_employees}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Technology Investment</div>
+                                    <div class="field-value">${this.formatAmount(testCase.data.technology_equipment_cost)}</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-label">Export Turnover</div>
+                                    <div class="field-value">${this.formatAmount(testCase.data.export_turnover)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="test-roadmap">
+                            <h4>Expected Test Roadmap</h4>
+                            ${testCase.roadmap.map(step => `
+                                <div class="roadmap-step">
+                                    <div class="step-number">Step ${step.step}: ${step.title}</div>
+                                    <div>${step.description}</div>
+                                    <div><strong>Expected Schemes:</strong> ${step.expectedSchemes.join(', ')}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="expected-outcomes">
+                            <h4>Expected Outcomes</h4>
+                            <div class="outcome-item">
+                                <span class="scheme-name">PADMA Capital Investment:</span>
+                                <span class="benefit-amount">${testCase.data.promoter_category === 'sc' || testCase.data.promoter_category === 'st' || testCase.data.promoter_category === 'women' ? '35% subsidy (max ₹35L)' : '25% subsidy (max ₹25L)'}</span>
+                            </div>
+                            <div class="outcome-item">
+                                <span class="scheme-name">Technology Acquisition:</span>
+                                <span class="benefit-amount">75% subsidy (max ₹50L)</span>
+                            </div>
+                            <div class="outcome-item">
+                                <span class="scheme-name">Employment Generation:</span>
+                                <span class="benefit-amount">₹30K-36K/year per employee (7 years)</span>
+                            </div>
+                            <div class="outcome-item">
+                                <span class="scheme-name">Power Tariff Subsidy:</span>
+                                <span class="benefit-amount">₹2/unit (max ₹24L)</span>
+                            </div>
+                            <div class="outcome-item">
+                                <span class="scheme-name">Quality Certification:</span>
+                                <span class="benefit-amount">75% reimbursement (max ₹5L)</span>
+                            </div>
+                        </div>
+                        
+                        <button class="copy-btn" onclick="copyTestData()">Copy Test Data to Clipboard</button>
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML = html;
+            }
+        }
+
+        // Initialize test generator
+        const testGenerator = new TestCaseGenerator();
+        
+        // Event listener for generate button
+        document.getElementById('generate-test-btn').addEventListener('click', function() {
+            const testCase = testGenerator.generateRandomTestCase();
+            testGenerator.displayTestCase(testCase);
+            
+            // Store test case data globally for copying
+            window.currentTestData = testCase.data;
+        });
+        
+        // Function to copy test data
+        function copyTestData() {
+            if (window.currentTestData) {
+                const dataString = JSON.stringify(window.currentTestData, null, 2);
+                navigator.clipboard.writeText(dataString).then(() => {
+                    alert('Test data copied to clipboard!');
+                }).catch(() => {
+                    alert('Failed to copy to clipboard');
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

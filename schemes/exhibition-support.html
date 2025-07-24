@@ -43,24 +43,56 @@
     <nav class="navbar">
         <div class="container">
             <div class="navbar__content">
-                <div class="navbar__logo">
-                    <a href="../index.html">
-                        <i class="fas fa-bridge"></i>
-                        <span class="navbar__logo-text">BharatSetu</span>
-                    </a>
-                </div>
-                <div class="navbar__cta">
-                    <!-- Authentication Section -->
-                    <div id="auth-section" style="display: none;">
-                        <div id="google-signin-button"></div>
+                <div class="navbar__left">
+                    <div class="navbar__logo">
+                        <a href="../index.html">
+                            <i class="fas fa-bridge"></i>
+                            <span class="navbar__logo-text">BharatSetu</span>
+                        </a>
                     </div>
+                </div>
+                
+                <div class="navbar__right">
+                    <!-- Apply Now Button -->
+                    <a href="../dashboard.html" class="btn btn--primary">Apply Now</a>
                     
-                    <!-- User Section -->
-                    <div id="user-section" style="display: none;">
-                        <div class="user-info">
-                            <img id="user-picture" class="user-picture" style="display: none;" alt="User">
-                            <span id="user-name"></span>
-                            <button id="logout-btn" class="btn btn--secondary">Logout</button>
+                    <!-- Hamburger Menu Button -->
+                    <button id="hamburger-btn" class="navbar__hamburger">
+                        <i class="fas fa-bars hamburger-icon"></i>
+                        <i class="fas fa-times close-icon"></i>
+                    </button>
+                    
+                    <!-- Mobile Menu Overlay -->
+                    <div id="mobile-menu" class="mobile-menu">
+                        <div class="mobile-menu__header">
+                            <div class="mobile-menu__user">
+                                <div id="mobile-user-picture" class="mobile-menu__user-pic">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="mobile-menu__user-info">
+                                    <span id="mobile-user-name">Guest</span>
+                                    <span id="mobile-user-email">Not logged in</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-menu__content">
+                            <a href="../dashboard.html" class="mobile-menu__item">
+                                <i class="fas fa-home"></i>
+                                Dashboard
+                            </a>
+                            <a href="../eligibility-check.html" class="mobile-menu__item">
+                                <i class="fas fa-check-circle"></i>
+                                Check Eligibility
+                            </a>
+                            <div class="mobile-menu__divider"></div>
+                            <button id="mobile-login-btn" class="mobile-menu__item mobile-menu__item--login">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login
+                            </button>
+                            <button id="mobile-logout-btn" class="mobile-menu__item mobile-menu__item--logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -273,6 +305,7 @@
     <!-- JavaScript -->
     <script src="../js/auth-service.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/main.js"></script>
     <script src="../js/scheme-detail.js"></script>
 </body>
 </html>
