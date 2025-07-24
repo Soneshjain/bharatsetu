@@ -120,8 +120,15 @@ class AuthFlow {
             const modal = document.getElementById('auth-modal');
             if (modal) modal.remove();
             
-            // Show success message instead of application form for now
-            this.showSuccessMessage();
+            // Wait a moment for authentication to complete, then show success
+            setTimeout(() => {
+                if (this.authService && this.authService.isAuthenticated()) {
+                    this.showSuccessMessage();
+                } else {
+                    console.log('Authentication not completed yet');
+                }
+            }, 1000);
+            
         } catch (error) {
             console.error('Modal sign-in failed:', error);
             this.showAuthError('Sign-in failed. Please try again.');
@@ -137,7 +144,7 @@ class AuthFlow {
                         background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
                         text-align: center; z-index: 10000;">
                 <h3 style="color: #10b981; margin-bottom: 15px;">✅ Login Successful!</h3>
-                <p style="color: #6b7280; margin-bottom: 20px;">You are now logged in as a test user.</p>
+                <p style="color: #6b7280; margin-bottom: 20px;">You are now logged in successfully!</p>
                 <button onclick="this.parentElement.remove()" 
                         style="background: #10b981; color: white; border: none; padding: 10px 20px; 
                                border-radius: 6px; cursor: pointer;">Close</button>
@@ -403,6 +410,48 @@ class AuthFlow {
         setTimeout(() => {
             errorDiv.remove();
         }, 5000);
+    }
+
+    showAuthModalForApply() {
+        this.showAuthModal();
+        
+        // Override the success callback to redirect to dashboard
+        const originalOnAuthSuccess = this.authService.onAuthSuccess;
+        this.authService.onAuthSuccess = (user) => {
+            console.log('Authentication successful for Apply Now, redirecting to dashboard');
+            
+            // Show success message
+            this.showSuccessMessage();
+            
+            // Redirect to dashboard after a short delay
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 2000);
+            
+            // Restore original callback
+            this.authService.onAuthSuccess = originalOnAuthSuccess;
+        };
+    }
+
+    showAuthModalForResults() {
+        this.showAuthModal();
+        
+        // Override the success callback to show results
+        const originalOnAuthSuccess = this.authService.onAuthSuccess;
+        this.authService.onAuthSuccess = (user) => {
+            console.log('Authentication successful for results, showing eligibility results');
+            
+            // Show success message
+            this.showSuccessMessage();
+            
+            // Show eligibility results (this will be handled by eligibility-check.html)
+            if (window.showEligibilityResults) {
+                window.showEligibilityResults();
+            }
+            
+            // Restore original callback
+            this.authService.onAuthSuccess = originalOnAuthSuccess;
+        };
     }
 }
 

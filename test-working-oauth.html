@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working Google OAuth Test - BharatSetu</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn { 
+            padding: 12px 24px; 
+            margin: 10px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px;
+        }
+        .btn-primary { 
+            background: #4285f4; 
+            color: white; 
+        }
+        .btn-secondary { 
+            background: #f1f1f1; 
+            color: #333; 
+        }
+        .status { 
+            padding: 15px; 
+            margin: 15px 0; 
+            border-radius: 5px; 
+            font-weight: bold;
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb;
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb;
+        }
+        .warning { 
+            background: #fff3cd; 
+            color: #856404; 
+            border: 1px solid #ffeaa7;
+        }
+        #google-signin-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Working Google OAuth Test</h1>
+        <h3>BharatSetu Authentication</h3>
+        
+        <div id="status" class="status"></div>
+        
+        <div>
+            <button class="btn btn-primary" onclick="initializeOAuth()">Initialize OAuth</button>
+            <button class="btn btn-secondary" onclick="clearStatus()">Clear Status</button>
+            <button class="btn btn-secondary" onclick="reloadPage()">Reload Page</button>
+        </div>
+        
+        <div id="google-signin-container"></div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // NEW BHARATSETU CREDENTIALS
+        const CLIENT_ID = '450190082724-3knmlhpjkog7gdktivlsa3gli1egc6jm.apps.googleusercontent.com';
+        let googleInitialized = false;
+        
+        function showStatus(message, type = 'success') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+        
+        function clearStatus() {
+            document.getElementById('status').textContent = '';
+            document.getElementById('status').className = 'status';
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        function reloadPage() {
+            window.location.reload();
+        }
+        
+        function initializeOAuth() {
+            showStatus('Initializing Google OAuth with new BharatSetu credentials...', 'warning');
+            
+            if (!window.google) {
+                showStatus('Google library not loaded. Loading now...', 'error');
+                loadGoogleLibrary();
+                return;
+            }
+            
+            if (!window.google.accounts) {
+                showStatus('Google accounts library not available. Please refresh the page.', 'error');
+                return;
+            }
+            
+            try {
+                // Clear any existing initialization
+                if (googleInitialized) {
+                    showStatus('Reinitializing Google OAuth...', 'warning');
+                }
+                
+                // Initialize with minimal configuration
+                google.accounts.id.initialize({
+                    client_id: CLIENT_ID,
+                    callback: handleCredentialResponse,
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+                
+                googleInitialized = true;
+                showStatus('✅ Google OAuth initialized successfully with new credentials', 'success');
+                
+                // Render button
+                renderGoogleButton();
+                
+            } catch (error) {
+                showStatus('❌ Failed to initialize Google OAuth: ' + error.message, 'error');
+                console.error('OAuth initialization error:', error);
+            }
+        }
+        
+        function renderGoogleButton() {
+            try {
+                const container = document.getElementById('google-signin-container');
+                if (!container) {
+                    showStatus('Container not found for Google button', 'error');
+                    return;
+                }
+                
+                // Clear container first
+                container.innerHTML = '';
+                
+                google.accounts.id.renderButton(container, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left'
+                });
+                
+                showStatus('✅ Google Sign-In button rendered successfully', 'success');
+                
+            } catch (error) {
+                showStatus('❌ Failed to render Google button: ' + error.message, 'error');
+                console.error('Button rendering error:', error);
+            }
+        }
+        
+        function loadGoogleLibrary() {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                showStatus('Google library loaded, initializing OAuth...', 'success');
+                setTimeout(initializeOAuth, 1000);
+            };
+            script.onerror = () => {
+                showStatus('Failed to load Google library', 'error');
+            };
+            document.head.appendChild(script);
+        }
+        
+        function handleCredentialResponse(response) {
+            try {
+                console.log('🎉 Google Sign-In Response:', response);
+                showStatus('🎉 Google Sign-In successful! Authentication working!', 'success');
+                
+                // Display response details
+                const results = document.getElementById('results');
+                results.innerHTML = `
+                    <h3>�� Sign-In Successful!</h3>
+                    <p><strong>✅ Credential:</strong> ${response.credential.substring(0, 50)}...</p>
+                    <p><strong>✅ Select By:</strong> ${response.select_by}</p>
+                    <p><strong>✅ Client ID:</strong> ${response.client_id}</p>
+                    <p><strong>✅ Status:</strong> Authentication working perfectly!</p>
+                `;
+                
+            } catch (error) {
+                showStatus('❌ Error handling sign-in response: ' + error.message, 'error');
+                console.error('Response handling error:', error);
+            }
+        }
+        
+        // Auto-initialize when page loads
+        window.addEventListener('load', function() {
+            showStatus('Page loaded, waiting for Google library...', 'warning');
+            
+            // Wait for Google library
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            const checkGoogle = setInterval(() => {
+                attempts++;
+                
+                if (window.google && window.google.accounts) {
+                    clearInterval(checkGoogle);
+                    showStatus('Google library detected, initializing...', 'success');
+                    setTimeout(initializeOAuth, 500);
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkGoogle);
+                    showStatus('Google library failed to load after ' + maxAttempts + ' attempts', 'error');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 
 // Security middleware
 app.use(helmet({
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],

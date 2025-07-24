@@ -11,6 +11,21 @@ class AuthService {
         this.initGoogleAuth().catch(error => {
             console.error('Failed to initialize Google Auth:', error);
         });
+        
+        // Check authentication state on page load
+        this.checkAuthStateOnLoad();
+    }
+
+    // Check authentication state when page loads
+    checkAuthStateOnLoad() {
+        console.log('Checking auth state on page load...');
+        if (this.isAuthenticated()) {
+            console.log('User is authenticated, updating UI...');
+            this.updateUIForAuthenticatedUser();
+        } else {
+            console.log('User is not authenticated, updating UI...');
+            this.updateUIForUnauthenticatedUser();
+        }
     }
 
     // Initialize Google OAuth
@@ -52,7 +67,7 @@ class AuthService {
             // Only initialize once
             if (!AuthService.googleInitialized) {
                 google.accounts.id.initialize({
-                    client_id: '314061526138-r8gk1vfcan1rm93p0otk93cvtmdcohev.apps.googleusercontent.com',
+                    client_id: '450190082724-3knmlhpjkog7gdktivlsa3gli1egc6jm.apps.googleusercontent.com',
                     callback: this.handleGoogleSignIn.bind(this),
                     auto_select: false,
                     cancel_on_tap_outside: true,
@@ -117,21 +132,15 @@ class AuthService {
             
             // Check if we have a credential
             if (!response.credential) {
-                console.log('No credential in response, creating mock user');
-                const mockUser = {
-                    sub: 'mock_user',
-                    email: 'user@example.com',
-                    name: 'Test User',
-                    picture: null
-                };
-                this.setAuthData('mock_token', mockUser);
-                this.onAuthSuccess(mockUser);
+                console.log('No credential in response - this is normal for cancelled sign-in');
+                // Don't create mock user - just return
                 return;
             }
             
             // Decode the JWT token to get user information
             const userInfo = this.decodeJwtToken(response.credential);
             console.log('Decoded user info:', userInfo);
+            console.log('Profile picture URL:', userInfo.picture);
             
             // Store the credential as the token
             this.setAuthData(response.credential, userInfo);
@@ -219,82 +228,57 @@ class AuthService {
             }
         });
 
-        if (response.status === 401) {
-            this.clearAuthData();
-            this.onAuthError(new Error('Session expired'));
-            throw new Error('Session expired');
-        }
-
         if (!response.ok) {
             throw new Error(`API call failed: ${response.statusText}`);
         }
 
-        return await response.json();
+        return response.json();
     }
 
-    // Get user profile
+    // API methods
     async getUserProfile() {
-        return await this.apiCall('/user/profile');
+        return this.apiCall('/user/profile');
     }
 
-    // Get user's companies
     async getCompanies() {
-        const response = await this.apiCall('/companies');
-        return response.companies || [];
+        return this.apiCall('/companies');
     }
 
-    // Create new company
     async createCompany(companyData) {
-        return await this.apiCall('/companies', {
+        return this.apiCall('/companies', {
             method: 'POST',
             body: JSON.stringify(companyData)
         });
     }
 
-    // Store eligibility test result
     async storeEligibilityTest(companyId, testData, results) {
-        return await this.apiCall('/eligibility-tests', {
+        return this.apiCall('/eligibility-tests', {
             method: 'POST',
-            body: JSON.stringify({
-                companyId,
-                testData,
-                results
-            })
+            body: JSON.stringify({ companyId, testData, results })
         });
     }
 
-    // Get eligibility test history
     async getEligibilityTests() {
-        const response = await this.apiCall('/eligibility-tests');
-        return response.tests || [];
+        return this.apiCall('/eligibility-tests');
     }
 
-    // Create scheme application
     async createApplication(companyId, schemeId, schemeName, documents) {
-        return await this.apiCall('/applications', {
+        return this.apiCall('/applications', {
             method: 'POST',
-            body: JSON.stringify({
-                companyId,
-                schemeId,
-                schemeName,
-                documents
-            })
+            body: JSON.stringify({ companyId, schemeId, schemeName, documents })
         });
     }
 
-    // Get applications
     async getApplications() {
-        const response = await this.apiCall('/applications');
-        return response.applications || [];
+        return this.apiCall('/applications');
     }
 
-    // Logout
     logout() {
+        console.log('Logging out user...');
         this.clearAuthData();
         this.onLogout();
     }
 
-    // Event handlers (can be overridden)
     onAuthSuccess(user) {
         console.log('Authentication successful:', user);
         // Update UI to show authenticated state
@@ -325,14 +309,7 @@ class AuthService {
 
     // UI update methods
     updateUIForAuthenticatedUser() {
-        const authSection = document.getElementById('auth-section');
-        const userSection = document.getElementById('user-section');
-        
-        if (authSection) authSection.style.display = 'none';
-        if (userSection) {
-            userSection.style.display = 'block';
-            this.updateUserInfo();
-        }
+        console.log('Updating UI for authenticated user:', this.user);
         
         // Update mobile menu for authenticated state
         if (typeof window.updateMobileMenuForAuth === 'function') {
@@ -341,11 +318,7 @@ class AuthService {
     }
 
     updateUIForUnauthenticatedUser() {
-        const authSection = document.getElementById('auth-section');
-        const userSection = document.getElementById('user-section');
-        
-        if (authSection) authSection.style.display = 'block';
-        if (userSection) userSection.style.display = 'none';
+        console.log('Updating UI for unauthenticated user');
         
         // Update mobile menu for guest state
         if (typeof window.updateMobileMenuForAuth === 'function') {
@@ -354,17 +327,53 @@ class AuthService {
     }
 
     updateUserInfo() {
-        if (!this.user) return;
+        if (!this.user) {
+            console.log('No user data available for UI update');
+            return;
+        }
 
-        const userNameElement = document.getElementById('user-name');
-        const userEmailElement = document.getElementById('user-email');
-        const userPictureElement = document.getElementById('user-picture');
+        console.log('Updating user info in UI:', this.user);
 
-        if (userNameElement) userNameElement.textContent = this.user.name;
-        if (userEmailElement) userEmailElement.textContent = this.user.email;
-        if (userPictureElement && this.user.picture) {
-            userPictureElement.src = this.user.picture;
-            userPictureElement.style.display = 'block';
+        // Update all possible user info elements
+        const userNameElements = document.querySelectorAll('#user-name, .user-name, [data-user-name]');
+        const userEmailElements = document.querySelectorAll('#user-email, .user-email, [data-user-email]');
+        const userPictureElements = document.querySelectorAll('#user-picture, .user-picture, [data-user-picture]');
+
+        // Update name
+        userNameElements.forEach(element => {
+            element.textContent = this.user.name || 'User';
+        });
+
+        // Update email
+        userEmailElements.forEach(element => {
+            element.textContent = this.user.email || '';
+        });
+
+        // Update profile picture
+        userPictureElements.forEach(element => {
+            if (this.user.picture) {
+                element.src = this.user.picture;
+                element.style.display = 'block';
+                element.onerror = () => {
+                    console.log('Failed to load profile picture, showing default');
+                    element.style.display = 'none';
+                };
+            } else {
+                console.log('No profile picture available');
+                element.style.display = 'none';
+            }
+        });
+
+        // Update mobile menu user info
+        const mobileUserName = document.getElementById('mobile-user-name');
+        const mobileUserEmail = document.getElementById('mobile-user-email');
+        const mobileUserPicture = document.getElementById('mobile-user-picture');
+
+        if (mobileUserName) mobileUserName.textContent = this.user.name || 'User';
+        if (mobileUserEmail) mobileUserEmail.textContent = this.user.email || '';
+        if (mobileUserPicture && this.user.picture) {
+            mobileUserPicture.src = this.user.picture;
+            mobileUserPicture.style.display = 'block';
         }
     }
 
@@ -375,6 +384,18 @@ class AuthService {
             errorElement = document.createElement('div');
             errorElement.id = 'auth-error';
             errorElement.className = 'auth-error';
+            errorElement.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #f8d7da;
+                color: #721c24;
+                padding: 15px;
+                border-radius: 5px;
+                border: 1px solid #f5c6cb;
+                z-index: 10000;
+                max-width: 300px;
+            `;
             document.body.appendChild(errorElement);
         }
         

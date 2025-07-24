@@ -51,13 +51,7 @@ const initMobileMenu = () => {
             } else if (window.initiateLogin) {
                 window.initiateLogin();
             } else {
-                // Fallback test login for demo
-                const testUserData = {
-                    name: 'Test User',
-                    email: 'test@example.com',
-                    picture: null
-                };
-                updateMobileMenuForAuth(true, testUserData);
+                console.log('No authentication service available');
             }
         });
     }
@@ -90,12 +84,16 @@ const updateMobileMenuForAuth = (isAuthenticated, userData = null) => {
     const mobileLogoutBtn = $('#mobile-logout-btn');
     
     if (isAuthenticated && userData) {
+        console.log('Updating mobile menu with user data:', userData);
+        
         // Update user info
         if (mobileUserPicture) {
             // If user has a picture, replace the icon with an image
             if (userData.picture) {
-                mobileUserPicture.innerHTML = `<img src="${userData.picture}" alt="${userData.name || 'User'}" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">`;
+                console.log('Setting profile picture:', userData.picture);
+                mobileUserPicture.innerHTML = `<img src="${userData.picture}" alt="${userData.name || 'User'}" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-user\\'></i>'; console.log('Profile picture failed to load');">`;
             } else {
+                console.log('No profile picture available, showing default icon');
                 mobileUserPicture.innerHTML = '<i class="fas fa-user"></i>';
             }
         }
@@ -113,6 +111,8 @@ const updateMobileMenuForAuth = (isAuthenticated, userData = null) => {
         if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'flex';
         
     } else {
+        console.log('Resetting mobile menu to guest state');
+        
         // Reset to guest state
         if (mobileUserPicture) {
             mobileUserPicture.innerHTML = '<i class="fas fa-user"></i>';
@@ -129,6 +129,19 @@ const updateMobileMenuForAuth = (isAuthenticated, userData = null) => {
         // Show login, hide logout
         if (mobileLoginBtn) mobileLoginBtn.style.display = 'flex';
         if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'none';
+    }
+};
+
+// ===== MOBILE MENU AUTH PERSISTENCE =====
+const initMobileMenuAuthPersistence = () => {
+    // Check authentication state on page load
+    if (window.authService && window.authService.isAuthenticated()) {
+        const userData = window.authService.getUserData();
+        console.log('Restoring mobile menu auth state:', userData);
+        updateMobileMenuForAuth(true, userData);
+    } else {
+        console.log('No authenticated user found');
+        updateMobileMenuForAuth(false);
     }
 };
 
@@ -262,7 +275,7 @@ const initAccessibility = () => {
     skipLink.href = '#main-content';
     skipLink.textContent = 'Skip to main content';
     skipLink.className = 'skip-link';
-    document.body.insertBefore(skipLink, document.body.firstChild);
+    // document.body.insertBefore(skipLink, document.body.firstChild);
     
     // Keyboard navigation for mobile menu
     const mobileMenu = $('#mobile-menu');
@@ -352,6 +365,62 @@ const initAnalytics = () => {
     trackPageView();
 };
 
+// ===== HERO BUTTON AUTHENTICATION FLOWS =====
+const initHeroButtonFlows = () => {
+    const applyNowBtn = document.querySelector('.hero__cta .btn--primary');
+    const eligibilityBtn = document.getElementById('eligibility-cta');
+    
+    // Apply Now Button - Requires login first
+    if (applyNowBtn) {
+        applyNowBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Check if user is authenticated
+            if (window.authService && window.authService.isAuthenticated()) {
+                // User is logged in, go directly to dashboard
+                window.location.href = 'dashboard.html';
+            } else {
+                // User not logged in, show auth modal
+                if (window.authFlow) {
+                    window.authFlow.showAuthModalForApply();
+                } else {
+                    console.log('Auth flow not available');
+                    // Fallback: redirect to dashboard (user will be prompted to login there)
+                    window.location.href = 'dashboard.html';
+                }
+            }
+        });
+    }
+    
+    // Check Eligibility Button - Go directly to eligibility check
+    if (eligibilityBtn) {
+        eligibilityBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Always go to eligibility check (login will be required for results)
+            window.location.href = 'eligibility-check.html';
+        });
+    }
+};
+
+// ===== ELIGIBILITY RESULTS AUTHENTICATION =====
+const initEligibilityResultsAuth = () => {
+    // This will be called on eligibility-check.html to require login for results
+    const requireLoginForResults = () => {
+        if (!window.authService || !window.authService.isAuthenticated()) {
+            // Show login prompt for results
+            if (window.authFlow) {
+                window.authFlow.showAuthModalForResults();
+            }
+            return false;
+        }
+        return true;
+    };
+    
+    // Make it globally available
+    window.requireLoginForResults = requireLoginForResults;
+};
+
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all modules
@@ -364,6 +433,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initAccessibility();
     initErrorHandling();
     initAnalytics();
+    initHeroButtonFlows();
+    initEligibilityResultsAuth();
     
     // Initial navbar state
     handleNavbarScroll();
@@ -391,6 +462,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.updateMobileMenuForAuth = updateMobileMenuForAuth;
     window.handleNavbarScroll = handleNavbarScroll;
     
+    // Call this when page loads
+    setTimeout(initMobileMenuAuthPersistence, 1000); // Wait for auth service to load
+    
     console.log('BharatSetu main.js initialized successfully');
 });
 
@@ -407,6 +481,8 @@ if (typeof module !== 'undefined' && module.exports) {
         initPerformanceOptimizations,
         initAccessibility,
         initErrorHandling,
-        initAnalytics
+        initAnalytics,
+        initHeroButtonFlows,
+        initEligibilityResultsAuth
     };
 } 

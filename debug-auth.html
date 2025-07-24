@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Authentication - BharatSetu</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .debug-section { 
+            background: #f5f5f5; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 5px;
+        }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .user-info { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin: 10px 0;
+        }
+        .user-picture { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%; 
+            margin-right: 10px;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug Authentication</h1>
+        
+        <div class="debug-section">
+            <h3>Authentication Status</h3>
+            <div id="auth-status" class="status info">Checking authentication...</div>
+            
+            <div id="auth-section">
+                <h4>Sign In</h4>
+                <div id="google-signin-button"></div>
+            </div>
+            
+            <div id="user-section" style="display: none;">
+                <h4>User Info</h4>
+                <div class="user-info">
+                    <img id="user-picture" class="user-picture" style="display: none;" alt="User">
+                    <div>
+                        <strong>Name:</strong> <span id="user-name">Loading...</span><br>
+                        <strong>Email:</strong> <span id="user-email">Loading...</span><br>
+                        <strong>Token:</strong> <span id="user-token">Loading...</span>
+                    </div>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="debug-section">
+            <h3>Debug Actions</h3>
+            <button onclick="checkAuthState()" class="btn btn-primary">Check Auth State</button>
+            <button onclick="clearStorage()" class="btn btn-secondary">Clear Storage</button>
+            <button onclick="showStorage()" class="btn btn-secondary">Show Storage</button>
+            <button onclick="refreshPage()" class="btn btn-secondary">Refresh Page</button>
+        </div>
+        
+        <div class="debug-section">
+            <h3>Console Log</h3>
+            <div id="console-log" style="background: #000; color: #0f0; padding: 10px; height: 200px; overflow-y: scroll; font-family: monospace;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Override console.log to capture logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function addToLog(message, type = 'log') {
+            const logDiv = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToLog(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToLog(args.join(' '), 'error');
+        };
+        
+        // Debug functions
+        function checkAuthState() {
+            const authService = window.authService;
+            if (authService) {
+                console.log('AuthService exists:', !!authService);
+                console.log('Is authenticated:', authService.isAuthenticated());
+                console.log('User data:', authService.getUserData());
+                console.log('Token:', authService.token);
+            } else {
+                console.log('AuthService not found');
+            }
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            sessionStorage.clear();
+            console.log('Storage cleared');
+            location.reload();
+        }
+        
+        function showStorage() {
+            console.log('localStorage:', Object.keys(localStorage));
+            console.log('sessionStorage:', Object.keys(sessionStorage));
+            for (let key in localStorage) {
+                console.log(`${key}:`, localStorage.getItem(key));
+            }
+        }
+        
+        function refreshPage() {
+            location.reload();
+        }
+        
+        // Update status display
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('auth-status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        // Wait for auth service to load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (window.authService) {
+                    console.log('AuthService loaded successfully');
+                    updateStatus('AuthService loaded', 'success');
+                    
+                    // Check initial state
+                    if (window.authService.isAuthenticated()) {
+                        console.log('User is authenticated on page load');
+                        updateStatus('User is authenticated', 'success');
+                        updateUserDisplay();
+                    } else {
+                        console.log('User is not authenticated on page load');
+                        updateStatus('User is not authenticated', 'info');
+                    }
+                } else {
+                    console.log('AuthService not found after page load');
+                    updateStatus('AuthService not found', 'error');
+                }
+            }, 2000);
+        });
+        
+        function updateUserDisplay() {
+            const authService = window.authService;
+            if (authService && authService.isAuthenticated()) {
+                const user = authService.getUserData();
+                console.log('Updating user display with:', user);
+                
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('user-section').style.display = 'block';
+                
+                document.getElementById('user-name').textContent = user.name || 'Unknown';
+                document.getElementById('user-email').textContent = user.email || 'No email';
+                document.getElementById('user-token').textContent = authService.token ? 'Present' : 'None';
+                
+                const userPicture = document.getElementById('user-picture');
+                if (user.picture) {
+                    userPicture.src = user.picture;
+                    userPicture.style.display = 'block';
+                    userPicture.onerror = () => {
+                        console.log('Failed to load profile picture');
+                        userPicture.style.display = 'none';
+                    };
+                } else {
+                    console.log('No profile picture available');
+                    userPicture.style.display = 'none';
+                }
+            } else {
+                document.getElementById('auth-section').style.display = 'block';
+                document.getElementById('user-section').style.display = 'none';
+            }
+        }
+        
+        // Override auth service methods for debugging
+        if (window.authService) {
+            const originalOnAuthSuccess = window.authService.onAuthSuccess;
+            window.authService.onAuthSuccess = function(user) {
+                console.log('🔐 AUTH SUCCESS CALLED with user:', user);
+                updateStatus('Authentication successful!', 'success');
+                updateUserDisplay();
+                if (originalOnAuthSuccess) {
+                    originalOnAuthSuccess.call(this, user);
+                }
+            };
+            
+            const originalOnLogout = window.authService.onLogout;
+            window.authService.onLogout = function() {
+                console.log('🔐 LOGOUT CALLED');
+                updateStatus('User logged out', 'info');
+                document.getElementById('auth-section').style.display = 'block';
+                document.getElementById('user-section').style.display = 'none';
+                if (originalOnLogout) {
+                    originalOnLogout.call(this);
+                }
+            };
+        }
+        
+        // Logout button handler
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            if (window.authService) {
+                window.authService.logout();
+            }
+        });
+    </script>
+    
+    <!-- Load auth service -->
+    <script src="js/auth-service.js"></script>
+</body>
+</html>

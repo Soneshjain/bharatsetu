@@ -16,7 +16,7 @@
     right: 0;
     z-index: var(--z-fixed);
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    /* backdrop-filter: blur(10px); */
     border-bottom: 1px solid var(--gray-200);
     transition: all var(--transition-normal);
 }
@@ -1075,3 +1075,35 @@
         transform: none;
     }
 } 
+
+/* User Info Styles */
+/* COMMENT OUT OR REMOVE THESE STYLES: */
+/*
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--golden-primary);
+}
+
+.user-picture {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.navbar--transparent .user-info {
+    color: var(--golden-primary);
+}
+
+.navbar--scrolled .user-info {
+    color: var(--golden-primary);
+}
+
+#logout-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    margin-left: 10px;
+}
+*/ 

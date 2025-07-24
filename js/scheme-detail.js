@@ -29,7 +29,7 @@ function initializeAuth() {
     // Initialize Google Sign-In
     if (typeof google !== 'undefined') {
         google.accounts.id.initialize({
-            client_id: '7895211541-abc123def456.apps.googleusercontent.com',
+                            client_id: '450190082724-3knmlhpjkog7gdktivlsa3gli1egc6jm.apps.googleusercontent.com',
             callback: handleCredentialResponse
         });
         
