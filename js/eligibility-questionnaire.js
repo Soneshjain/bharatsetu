@@ -132,6 +132,7 @@ window.applyForScheme = applyForScheme;
 
 class EligibilityQuestionnaire {
     constructor() {
+        console.log('EligibilityQuestionnaire constructor called');
         this.userData = {};
         this.engine = new EligibilityEngine();
         this.init();
@@ -162,13 +163,35 @@ class EligibilityQuestionnaire {
     }
 
     bindEvents() {
-        // Form submission
+        console.log('Binding events...');
+        
+        // Form submission - handle both form submit and button click
         const form = document.querySelector('.questionnaire-form');
+        const submitButton = document.querySelector('button[type="submit"]');
+        
+        console.log('Form found:', form);
+        console.log('Submit button found:', submitButton);
+        
         if (form) {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 this.submitQuestionnaire();
             });
+        }
+        
+        if (submitButton) {
+            console.log('Submit button found:', submitButton);
+            submitButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Submit button clicked');
+                
+                // TEMPORARY: Auto-fill form with test data for faster testing
+                this.fillTestData();
+                
+                this.submitQuestionnaire();
+            });
+        } else {
+            console.error('Submit button not found!');
         }
 
         // Land ownership conditional logic
@@ -274,6 +297,13 @@ class EligibilityQuestionnaire {
         inputs.forEach(input => {
             input.addEventListener('blur', () => this.validateField(input));
             input.addEventListener('input', () => this.clearFieldError(input));
+            
+            // Add radio button debugging
+            if (input.type === 'radio') {
+                input.addEventListener('change', (e) => {
+                    console.log('Radio button changed:', e.target.name, e.target.value, e.target.checked);
+                });
+            }
         });
     }
 
@@ -310,25 +340,12 @@ class EligibilityQuestionnaire {
     }
 
     showFieldError(field, message) {
-        // Remove existing error message
-        const existingError = field.parentNode.querySelector('.field-error');
-        if (existingError) {
-            existingError.remove();
-        }
-        
-        // Create error message
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'field-error error-message';
-        errorDiv.textContent = message;
-        field.parentNode.appendChild(errorDiv);
+        // Only add error class, no error message display
+        field.classList.add('error');
     }
 
     clearFieldError(field) {
         field.classList.remove('error');
-        const errorDiv = field.parentNode.querySelector('.field-error');
-        if (errorDiv) {
-            errorDiv.remove();
-        }
     }
 
     initAutoSave() {
@@ -337,11 +354,21 @@ class EligibilityQuestionnaire {
 
         // Auto-save form data to localStorage
         const saveFormData = () => {
-            const formData = new FormData(form);
+            // Manually collect form data since we're using divs, not forms
             const data = {};
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
-            }
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.name && input.value) {
+                    // For radio buttons, only save the checked one
+                    if (input.type === 'radio') {
+                        if (input.checked) {
+                            data[input.name] = input.value;
+                        }
+                    } else {
+                        data[input.name] = input.value;
+                    }
+                }
+            });
             localStorage.setItem('eligibilityFormData', JSON.stringify(data));
         };
 
@@ -369,6 +396,144 @@ class EligibilityQuestionnaire {
         
         // Load saved data on page load
         loadFormData();
+    }
+
+    // TEMPORARY: Auto-fill form with test data for faster testing
+    fillTestData() {
+        console.log('Filling form with test data...');
+        
+        const testData = {
+            // Company Information
+            'msme-registered': 'yes',
+            'company-name': 'Test Manufacturing Co. Ltd.',
+            'company-state': 'haryana',
+            'directors-partners': '3',
+            'women-directors-equity': 'yes',
+            'sc-st-directors-equity': 'yes',
+            'domestic-turnover-fy24-25': 'small',
+            'primary-sector': 'general',
+            'operational-manufacturing-units': '2',
+            'upcoming-manufacturing-units': '1',
+            'requires-listing': 'false',
+            'startup-status': 'yes',
+            
+            // Applicant Information
+            'applicant-name': 'Rajesh Kumar',
+            'applicant-role': 'director',
+            'applicant-phone': '9876543210',
+            
+            // Location Information
+            'district': 'kurukshetra',
+            'block': 'kurukshetra',
+            'commercial-production-month': '2025-03',
+            
+            // Project Information
+            'project-type': 'new',
+            'land-ownership': 'own',
+            'land-purchase-month': '2024-06',
+            'stamp-duty-paid': '2.5',
+            'land-investment': '15.0',
+            'machinery-investment': '25.0',
+            'total-project-cost': '50.0',
+            
+            // Financial & Operational Details
+            'interest-rate': '12.5',
+            'annual-turnover': '75.0',
+            'export-turnover': '15.0',
+            'connected-load': '45.0',
+            'annual-electricity-consumption': '50000',
+            
+            // FY25-26 Cost Details (all in Lakhs)
+            'domestic-exhibition-cost': '2.5',
+            'international-exhibition-cost': '8.0',
+            'international-airfare': '1.2',
+            'energy-audit-cost': '1.5',
+            'water-conservation-audit-cost': '1.0',
+            'energy-efficient-equipment-cost': '12.0',
+            'quality-certification-cost': '3.5',
+            'erp-implementation-cost': '8.0',
+            'testing-measuring-equipment-cost': '6.0',
+            'barcoding-implementation-cost': '2.0',
+            'international-patent-filing-cost': '15.0',
+            'national-patent-filing-cost': '5.0',
+            'copyright-trademark-filing-cost': '2.5',
+            'haryana-domicile-employees': '25',
+            'apprentices': '8',
+            'safety-audit-cost': '1.5',
+            'safety-equipment-cost': '3.0',
+            'etp-plant-cost': '20.0',
+            'rooftop-solar-cost': '12.0',
+            'zero-liquid-discharge-cost': '35.0',
+            'equity-investment': '75.0',
+            'branding-marketing-cost': '18.0'
+        };
+        
+        // Fill all form fields
+        Object.keys(testData).forEach(fieldName => {
+            const field = document.querySelector(`[name="${fieldName}"]`);
+            if (field) {
+                if (field.type === 'radio') {
+                    // For radio buttons, find the correct option and check it
+                    const radioOption = document.querySelector(`[name="${fieldName}"][value="${testData[fieldName]}"]`);
+                    if (radioOption) {
+                        radioOption.checked = true;
+                        radioOption.dispatchEvent(new Event('change'));
+                    }
+                } else {
+                    // For other fields, set the value
+                    field.value = testData[fieldName];
+                    field.dispatchEvent(new Event('change'));
+                }
+            }
+        });
+        
+        // Trigger any conditional logic
+        setTimeout(() => {
+            // Trigger project type change to show land ownership
+            const projectTypeSelect = document.getElementById('project-type');
+            if (projectTypeSelect) {
+                projectTypeSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Trigger district change to populate blocks
+            const districtSelect = document.getElementById('district');
+            if (districtSelect) {
+                districtSelect.dispatchEvent(new Event('change'));
+            }
+            
+            // Set block value after a delay to ensure dropdown is populated
+            setTimeout(() => {
+                const blockSelect = document.getElementById('block');
+                console.log('Setting block value, options length:', blockSelect?.options?.length);
+                if (blockSelect && blockSelect.options.length > 1) {
+                    // Find the option with value 'Kurukshetra'
+                    for (let i = 0; i < blockSelect.options.length; i++) {
+                        console.log('Option', i, ':', blockSelect.options[i].value);
+                        if (blockSelect.options[i].value === 'kurukshetra') {
+                            blockSelect.selectedIndex = i;
+                            blockSelect.dispatchEvent(new Event('change'));
+                            console.log('Block value set to Kurukshetra');
+                            break;
+                        }
+                    }
+                }
+                
+                // Set land ownership after project type change (for new projects)
+                setTimeout(() => {
+                    const landOwnershipSection = document.getElementById('land-ownership-section');
+                    if (landOwnershipSection && landOwnershipSection.style.display !== 'none') {
+                        const ownLandRadio = document.querySelector('input[name="land-ownership"][value="own"]');
+                        if (ownLandRadio) {
+                            ownLandRadio.checked = true;
+                            ownLandRadio.dispatchEvent(new Event('change'));
+                            console.log('Land ownership set to own');
+                        }
+                    }
+                }, 100);
+            }, 300);
+        }, 100);
+        
+        console.log('Test data filled successfully!');
     }
 
     validateForm() {
@@ -471,12 +636,25 @@ class EligibilityQuestionnaire {
         console.log('Benefits:', benefits);
         
         // Display results
+        console.log('About to display results...');
         this.displayResults(results, benefits);
+        console.log('Results displayed successfully');
     }
 
     convertToEngineFormat(userData) {
         // Convert form data to the format expected by the eligibility engine
         const engineData = {
+            // Company information
+            msme_registered: userData['msme-registered'] === 'yes',
+            company_name: userData['company-name'],
+            company_state: userData['company-state'],
+            directors_partners: parseInt(userData['directors-partners']) || 0,
+            women_directors_equity: userData['women-directors-equity'] === 'yes',
+            sc_st_directors_equity: userData['sc-st-directors-equity'] === 'yes',
+            domestic_turnover_fy24_25: userData['domestic-turnover-fy24-25'],
+            operational_manufacturing_units: parseInt(userData['operational-manufacturing-units']) || 1,
+            upcoming_manufacturing_units: parseInt(userData['upcoming-manufacturing-units']) || 0,
+            
             // Basic information
             commercial_production_date: userData['commercial-production-month'],
             electricity_connection_date: userData['electricity-connection-date'],
@@ -489,14 +667,14 @@ class EligibilityQuestionnaire {
             // Project details - Convert Lakhs to Cr for engine compatibility
             project_type: userData['project-type'],
             land_ownership: userData['land-ownership'],
-            land_investment: parseFloat(userData['land-investment']) || 0,
-            machinery_investment: parseFloat(userData['machinery-investment']) || 0,
-            total_project_cost: parseFloat(userData['total-project-cost']) || 0,
+            land_investment: (parseFloat(userData['land-investment']) || 0) / 100, // Convert Lakhs to Cr
+            machinery_investment: (parseFloat(userData['machinery-investment']) || 0) / 100, // Convert Lakhs to Cr
+            total_project_cost: (parseFloat(userData['total-project-cost']) || 0) / 100, // Convert Lakhs to Cr
             
             // Land-specific details
             land_purchase_month: userData['land-purchase-month'],
-            stamp_duty_paid: parseFloat(userData['stamp-duty-paid']) || 0,
-            monthly_rent: parseFloat(userData['monthly-rent']) || 0,
+            stamp_duty_paid: (parseFloat(userData['stamp-duty-paid']) || 0) / 100, // Convert Lakhs to Cr
+            monthly_rent: (parseFloat(userData['monthly-rent']) || 0) / 100, // Convert Lakhs to Cr
             
             // Financial details - Convert Lakhs to Cr for engine compatibility
             has_term_loan: false, // Removed from form, default to false
@@ -510,20 +688,28 @@ class EligibilityQuestionnaire {
             annual_electricity_consumption: parseInt(userData['annual-electricity-consumption']) || 0,
             
             // FY25-26 Cost details - Convert Lakhs to Cr for engine compatibility
-            domestic_exhibition_cost: parseFloat(userData['domestic-exhibition-cost']) || 0,
-            international_exhibition_cost: parseFloat(userData['international-exhibition-cost']) || 0,
-            international_airfare: parseFloat(userData['international-airfare']) || 0,
-            energy_audit_cost: parseFloat(userData['energy-audit-cost']) || 0,
-            water_conservation_audit_cost: parseFloat(userData['water-conservation-audit-cost']) || 0,
-            energy_efficient_equipment_cost: parseFloat(userData['energy-efficient-equipment-cost']) || 0,
-            quality_certification_cost: parseFloat(userData['quality-certification-cost']) || 0,
-            erp_implementation_cost: parseFloat(userData['erp-implementation-cost']) || 0,
-            testing_measuring_equipment_cost: parseFloat(userData['testing-measuring-equipment-cost']) || 0,
-            barcoding_implementation_cost: parseFloat(userData['barcoding-implementation-cost']) || 0,
-            international_patent_filing_cost: parseFloat(userData['international-patent-filing-cost']) || 0,
-            national_patent_filing_cost: parseFloat(userData['national-patent-filing-cost']) || 0,
-            copyright_trademark_filing_cost: parseFloat(userData['copyright-trademark-filing-cost']) || 0,
+            domestic_exhibition_cost: (parseFloat(userData['domestic-exhibition-cost']) || 0) / 100, // Convert Lakhs to Cr
+            international_exhibition_cost: (parseFloat(userData['international-exhibition-cost']) || 0) / 100, // Convert Lakhs to Cr
+            international_airfare: (parseFloat(userData['international-airfare']) || 0) / 100, // Convert Lakhs to Cr
+            energy_audit_cost: (parseFloat(userData['energy-audit-cost']) || 0) / 100, // Convert Lakhs to Cr
+            water_conservation_audit_cost: (parseFloat(userData['water-conservation-audit-cost']) || 0) / 100, // Convert Lakhs to Cr
+            energy_efficient_equipment_cost: (parseFloat(userData['energy-efficient-equipment-cost']) || 0) / 100, // Convert Lakhs to Cr
+            quality_certification_cost: (parseFloat(userData['quality-certification-cost']) || 0) / 100, // Convert Lakhs to Cr
+            erp_implementation_cost: (parseFloat(userData['erp-implementation-cost']) || 0) / 100, // Convert Lakhs to Cr
+            testing_measuring_equipment_cost: (parseFloat(userData['testing-measuring-equipment-cost']) || 0) / 100, // Convert Lakhs to Cr
+            barcoding_implementation_cost: (parseFloat(userData['barcoding-implementation-cost']) || 0) / 100, // Convert Lakhs to Cr
+            international_patent_filing_cost: (parseFloat(userData['international-patent-filing-cost']) || 0) / 100, // Convert Lakhs to Cr
+            national_patent_filing_cost: (parseFloat(userData['national-patent-filing-cost']) || 0) / 100, // Convert Lakhs to Cr
+            copyright_trademark_filing_cost: (parseFloat(userData['copyright-trademark-filing-cost']) || 0) / 100, // Convert Lakhs to Cr
             haryana_domicile_employees: parseInt(userData['haryana-domicile-employees']) || 0,
+            apprentices: parseInt(userData['apprentices']) || 0,
+            safety_audit_cost: (parseFloat(userData['safety-audit-cost']) || 0) / 100, // Convert Lakhs to Cr
+            safety_equipment_cost: (parseFloat(userData['safety-equipment-cost']) || 0) / 100, // Convert Lakhs to Cr
+            etp_plant_cost: (parseFloat(userData['etp-plant-cost']) || 0) / 100, // Convert Lakhs to Cr
+            rooftop_solar_cost: (parseFloat(userData['rooftop-solar-cost']) || 0) / 100, // Convert Lakhs to Cr
+            zero_liquid_discharge_cost: (parseFloat(userData['zero-liquid-discharge-cost']) || 0) / 100, // Convert Lakhs to Cr
+            equity_investment: (parseFloat(userData['equity-investment']) || 0) / 100, // Convert Lakhs to Cr
+            branding_marketing_cost: (parseFloat(userData['branding-marketing-cost']) || 0) / 100, // Convert Lakhs to Cr
             
             // Employee information
             total_employees: parseInt(userData['total-employees']) || 0,
@@ -644,58 +830,78 @@ class EligibilityQuestionnaire {
     }
 
     displayResults(results, benefits) {
-        const resultsContainer = document.getElementById('eligibility-results');
-        if (!resultsContainer) {
-            console.error('Results container not found');
-            return;
-        }
-
-        // Show results container
-        resultsContainer.style.display = 'block';
-
-        // Calculate total benefits
-        const totalBenefits = benefits.total_value || 0;
-
-        // Create results HTML
-        let resultsHTML = `
-            <div class="results-summary">
-                <h4>Eligibility Summary</h4>
-                <p>You are eligible for <strong>${results.total_eligible}</strong> out of <strong>${results.total_schemes}</strong> schemes</p>
-                <p class="total-benefit">Total potential benefits: <strong>₹${totalBenefits.toLocaleString()}</strong></p>
-            </div>
-        `;
-
-        // Add eligible schemes
-        if (results.eligible_schemes && results.eligible_schemes.length > 0) {
-            resultsHTML += '<div class="eligible-schemes"><h4>Eligible Schemes:</h4>';
-            
-            results.eligible_schemes.forEach((eligibleScheme, index) => {
-                const benefit = benefits.benefits_breakdown[index] || { 
-                    scheme_name: eligibleScheme.scheme.name,
-                    benefit_description: 'Benefit calculation pending',
-                    estimated_value: 0
-                };
-                
-                resultsHTML += `
-                    <div class="scheme-result">
-                        <h5>${eligibleScheme.scheme.name}</h5>
-                        <p><strong>Benefit:</strong> ₹${benefit.estimated_value.toLocaleString()}</p>
-                        <p><strong>Description:</strong> ${benefit.benefit_description}</p>
-                        <p><strong>Documents Required:</strong> ${eligibleScheme.documents ? eligibleScheme.documents.join(', ') : 'Standard documents'}</p>
-                        <button onclick="applyForScheme('${eligibleScheme.scheme.id}')" class="btn btn--primary">Apply Now</button>
-                    </div>
-                `;
-            });
-            
-            resultsHTML += '</div>';
-        } else {
-            resultsHTML += '<p>No eligible schemes found for your current profile. Please check your inputs or contact us for guidance.</p>';
-        }
-
-        resultsContainer.innerHTML = resultsHTML;
+        console.log('displayResults called with:', results, benefits);
         
-        // Scroll to results
-        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        // Store results data in localStorage for the new page
+        const resultsData = {
+            total_eligible: results.total_eligible,
+            total_schemes: results.total_schemes,
+            total_benefits: benefits.total_value || 0,
+            eligible_schemes: results.eligible_schemes.map((eligibleScheme, index) => {
+                const benefit = benefits.benefits_breakdown[index];
+                
+                // Extract benefit information
+                let benefitDescription = 'Benefit calculation pending';
+                let estimatedValue = 0;
+                
+                if (benefit) {
+                    estimatedValue = benefit.value || 0;
+                    benefitDescription = benefit.description || 'Benefit calculation pending';
+                }
+                
+                // Format the benefit description to be more user-friendly
+                if (benefitDescription.includes('subsidy')) {
+                    benefitDescription = benefitDescription.replace('subsidy', 'subsidy');
+                } else if (benefitDescription.includes('Standard subsidy')) {
+                    benefitDescription = 'Standard government subsidy';
+                }
+                
+                // Calculate expense declaration based on scheme type
+                let expenseDeclaration = 0;
+                if (benefitDescription.includes('50% refund') || benefitDescription.includes('50% subsidy')) {
+                    expenseDeclaration = Math.round(estimatedValue / 0.5);
+                } else if (benefitDescription.includes('75% refund') || benefitDescription.includes('75% subsidy')) {
+                    expenseDeclaration = Math.round(estimatedValue / 0.75);
+                } else if (benefitDescription.includes('80% reimbursement')) {
+                    expenseDeclaration = Math.round(estimatedValue / 0.8);
+                } else if (benefitDescription.includes('30% subsidy')) {
+                    expenseDeclaration = Math.round(estimatedValue / 0.3);
+                } else if (benefitDescription.includes('6% PA interest')) {
+                    expenseDeclaration = estimatedValue * 5; // 5 years of interest
+                } else if (benefitDescription.includes('Full refund') || benefitDescription.includes('Full reimbursement')) {
+                    expenseDeclaration = estimatedValue;
+                } else if (benefitDescription.includes('₹4,000/pm') || benefitDescription.includes('per employee') || benefitDescription.includes('per apprentice')) {
+                    expenseDeclaration = 0; // No expense declaration for employment subsidies
+                } else if (benefitDescription.includes('Up to ₹') && !benefitDescription.includes('subsidy')) {
+                    expenseDeclaration = estimatedValue; // For fixed amounts, expense = benefit
+                } else {
+                    expenseDeclaration = estimatedValue; // Default to benefit amount
+                }
+                
+                return {
+                    scheme_name: eligibleScheme.scheme.name,
+                    benefit_description: benefitDescription,
+                    estimated_value: estimatedValue,
+                    expense_declaration: expenseDeclaration,
+                    your_eligibility: `₹${estimatedValue.toLocaleString()}`
+                };
+            }),
+            eligibility_criteria: [
+                "MSME Registration required",
+                "Unit must be located in Haryana",
+                "Commercial production within specified timeline",
+                "Valid Udyam certificate",
+                "Bank account in Haryana",
+                "CA certificate for financial documents",
+                "Project report for investment schemes",
+                "Land ownership documents (if applicable)"
+            ]
+        };
+        
+        localStorage.setItem('eligibilityResults', JSON.stringify(resultsData));
+        
+        // Redirect to the new results page
+        window.location.href = 'eligibility-results.html';
     }
 }
 

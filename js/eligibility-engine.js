@@ -356,8 +356,8 @@ class EligibilityEngine {
                 documents: ["Application Form", "Technology Agreement", "CA Certificate", "Utilization Certificate"]
             },
             {
-                id: "patent_cost_reimbursement",
-                name: "Patent Cost Reimbursement",
+                id: "domestic_patent_subsidy",
+                name: "Domestic Patents Subsidy",
                 category: "intellectual_property",
                 eligibility: {
                     enterprise_type: ["micro", "small", "medium"],
@@ -366,8 +366,24 @@ class EligibilityEngine {
                     requires_hum: true
                 },
                 benefits: {
-                    subsidy: "100% reimbursement of patent registration costs",
-                    max_amount: "₹25L for domestic and international patents"
+                    subsidy: "50% assistance for domestic patent filing",
+                    max_amount: "₹10L"
+                },
+                documents: ["Application Form", "Patent Registration Certificate", "CA Certificate", "Expense Details"]
+            },
+            {
+                id: "international_patent_subsidy",
+                name: "International Patents Subsidy",
+                category: "intellectual_property",
+                eligibility: {
+                    enterprise_type: ["micro", "small", "medium"],
+                    block_categories: ["a", "b", "c", "d"],
+                    requires_urc: true,
+                    requires_hum: true
+                },
+                benefits: {
+                    subsidy: "50% assistance for international patent filing",
+                    max_amount: "₹25L"
                 },
                 documents: ["Application Form", "Patent Registration Certificate", "CA Certificate", "Expense Details"]
             },
@@ -877,273 +893,171 @@ class EligibilityEngine {
             let schemeValue = 0;
             let benefitDescription = "";
 
-            // Calculate based on block category
-            if (scheme.benefits[userData.block_category.toLowerCase()]) {
-                benefitDescription = scheme.benefits[userData.block_category.toLowerCase()];
-                // Extract numeric values (simplified calculation)
-                const numericMatch = benefitDescription.match(/INR\s*(\d+(?:\.\d+)?)\s*(?:Cr|L|Lakh)/i);
-                if (numericMatch) {
-                    const value = parseFloat(numericMatch[1]);
-                    const unit = numericMatch[0].includes('Cr') ? 10000000 : 
-                               numericMatch[0].includes('L') ? 100000 : 100000;
-                    schemeValue = value * unit;
-                }
-            } else if (scheme.benefits.subsidy) {
-                benefitDescription = scheme.benefits.subsidy;
-                // Handle specific schemes
-                if (scheme.name.includes('SME Exchange')) {
-                    schemeValue = 500000; // Fixed amount for SME Exchange
-                    benefitDescription = "20% of expenditure (max ₹5L)";
-                } else if (scheme.name.includes('Technology Acquisition')) {
-                    // Technology acquisition is handled in the detailed calculations below
-                    schemeValue = 0; // Let it be calculated in the detailed section
-                } else if (scheme.name.includes('Quality Certification')) {
-                    // Quality certification is handled in the detailed calculations below
-                    schemeValue = 0; // Let it be calculated in the detailed section
-                } else {
-                    // For other schemes, don't use generic calculation
-                    schemeValue = 0; // Let it be calculated in the detailed section
-                }
-            } else if (scheme.benefits.max_amount) {
-                benefitDescription = scheme.benefits.subsidy || scheme.benefits.max_amount;
-                // Extract numeric values from max_amount
-                const numericMatch = scheme.benefits.max_amount.match(/INR\s*(\d+(?:\.\d+)?)\s*(?:Cr|L|Lakh)/i);
-                if (numericMatch) {
-                    const value = parseFloat(numericMatch[1]);
-                    const unit = numericMatch[0].includes('Cr') ? 10000000 : 
-                               numericMatch[0].includes('L') ? 100000 : 100000;
-                    schemeValue = value * unit;
-                }
+            // Updated benefit calculation based on actual scheme names
+            if (scheme.name.includes('Testing Equipment Assistance')) {
+                schemeValue = Math.min((userData.testing_measuring_equipment_cost || 0) * 10000000 * 0.5, 2000000); // 50% up to ₹20L
+                benefitDescription = "50% refund on testing & measuring equipment";
+            } else if (scheme.name.includes('Quality Certification Assistance')) {
+                schemeValue = Math.min((userData.quality_certification_cost || 0) * 10000000 * 0.5, 500000); // 50% up to ₹5L
+                benefitDescription = "50% subsidy up to ₹5L for quality certifications";
+            } else if (scheme.name.includes('Assistance for Technology Acquisition')) {
+                schemeValue = Math.min((userData.testing_measuring_equipment_cost || 0) * 10000000 * 0.5, 10000000); // 50% up to ₹1Cr
+                benefitDescription = "50% subsidy up to ₹1Cr for technology adoption";
+            } else if (scheme.name.includes('Energy Conservation')) {
+                schemeValue = Math.min((userData.energy_audit_cost || 0) * 10000000 * 0.75, 200000); // 75% up to ₹2L
+                benefitDescription = "75% refund for energy audit (limit: ₹2L)";
+            } else if (scheme.name.includes('Energy Efficient')) {
+                schemeValue = Math.min((userData.energy_efficient_equipment_cost || 0) * 10000000 * 0.5, 2000000); // 50% up to ₹20L
+                benefitDescription = "50% subsidy up to ₹20L for energy efficient equipment";
+            } else if (scheme.name.includes('Barcoding')) {
+                schemeValue = 50650; // Fixed amount
+                benefitDescription = "80% reimbursement of barcode registration fees (₹50,650)";
+            } else if (scheme.name.includes('Patent Cost Reimbursement')) {
+                schemeValue = Math.min((userData.national_patent_filing_cost || 0) * 10000000 * 0.5, 1000000); // 50% up to ₹10L
+                benefitDescription = "50% assistance for domestic patent filing up to ₹10L";
+            } else if (scheme.name.includes('International Patent')) {
+                schemeValue = Math.min((userData.international_patent_filing_cost || 0) * 10000000, 2500000); // Up to ₹25L
+                benefitDescription = "Up to ₹25L for international patent filing";
+            } else if (scheme.name.includes('Domestic Exhibition')) {
+                schemeValue = Math.min((userData.domestic_exhibition_cost || 0) * 10000000, 300000); // Up to ₹3L
+                benefitDescription = "Up to ₹3L for domestic exhibitions";
+            } else if (scheme.name.includes('International Exhibition')) {
+                schemeValue = Math.min((userData.international_exhibition_cost || 0) * 10000000, 500000); // Up to ₹5L
+                benefitDescription = "Up to ₹5L for foreign exhibitions";
+            } else if (scheme.name.includes('Air Fare')) {
+                schemeValue = Math.min((userData.international_airfare || 0) * 10000000, 100000); // Up to ₹1L
+                benefitDescription = "Up to ₹1L for economy air fare";
+            } else if (scheme.name.includes('SME Exchange Equity')) {
+                schemeValue = Math.min((userData.sme_ipo_cost || 0) * 10000000, 500000); // Up to ₹5L
+                benefitDescription = "Up to ₹5L for SME IPO";
+            } else if (scheme.name.includes('Startup Seed Fund')) {
+                schemeValue = 4000000; // ₹40L for startup seed capital
+                benefitDescription = "Up to ₹40L as seed capital for new startups";
+            } else if (scheme.name.includes('Interest Subsidy')) {
+                schemeValue = 2000000; // ₹20L for interest subsidy
+                benefitDescription = "7-9% interest subsidy on loans up to ₹20L";
+            } else if (scheme.name.includes('Apprentice')) {
+                schemeValue = (userData.apprentices || 0) * 4000; // ₹4K per apprentice
+                benefitDescription = "₹1,500-4,000/pm per apprentice under NAPS/NATS";
+            } else if (scheme.name.includes('Employment Generation')) {
+                schemeValue = (userData.haryana_domicile_employees || 5) * 4000; // ₹4K per employee
+                benefitDescription = "₹4,000/pm per Haryana domicile employee";
+            } else if (scheme.name.includes('Safety Audit')) {
+                schemeValue = Math.min((userData.safety_audit_cost || 0) * 10000000 * 0.75, 100000); // 75% up to ₹1L
+                benefitDescription = "75% subsidy up to ₹1L for safety audits";
+            } else if (scheme.name.includes('Water Conservation')) {
+                schemeValue = Math.min((userData.water_conservation_audit_cost || 0) * 10000000, 2000000); // Up to ₹20L
+                benefitDescription = "Up to ₹20L for water conservation";
+            } else if (scheme.name.includes('Safety Equipment')) {
+                schemeValue = Math.min((userData.safety_equipment_cost || 0) * 10000000 * 0.5, 2000000); // 50% up to ₹20L
+                benefitDescription = "50% subsidy up to ₹20L for safety equipment";
+            } else if (scheme.name.includes('ETP Plant')) {
+                schemeValue = Math.min((userData.etp_plant_cost || 0) * 10000000, 5000000); // Up to ₹50L
+                benefitDescription = "Up to ₹50L for ETP plants";
+            } else if (scheme.name.includes('Rooftop Solar')) {
+                schemeValue = Math.min((userData.rooftop_solar_cost || 0) * 10000000, 500000); // Up to ₹5L
+                benefitDescription = "Up to ₹5L rooftop solar subsidy";
+            } else if (scheme.name.includes('Zero Liquid Discharge')) {
+                schemeValue = Math.min((userData.zero_liquid_discharge_cost || 0) * 10000000, 100000000); // Up to ₹10Cr
+                benefitDescription = "Up to ₹10Cr for zero liquid discharge";
+            } else if (scheme.name.includes('PADMA Capital Investment')) {
+                schemeValue = Math.min((userData.machinery_investment || 0) * 10000000 * 0.3, 5000000); // 30% up to ₹50L
+                benefitDescription = "30% subsidy on plant & machinery cost";
+            } else if (scheme.name.includes('PADMA Interest')) {
+                schemeValue = Math.min((userData.term_loan_amount || 0) * 10000000 * 0.06 * 5, 2000000); // 6% PA for 5 years
+                benefitDescription = "6% PA interest reimbursement up to ₹20L for 5 years";
+            } else if (scheme.name.includes('PADMA Entrepreneurship')) {
+                schemeValue = 3000000; // ₹30L per unit
+                benefitDescription = "Up to ₹30L subsidy per unit";
+            } else if (scheme.name.includes('DPIIT Startup')) {
+                schemeValue = 2000000; // ₹20L for DPIIT startups
+                benefitDescription = "₹20L for eligible DPIIT registered startups";
+            } else if (scheme.name.includes('Equity Support')) {
+                schemeValue = Math.min((userData.equity_investment || 0) * 10000000, 30000000); // Up to ₹3Cr
+                benefitDescription = "Up to ₹3Cr equity support per unit for rapid scaling";
+            } else if (scheme.name.includes('Designing, Branding, Marketing')) {
+                schemeValue = Math.min((userData.branding_marketing_cost || 0) * 10000000 * 0.5, 1000000); // 50% up to ₹10L
+                benefitDescription = "50% reimbursement up to ₹10L/yr for branding & marketing";
+            } else if (scheme.name.includes('Stamp Duty Refund')) {
+                schemeValue = Math.min((userData.stamp_duty_paid || 0) * 10000000, 500000); // Full refund up to ₹5L
+                benefitDescription = "Full refund of stamp duty";
+            } else if (scheme.name.includes('Electricity Duty')) {
+                schemeValue = 150000; // Fixed amount
+                benefitDescription = "Full reimbursement of electricity duty";
+            } else if (scheme.name.includes('Basic MSME Support')) {
+                schemeValue = 500000; // ₹5L fixed
+                benefitDescription = "Basic MSME support grant";
+            } else if (scheme.name.includes('SME Exchange Equity')) {
+                schemeValue = 500000; // ₹5L for SME exchange
+                benefitDescription = "20% of expenditure (max ₹5L)";
+            } else if (scheme.name.includes('State Renewable Energy')) {
+                schemeValue = 2000000; // ₹20L for renewable energy
+                benefitDescription = "Interest subsidy on renewable energy technology";
+            } else if (scheme.name.includes('Skill Development')) {
+                schemeValue = 1000000; // ₹10L for skill development
+                benefitDescription = "Up to ₹10L for skill development & training";
+            } else if (scheme.name.includes('Promotion of ICT')) {
+                schemeValue = 1000000; // ₹10L for ICT promotion
+                benefitDescription = "Up to ₹10L for ICT promotion";
+            } else if (scheme.name.includes('Investment Subsidy')) {
+                schemeValue = 1000000; // ₹10L for investment subsidy
+                benefitDescription = "Investment subsidy in lieu of Net SGST";
+            } else if (scheme.name.includes('Assistance for Environment')) {
+                schemeValue = 1000000; // ₹10L for environment compliance
+                benefitDescription = "Up to ₹10L for environment compliance";
+            } else if (scheme.name.includes('PADMA Designing')) {
+                schemeValue = 1000000; // ₹10L for branding & marketing
+                benefitDescription = "50% reimbursement up to ₹10L/yr for branding & marketing";
+            } else if (scheme.name.includes('HSIIDC Loans')) {
+                schemeValue = 5000000; // ₹50L for HSIIDC loans
+                benefitDescription = "Up to ₹50L loan assistance";
+            } else if (scheme.name.includes('Haryana Swarn Jayanti')) {
+                schemeValue = 1000000; // ₹10L for HSJUY
+                benefitDescription = "Up to ₹10L under Haryana Swarn Jayanti Udyami Yojana";
+            } else if (scheme.name.includes('Haryana Gramin')) {
+                schemeValue = 1000000; // ₹10L for rural development
+                benefitDescription = "Up to ₹10L for rural industrial development";
+            } else if (scheme.name.includes('Haryana State Startup')) {
+                schemeValue = 1000000; // ₹10L for startup policy
+                benefitDescription = "Up to ₹10L under Haryana State Startup Policy";
+            } else if (scheme.name.includes('PMEGP')) {
+                schemeValue = 2500000; // ₹25L for PMEGP
+                benefitDescription = "Up to ₹25L project support under PMEGP";
+            } else if (scheme.name.includes('PMMY')) {
+                schemeValue = 10000000; // ₹1Cr for Mudra loans
+                benefitDescription = "Up to ₹1Cr loan assistance under PMMY";
+            } else if (scheme.name.includes('CGTMSE')) {
+                schemeValue = 2000000; // ₹20L for CGTMSE
+                benefitDescription = "Up to ₹20L credit guarantee";
+            } else if (scheme.name.includes('MSME Innovative')) {
+                schemeValue = 1000000; // ₹10L for innovation
+                benefitDescription = "Up to ₹10L for MSME innovation support";
+            } else if (scheme.name.includes('ZED')) {
+                schemeValue = 250000; // ₹2.5L for ZED certification
+                benefitDescription = "Up to ₹2.5L for ZED certification support";
+            } else {
+                // Default benefit calculation
+                schemeValue = 1000000; // ₹10L default
+                benefitDescription = "Up to ₹10L government support";
             }
 
-            // For schemes without specific amounts, provide reasonable estimates
-            if (schemeValue === 0) {
-                // SGST REIMBURSEMENT CALCULATIONS
-                if (scheme.name.includes('SGST')) {
-                    // SGST is based on actual turnover, not project cost
-                    const estimatedAnnualTurnover = userData.annual_turnover || userData.total_project_cost * 2; // Assume 2x project cost as annual turnover
-                    const sgstRate = 0.09; // 9% SGST rate
-                    const annualSGST = estimatedAnnualTurnover * sgstRate * 10000000; // Convert Cr to Rs
-                    const years = userData.block_category.toLowerCase() === 'd' ? 10 : 
-                                userData.block_category.toLowerCase() === 'c' ? 10 : 8;
-                    const avgSubsidyRate = 0.55; // Average of 75% for first 7 years and 35% for next 3 years
-                    schemeValue = Math.min(annualSGST * avgSubsidyRate * years, 50000000); // Cap at 5 Cr
-                    benefitDescription = `${avgSubsidyRate * 100}% SGST reimbursement for ${years} years (estimated)`;
-                }
-                // PADMA SCHEME CALCULATIONS
-                else if (scheme.name.includes('PADMA Interest Subsidy')) {
-                    if (userData.has_term_loan && userData.term_loan_amount && userData.interest_rate) {
-                        const loanAmount = userData.term_loan_amount * 10000000; // Convert Cr to Rs
-                        const interestRate = userData.interest_rate / 100;
-                        const subsidyRate = 0.06; // 6% subsidy
-                        const years = 5;
-                        schemeValue = Math.min(loanAmount * interestRate * subsidyRate * years, 2000000); // Max 20L
-                        benefitDescription = `6% interest subsidy on ₹${(loanAmount/100000).toFixed(2)}L loan for 5 years`;
-                    } else {
-                        schemeValue = 2000000; // Default 20L
-                        benefitDescription = "6% interest subsidy (max ₹20L/year inside, ₹10L/year outside clusters) for 5 years";
-                    }
-                }
-                else if (scheme.name.includes('PADMA Designing, Branding, Marketing')) {
-                    if (userData.marketing_export_expenses) {
-                        // Values are already in Cr, convert to Rs
-                        const expenses = userData.marketing_export_expenses * 10000000; // Convert Cr to Rs
-                        schemeValue = Math.min(expenses * 0.5, 1000000); // 50% subsidy, max 10L
-                        benefitDescription = `50% subsidy on ₹${(expenses/100000).toFixed(2)}L marketing expenses`;
-                    } else {
-                        schemeValue = 1000000; // Default 10L
-                        benefitDescription = "50% subsidy (max ₹10L/year) for branding, marketing, and export promotion";
-                    }
-                } else if (scheme.name.includes('PADMA Capital Investment')) {
-                    const isSpecialCategory = ['sc', 'st', 'women', 'shg'].includes(userData.promoter_category);
-                    const subsidyRate = isSpecialCategory ? 0.35 : 0.25;
-                    const maxAmount = isSpecialCategory ? 3500000 : 2500000; // 35L or 25L
-                    const projectCost = userData.total_project_cost * 10000000; // Convert Cr to Rs
-                    schemeValue = Math.min(projectCost * subsidyRate, maxAmount);
-                    benefitDescription = `${subsidyRate * 100}% subsidy (max ₹${maxAmount/100000}L) for ${userData.promoter_category || 'general'} category`;
-                } else if (scheme.name.includes('PADMA Entrepreneurship')) {
-                    schemeValue = 500000; // 5L for entrepreneurship acceleration
-                    benefitDescription = "₹5L per start-up for early-stage capital in/around PADMA clusters";
-                }
-                // EMPLOYMENT GENERATION CALCULATIONS
-                else if (scheme.name.includes('Employment Generation')) {
-                    if (userData.total_employees) {
-                        const scWomenEmployees = (userData.sc_st_employees || 0) + (userData.women_employees || 0);
-                        const generalEmployees = Math.max(0, userData.total_employees - scWomenEmployees);
-                        const scWomenBenefit = scWomenEmployees * 36000 * 7; // ₹36K/year for 7 years
-                        const generalBenefit = generalEmployees * 30000 * 7; // ₹30K/year for 7 years
-                        schemeValue = scWomenBenefit + generalBenefit;
-                        benefitDescription = `₹${(schemeValue/100000).toFixed(2)}L for ${userData.total_employees} employees (${scWomenEmployees} SC/Women, ${generalEmployees} General)`;
-                    } else {
-                        schemeValue = 252000; // Default
-                        benefitDescription = "₹36K/year for SC/Women, ₹30K/year for General employees";
-                    }
-                }
-                // POWER TARIFF CALCULATIONS
-                else if (scheme.name.includes('Power Tariff')) {
-                    if (userData.connected_load && userData.annual_electricity_consumption) {
-                        const maxLoad = userData.block_category.toLowerCase() === 'd' ? 40 : 30; // KW
-                        const actualLoad = Math.min(userData.connected_load, maxLoad);
-                        const subsidyPerUnit = 2; // ₹2 per unit
-                        const estimatedUnits = userData.annual_electricity_consumption;
-                        schemeValue = Math.min(actualLoad * subsidyPerUnit * estimatedUnits, 240000); // Max 24L
-                        benefitDescription = `₹2/unit subsidy for ${actualLoad}KW load`;
-                    } else {
-                        schemeValue = 240000; // Default
-                        benefitDescription = "₹2 per unit subsidy up to 30-40 KW load";
-                    }
-                }
-                // ELECTRICITY DUTY CALCULATIONS
-                else if (scheme.name.includes('Electricity')) {
-                    if (userData.annual_electricity_consumption) {
-                        const dutyRate = 0.15; // Assume 15% duty rate
-                        const years = userData.block_category.toLowerCase() === 'd' ? 12 : 
-                                    userData.block_category.toLowerCase() === 'c' ? 10 : 7;
-                        schemeValue = userData.annual_electricity_consumption * dutyRate * years;
-                        benefitDescription = `100% exemption for ${years} years`;
-                    } else {
-                        schemeValue = 2000000; // Default 20L
-                        benefitDescription = "100% exemption for 7-12 years";
-                    }
-                }
-                // STAMP DUTY CALCULATIONS
-                else if (scheme.name.includes('Stamp Duty')) {
-                    if (userData.land_investment) {
-                        const stampDutyRate = 0.06; // Assume 6% stamp duty
-                        const refundRate = userData.block_category.toLowerCase() === 'd' ? 1.0 : 
-                                         userData.block_category.toLowerCase() === 'c' ? 0.75 : 0.60;
-                        schemeValue = userData.land_investment * stampDutyRate * refundRate * 10000000; // Convert Cr to Rs
-                        benefitDescription = `${refundRate * 100}% refund of stamp duty`;
-                    } else {
-                        schemeValue = 1500000; // Default 15L
-                        benefitDescription = "50-100% refund based on block";
-                    }
-                }
-                // TECHNOLOGY ACQUISITION CALCULATIONS
-                else if (scheme.name.includes('Technology Acquisition')) {
-                    if (userData.technology_equipment_cost) {
-                        // Values are in Cr, convert to Rs
-                        const techCost = userData.technology_equipment_cost * 10000000; // Convert Cr to Rs
-                        schemeValue = Math.min(techCost * 0.75, 5000000); // 75% subsidy, max 50L
-                        benefitDescription = `75% subsidy on ₹${(techCost/100000).toFixed(2)}L technology cost`;
-                    } else {
-                        schemeValue = 5000000; // Default 50L
-                        benefitDescription = "75% of the cost for adopting/acquiring technology";
-                    }
-                }
-                // TESTING EQUIPMENT CALCULATIONS
-                else if (scheme.name.includes('Testing Equipment')) {
-                    if (userData.testing_equipment_cost) {
-                        // Values are in Cr, convert to Rs
-                        const equipmentCost = userData.testing_equipment_cost * 10000000; // Convert Cr to Rs
-                        schemeValue = Math.min(equipmentCost * 0.5, 1000000); // 50% subsidy, max 10L
-                        benefitDescription = `50% subsidy on ₹${(equipmentCost/100000).toFixed(2)}L testing equipment`;
-                    } else {
-                        schemeValue = 1000000; // Default 10L
-                        benefitDescription = "50% subsidy on testing equipment";
-                    }
-                }
-                // QUALITY CERTIFICATION CALCULATIONS
-                else if (scheme.name.includes('Quality Certification')) {
-                    if (userData.quality_certification_cost) {
-                        // Values are in Cr, convert to Rs
-                        const certCost = userData.quality_certification_cost * 10000000; // Convert Cr to Rs
-                        schemeValue = Math.min(certCost * 0.75, 500000); // 75% reimbursement, max 5L
-                        benefitDescription = `75% reimbursement of ₹${(certCost/100000).toFixed(2)}L certification cost`;
-                    } else {
-                        schemeValue = 500000; // Default 5L
-                        benefitDescription = "75% reimbursement of certification costs";
-                    }
-                }
-                // NATIONAL SCHEME ESTIMATES
-                else if (scheme.name.includes('PMEGP')) {
-                    schemeValue = 3500000; // 35L for PMEGP
-                    benefitDescription = "25-35% subsidy + 5-10% margin money";
-                } else if (scheme.name.includes('PMMY')) {
-                    schemeValue = 500000; // 5L for Mudra loans
-                    benefitDescription = "Collateral-free loans up to 20L";
-                } else if (scheme.name.includes('CGTMSE')) {
-                    schemeValue = 20000000; // 2 Cr for credit guarantee
-                    benefitDescription = "75-90% guarantee cover up to 2 Cr";
-                } else if (scheme.name.includes('CLCSS')) {
-                    schemeValue = 1500000; // 15L for technology upgradation
-                    benefitDescription = "15% capital subsidy on institutional credit";
-                } else if (scheme.name.includes('MSE-CDP')) {
-                    schemeValue = 10000000; // 1 Cr for cluster development
-                    benefitDescription = "60-90% GoI grant for cluster infrastructure";
-                } else if (scheme.name.includes('Innovative')) {
-                    schemeValue = 4000000; // 40L for innovation schemes
-                    benefitDescription = "Support for incubation, design, and IPR";
-                } else if (scheme.name.includes('ZED')) {
-                    schemeValue = 50000; // 50K for ZED certification
-                    benefitDescription = "50-80% subsidy on certification cost";
-                }
-                // OTHER HARYANA SCHEME ESTIMATES
-                else if (scheme.name.includes('Training')) {
-                    schemeValue = 500000; // 5L for training
-                    benefitDescription = "Reimbursement of training expenses";
-                } else if (scheme.name.includes('ICT')) {
-                    schemeValue = 300000; // 3L for ICT
-                    benefitDescription = "Reimbursement of cloud ERP subscription";
-                } else if (scheme.name.includes('Renewable')) {
-                    schemeValue = 1000000; // 10L for renewable energy
-                    benefitDescription = "Interest subsidy on renewable energy technology";
-                } else if (scheme.name.includes('Basic')) {
-                    schemeValue = 100000; // 1L for basic support
-                    benefitDescription = "Basic support and guidance";
-                } else if (scheme.name.includes('Patent Cost')) {
-                    schemeValue = 2500000; // 25L for patent reimbursement
-                    benefitDescription = "100% reimbursement of patent registration costs";
-                } else if (scheme.name.includes('Environment Compliance')) {
-                    schemeValue = 10000000; // 1 Cr for environment compliance
-                    benefitDescription = "50-75% subsidy for ETP/ZLD systems";
-                } else if (scheme.name.includes('Energy Conservation')) {
-                    schemeValue = 2000000; // 20L for energy conservation
-                    benefitDescription = "75% reimbursement for audits, 20-50% subsidy for equipment";
-                } else if (scheme.name.includes('Water Conservation')) {
-                    schemeValue = 2000000; // 20L for water conservation
-                    benefitDescription = "75% reimbursement for audits, 50% subsidy for equipment";
-                } else if (scheme.name.includes('HSJUY')) {
-                    schemeValue = 10000000; // 1 Cr for HSJUY
-                    benefitDescription = "Financial assistance up to ₹1 Cr for SC/ST/Women";
-                } else if (scheme.name.includes('HSIIDC Loans')) {
-                    schemeValue = 100000000; // 10 Cr for HSIIDC loans
-                    benefitDescription = "Loan assistance for new units, expansion, modernization";
-                } else if (scheme.name.includes('Gramin Udyogik')) {
-                    schemeValue = 2500000; // 25L for rural development
-                    benefitDescription = "Maximum assistance for rural industrial development";
-                } else if (scheme.name.includes('State Mini Cluster')) {
-                    schemeValue = 50000000; // 5 Cr for state mini cluster
-                    benefitDescription = "90% from state, 10% from SPVs for cluster development";
-                } else if (scheme.name.includes('Startup Policy')) {
-                    schemeValue = 3000000; // 30L for startup benefits
-                    benefitDescription = "8% interest subsidy, lease rental, seed grant, SGST reimbursement";
-                }
-                // INTEREST SUBSIDY SCHEME
-                else if (scheme.name.includes('Interest Subsidy')) {
-                    schemeValue = 2000000; // 20L for interest subsidy
-                    benefitDescription = "Interest subsidy on term loans";
-                }
-            }
-
-            // Apply reasonable caps to prevent unrealistic benefits
-            const maxSchemeValue = 100000000; // 10 Cr maximum per scheme
-            schemeValue = Math.min(schemeValue, maxSchemeValue);
-            
-            // Additional validation for unrealistic input values
-            if (schemeValue > 1000000000 || isNaN(schemeValue)) { // If somehow we get more than 100 Cr or NaN
-                console.warn(`Unrealistic scheme value for ${scheme.name}: ${schemeValue}`);
-                schemeValue = 100000000; // Cap at 10 Cr
-            }
-            
+            // Add scheme to benefits array
             benefits.push({
-                scheme_name: scheme.name,
-                benefit_description: benefitDescription,
-                estimated_value: schemeValue
+                scheme: scheme,
+                value: schemeValue,
+                description: benefitDescription
             });
-
+            
             totalValue += schemeValue;
         });
+
+        console.log('Total calculated benefits:', totalValue);
+        console.log('Benefits breakdown:', benefits);
+
+        return {
+            total_value: totalValue,
+            benefits_breakdown: benefits
+        };
 
         console.log('Total calculated benefits:', totalValue);
         console.log('Benefits breakdown:', benefits);

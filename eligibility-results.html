@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eligibility Results - BharatSetu</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/eligibility-questionnaire.css">
+    <style>
+        .results-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            padding-bottom: 120px; /* Space for bottom CTA */
+        }
+
+        .results-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .results-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .results-summary {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-benefit {
+            font-size: 28px;
+            font-weight: 700;
+            color: #28a745;
+            margin: 15px 0;
+        }
+
+        .eligible-count {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .schemes-list {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .scheme-item {
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+
+        .scheme-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .scheme-benefit {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .scheme-eligibility {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .scheme-expense {
+            color: #007bff;
+            font-size: 12px;
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .eligibility-criteria {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .eligibility-criteria h4 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .criteria-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .criteria-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .criteria-list li:last-child {
+            border-bottom: none;
+        }
+
+        .bottom-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .cta-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .cta-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 480px) {
+            .results-page {
+                padding: 10px;
+                padding-bottom: 120px;
+            }
+            
+            .results-container {
+                border-radius: 15px;
+            }
+            
+            .results-header {
+                padding: 25px 15px;
+            }
+            
+            .results-header h1 {
+                font-size: 22px;
+            }
+            
+            .total-benefit {
+                font-size: 24px;
+            }
+            
+            .schemes-list {
+                padding: 15px;
+                max-height: 50vh;
+            }
+            
+            .scheme-item {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .bottom-cta {
+                padding: 15px;
+            }
+            
+            .cta-btn {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="results-page">
+        <div class="results-container">
+            <div class="results-header">
+                <h1>🎉 Eligibility Results</h1>
+                <p>Your personalized incentive roadmap</p>
+            </div>
+
+            <div class="results-summary">
+                <div class="eligible-count">You are eligible for <strong id="eligible-count">29</strong> out of <strong>38</strong> schemes</div>
+                <div class="total-benefit">₹<span id="total-benefits">27,212,500</span></div>
+                <p style="color: #666; font-size: 14px; margin: 10px 0 0 0;">Total potential benefits</p>
+            </div>
+
+            <div class="schemes-list" id="schemes-list">
+                <!-- Schemes will be populated by JavaScript -->
+            </div>
+
+            <div class="eligibility-criteria">
+                <h4>📋 Eligibility Criteria Summary</h4>
+                <ul class="criteria-list" id="criteria-list">
+                    <!-- Criteria will be populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-cta">
+        <button class="cta-btn cta-primary" onclick="applyForAllSchemes()">Apply Now</button>
+        <button class="cta-btn cta-secondary" onclick="goBack()">← Back</button>
+    </div>
+
+    <script>
+        // Get results data from localStorage
+        let resultsData = {
+            total_eligible: 0,
+            total_schemes: 0,
+            total_benefits: 0,
+            eligible_schemes: [],
+            eligibility_criteria: []
+        };
+
+        // Try to load actual results data
+        const storedResults = localStorage.getItem('eligibilityResults');
+        if (storedResults) {
+            try {
+                resultsData = JSON.parse(storedResults);
+                console.log('Loaded results data:', resultsData);
+            } catch (error) {
+                console.error('Error parsing stored results:', error);
+            }
+        } else {
+            console.log('No stored results found, using sample data');
+            // Fallback to sample data if no stored results
+            resultsData = {
+                total_eligible: 29,
+                total_schemes: 38,
+                total_benefits: 27212500,
+                eligible_schemes: [
+                    {
+                        scheme_name: "International Exhibition Support",
+                        benefit_description: "75% subsidy up to ₹5L",
+                        estimated_value: 500000,
+                        your_eligibility: "₹3.75L (75% of ₹5L)"
+                    },
+                    {
+                        scheme_name: "Quality Certification Assistance",
+                        benefit_description: "75% subsidy up to ₹50L",
+                        estimated_value: 3750000,
+                        your_eligibility: "₹37.5L (75% of ₹50L)"
+                    },
+                    {
+                        scheme_name: "Technology Acquisition",
+                        benefit_description: "75% subsidy up to ₹50L",
+                        estimated_value: 3750000,
+                        your_eligibility: "₹37.5L (75% of ₹50L)"
+                    },
+                    {
+                        scheme_name: "ERP Implementation",
+                        benefit_description: "50% subsidy up to ₹20L",
+                        estimated_value: 1000000,
+                        your_eligibility: "₹10L (50% of ₹20L)"
+                    },
+                    {
+                        scheme_name: "Patent Filing Support",
+                        benefit_description: "75% subsidy up to ₹10L",
+                        estimated_value: 750000,
+                        your_eligibility: "₹7.5L (75% of ₹10L)"
+                    },
+                    {
+                        scheme_name: "Stamp Duty Refund",
+                        benefit_description: "Full refund of stamp duty",
+                        estimated_value: 250000,
+                        your_eligibility: "₹2.5L (100% refund)"
+                    },
+                    {
+                        scheme_name: "Electricity Duty Reimbursement",
+                        benefit_description: "Full reimbursement",
+                        estimated_value: 150000,
+                        your_eligibility: "₹1.5L (100% reimbursement)"
+                    },
+                    {
+                        scheme_name: "Employment Generation",
+                        benefit_description: "₹10,000 per employee",
+                        estimated_value: 50000,
+                        your_eligibility: "₹50K (5 employees)"
+                    }
+                ],
+                eligibility_criteria: [
+                    "MSME Registration required",
+                    "Unit must be located in Haryana",
+                    "Commercial production within specified timeline",
+                    "Valid Udyam certificate",
+                    "Bank account in Haryana",
+                    "CA certificate for financial documents",
+                    "Project report for investment schemes",
+                    "Land ownership documents (if applicable)"
+                ]
+            };
+        }
+
+        function displayResults() {
+            // Update summary
+            document.getElementById('eligible-count').textContent = resultsData.total_eligible;
+            document.getElementById('total-benefits').textContent = resultsData.total_benefits.toLocaleString();
+
+            // Display schemes
+            const schemesList = document.getElementById('schemes-list');
+            schemesList.innerHTML = '';
+
+            resultsData.eligible_schemes.forEach(scheme => {
+                const schemeItem = document.createElement('div');
+                schemeItem.className = 'scheme-item';
+                schemeItem.innerHTML = `
+                    <div class="scheme-title">${scheme.scheme_name}</div>
+                    <div class="scheme-benefit">${scheme.benefit_description}</div>
+                    <div class="scheme-eligibility">Your Eligibility: ${scheme.your_eligibility}</div>
+                    ${scheme.expense_declaration > 0 ? `<div class="scheme-expense">Your expense declaration: ₹${scheme.expense_declaration.toLocaleString()}</div>` : ''}
+                `;
+                schemesList.appendChild(schemeItem);
+            });
+
+            // Display eligibility criteria
+            const criteriaList = document.getElementById('criteria-list');
+            criteriaList.innerHTML = '';
+
+            resultsData.eligibility_criteria.forEach(criteria => {
+                const criteriaItem = document.createElement('li');
+                criteriaItem.textContent = criteria;
+                criteriaList.appendChild(criteriaItem);
+            });
+        }
+
+        function applyForAllSchemes() {
+            // Redirect to application page or show application modal
+            alert('Application feature coming soon!');
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Initialize results when page loads
+        document.addEventListener('DOMContentLoaded', displayResults);
+    </script>
+</body>
+</html> 
