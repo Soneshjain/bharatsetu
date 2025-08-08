@@ -169,7 +169,7 @@ class CompanyProfile {
         if (modal) modal.remove();
         
         // Navigate to add company page
-        window.location.href = 'add-company.html';
+        window.location.href = '/add-new-company.html';
     }
 
     editCompany(companyId) {

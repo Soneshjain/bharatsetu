@@ -378,7 +378,7 @@ const initHeroButtonFlows = () => {
             // Check if user is authenticated
             if (window.authService && window.authService.isAuthenticated()) {
                 // User is logged in, go directly to dashboard
-                window.location.href = 'dashboard.html';
+                window.location.href = '/user-dashboard.html';
             } else {
                 // User not logged in, show auth modal
                 if (window.authFlow) {
@@ -386,7 +386,7 @@ const initHeroButtonFlows = () => {
                 } else {
                     console.log('Auth flow not available');
                     // Fallback: redirect to dashboard (user will be prompted to login there)
-                    window.location.href = 'dashboard.html';
+                    window.location.href = '/user-dashboard.html';
                 }
             }
         });
@@ -398,14 +398,14 @@ const initHeroButtonFlows = () => {
             e.preventDefault();
             
             // Always go to eligibility check (login will be required for results)
-            window.location.href = 'eligibility-check.html';
+            window.location.href = '/check-eligibility.html';
         });
     }
 };
 
 // ===== ELIGIBILITY RESULTS AUTHENTICATION =====
 const initEligibilityResultsAuth = () => {
-    // This will be called on eligibility-check.html to require login for results
+    // This will be called on /check-eligibility.html to require login for results
     const requireLoginForResults = () => {
         if (!window.authService || !window.authService.isAuthenticated()) {
             // Show login prompt for results

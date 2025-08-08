@@ -4,11 +4,11 @@ Allow: /
 # Sitemap
 Sitemap: https://bharatsetu.com/sitemap.xml
 
-# Allow all pages
-Allow: /index.html
-Allow: /dashboard.html
-Allow: /add-company.html
-Allow: /eligibility-check.html
+# Allow key pages
+Allow: /
+Allow: /user-dashboard.html
+Allow: /add-new-company.html
+Allow: /check-eligibility.html
 
 # Allow all scheme pages
 Allow: /schemes/

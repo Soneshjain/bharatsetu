@@ -7,6 +7,10 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "init-db": "node server/init-database.js",
+    "add-scheme": "node scripts/add-scheme.js",
+    "check-db": "node scripts/check-db.js",
+    "gen-scheme-pages": "node scripts/generate-scheme-pages.js",
+    "test-setup": "node scripts/test-setup.js",
     "setup": "npm run init-db && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

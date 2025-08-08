@@ -114,7 +114,7 @@ function applyForScheme(schemeId) {
     // Check if user is authenticated
     if (window.authService && window.authService.isAuthenticated()) {
         // User is logged in, redirect to dashboard with scheme pre-selected
-        window.location.href = `dashboard.html?scheme=${schemeId}`;
+        window.location.href = `/user-dashboard.html?scheme=${schemeId}`;
     } else {
         // User not logged in, show auth modal
         if (window.authFlow) {
@@ -122,7 +122,7 @@ function applyForScheme(schemeId) {
         } else {
             alert('Please log in to apply for this scheme.');
             // Fallback: redirect to dashboard
-            window.location.href = 'dashboard.html';
+            window.location.href = '/user-dashboard.html';
         }
     }
 }
@@ -901,7 +901,7 @@ class EligibilityQuestionnaire {
         localStorage.setItem('eligibilityResults', JSON.stringify(resultsData));
         
         // Redirect to the new results page
-        window.location.href = 'eligibility-results.html';
+        window.location.href = '/eligibility-results-summary.html';
     }
 }
 

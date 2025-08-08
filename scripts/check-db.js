@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./database/schemes.db');
+const path = require('path');
+const db = new sqlite3.Database(path.join(__dirname, '..', 'server', 'database', 'schemes.db'));
 
 console.log('Checking database for new scheme...');
 

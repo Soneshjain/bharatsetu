@@ -251,7 +251,7 @@ class AuthFlow {
         if (modal) modal.remove();
         
         // Navigate to eligibility check page
-        window.location.href = 'eligibility-check.html';
+        window.location.href = '/check-eligibility.html';
     }
 
     showEligibilityFirst() {
@@ -260,7 +260,7 @@ class AuthFlow {
         if (modal) modal.remove();
         
         // Navigate to eligibility check page
-        window.location.href = 'eligibility-check.html';
+        window.location.href = '/check-eligibility.html';
     }
 
     updateApplyButtons() {
@@ -425,7 +425,7 @@ class AuthFlow {
             
             // Redirect to dashboard after a short delay
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                window.location.href = '/user-dashboard.html';
             }, 2000);
             
             // Restore original callback
@@ -444,7 +444,7 @@ class AuthFlow {
             // Show success message
             this.showSuccessMessage();
             
-            // Show eligibility results (this will be handled by eligibility-check.html)
+            // Show eligibility results (this will be handled by /check-eligibility.html)
             if (window.showEligibilityResults) {
                 window.showEligibilityResults();
             }

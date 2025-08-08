@@ -54,12 +54,12 @@ class Dashboard {
             // Check if companies is an array
             if (!Array.isArray(companies)) {
                 console.error('Companies is not an array:', companies);
-                companiesList.innerHTML = '<p>No companies added yet. <a href="add-company.html">Add your first company</a> to get started!</p>';
+                companiesList.innerHTML = '<p>No companies added yet. <a href="/add-new-company.html">Add your first company</a> to get started!</p>';
                 return;
             }
             
             if (companies.length === 0) {
-                companiesList.innerHTML = '<p>No companies added yet. <a href="add-company.html">Add your first company</a> to get started!</p>';
+                companiesList.innerHTML = '<p>No companies added yet. <a href="/add-new-company.html">Add your first company</a> to get started!</p>';
                 return;
             }
 
@@ -72,7 +72,7 @@ class Dashboard {
                     <p><strong>Project Cost:</strong> ₹${(company.total_project_cost / 10000000).toFixed(2)} Cr</p>
                     <div class="company-actions">
                         <a href="edit-company.html?id=${company.id}" class="btn btn--secondary btn--small">Edit</a>
-                        <a href="eligibility-check.html?company=${company.id}" class="btn btn--primary btn--small">Check Eligibility</a>
+                        <a href="/check-eligibility.html?company=${company.id}" class="btn btn--primary btn--small">Check Eligibility</a>
                     </div>
                 </div>
             `).join('');

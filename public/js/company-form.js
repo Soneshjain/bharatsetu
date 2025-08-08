@@ -192,7 +192,7 @@ class CompanyForm {
             
             // Redirect to dashboard after a short delay
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                window.location.href = '/user-dashboard.html';
             }, 2000);
 
         } catch (error) {

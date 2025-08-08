@@ -136,9 +136,9 @@ function generateSchemePage(scheme) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/auth.css">
-    <link rel="stylesheet" href="../css/scheme-detail.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/scheme-detail.css">
     
     <!-- Google OAuth -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -149,7 +149,7 @@ function generateSchemePage(scheme) {
         <div class="container">
             <div class="navbar__content">
                 <div class="navbar__logo">
-                    <a href="../index.html">
+                    <a href="/">
                         <i class="fas fa-bridge"></i>
                         <span class="navbar__logo-text">BharatSetu</span>
                     </a>
@@ -203,7 +203,7 @@ function generateSchemePage(scheme) {
                 </div>
                 
                 <div class="scheme-hero__cta">
-                    <a href="../eligibility-check.html" class="btn btn--primary">
+                    <a href="/check-eligibility.html" class="btn btn--primary">
                         Check Your Eligibility <i class="fas fa-arrow-right"></i>
                     </a>
                     <a href="#apply-now" class="btn btn--secondary">
@@ -315,10 +315,10 @@ function generateSchemePage(scheme) {
                 <h2>Ready to Apply?</h2>
                 <p>Check your eligibility and start your application process</p>
                 <div class="apply-actions">
-                    <a href="../eligibility-check.html" class="btn btn--primary">
+                    <a href="/check-eligibility.html" class="btn btn--primary">
                         Check Eligibility <i class="fas fa-search"></i>
                     </a>
-                    <a href="../dashboard.html" class="btn btn--secondary">
+                    <a href="/user-dashboard.html" class="btn btn--secondary">
                         Go to Dashboard <i class="fas fa-tachometer-alt"></i>
                     </a>
                 </div>
@@ -347,24 +347,24 @@ function generateSchemePage(scheme) {
                 <div class="footer__links">
                     <div class="footer__column">
                         <h4>Services</h4>
-                        <a href="../index.html#subsidies">Government Subsidies</a>
-                        <a href="../index.html#subsidies">Collateral-Free Loans</a>
-                        <a href="../index.html#subsidies">Payment Recovery</a>
-                        <a href="../index.html#subsidies">Financial Grants</a>
+                        <a href="/#subsidies">Government Subsidies</a>
+                        <a href="/#subsidies">Collateral-Free Loans</a>
+                        <a href="/#subsidies">Payment Recovery</a>
+                        <a href="/#subsidies">Financial Grants</a>
                     </div>
                     <div class="footer__column">
                         <h4>Company</h4>
-                        <a href="../index.html#problems">Problems We Solve</a>
-                        <a href="../index.html#success">Success Stories</a>
-                        <a href="../index.html#contact">Contact</a>
-                        <a href="../index.html#about">About</a>
+                        <a href="/#problems">Problems We Solve</a>
+                        <a href="/#success">Success Stories</a>
+                        <a href="/#contact">Contact</a>
+                        <a href="/#about">About</a>
                     </div>
                     <div class="footer__column">
                         <h4>Support</h4>
-                        <a href="../index.html#help">Help Center</a>
-                        <a href="../index.html#tracking">Application Tracking</a>
-                        <a href="../index.html#contact">Get Support</a>
-                        <a href="../index.html#faq">FAQs</a>
+                        <a href="/#help">Help Center</a>
+                        <a href="/#tracking">Application Tracking</a>
+                        <a href="/#contact">Get Support</a>
+                        <a href="/#faq">FAQs</a>
                     </div>
                 </div>
             </div>
@@ -376,20 +376,22 @@ function generateSchemePage(scheme) {
     </footer>
 
     <!-- JavaScript -->
-    <script src="../js/auth-service.js"></script>
-    <script src="../js/utils.js"></script>
-    <script src="../js/scheme-detail.js"></script>
+    <script src="/js/auth-service.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/scheme-detail.js"></script>
 </body>
 </html>`;
 }
 
-// Generate all scheme pages
+// Generate all scheme pages into public/html/schemes
+const outputDir = path.join(__dirname, '..', 'public', 'html', 'schemes');
+fs.mkdirSync(outputDir, { recursive: true });
+
 schemes.forEach(scheme => {
-    const filePath = path.join(__dirname, 'schemes', `${scheme.name}.html`);
+    const filePath = path.join(outputDir, `${scheme.name}.html`);
     const content = generateSchemePage(scheme);
-    
     fs.writeFileSync(filePath, content);
-    console.log(`Generated: ${scheme.name}.html`);
+    console.log(`Generated: ${path.relative(process.cwd(), filePath)}`);
 });
 
-console.log('All scheme pages generated successfully!'); 
+console.log('All scheme pages generated successfully!');

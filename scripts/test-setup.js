@@ -6,7 +6,7 @@ console.log('Testing BharatSetu setup...\n');
 
 // Test database connection
 console.log('1. Testing database connection...');
-const db = new sqlite3.Database('./bharatsetu.db', (err) => {
+const db = new sqlite3.Database(path.join(__dirname, '..', 'server', 'database', 'bharatsetu.db'), (err) => {
     if (err) {
         console.error('❌ Database connection failed:', err.message);
         process.exit(1);
