@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="sitemap:changefreq" content="monthly">
+    <meta name="sitemap:priority" content="0.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Eligibility - BharatSetu</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&family=Cambay:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Base CSS (Load First) -->
+    <link rel="stylesheet" href="/css/base.css">
+    
+    <!-- Page-Specific CSS (Load After) -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/eligibility-questionnaire.css">
+    
+    <!-- Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar--hero">
+        <div class="container">
+            <div class="navbar__content">
+                <div class="navbar__left">
+                    <div class="navbar__logo">
+                        <a href="/">
+                            <span class="navbar__logo-text">BharatSetu</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="navbar__right">
+                    <!-- Hamburger Menu Button -->
+                    <button id="hamburger-btn" class="navbar__hamburger">
+                        <i class="fas fa-bars hamburger-icon"></i>
+                        <i class="fas fa-times close-icon"></i>
+                    </button>
+                    
+                    <!-- Mobile Menu Overlay -->
+                    <div id="mobile-menu" class="mobile-menu">
+                        <div class="mobile-menu__header">
+                            <div class="mobile-menu__user">
+                                <div id="mobile-user-picture" class="mobile-menu__user-pic">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="mobile-menu__user-info">
+                                    <span id="mobile-user-name">Guest</span>
+                                    <span id="mobile-user-email">Not logged in</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-menu__content">
+                            <a href="/user-dashboard.html" class="mobile-menu__item">
+                                <i class="fas fa-home"></i>
+                                Dashboard
+                            </a>
+                            <a href="/check-eligibility.html" class="mobile-menu__item">
+                                <i class="fas fa-check-circle"></i>
+                                Check Eligibility
+                            </a>
+                            <div class="mobile-menu__divider"></div>
+                            <button id="mobile-login-btn" class="mobile-menu__item mobile-menu__item--login">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login
+                            </button>
+                            <button id="mobile-logout-btn" class="mobile-menu__item mobile-menu__item--logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Eligibility Check Content -->
+    <main class="eligibility-main">
+        <div class="container">
+
+
+
+            <div class="eligibility-header">
+                <h1>Haryana based MSMEs are eligible for upto Rs. 25cr incentives & subsidies</h1>
+                <h4>Check how much are you eligible for</h4>
+            </div>
+
+            <!-- Flow Map -->
+            <div class="flow-map">
+                <div class="flow-step active">
+                    <div class="flow-step__icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="flow-step__content">
+                        <h3>Fill Details</h3>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step__icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="flow-step__content">
+                        <h3>Check Eligibility</h3>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step__icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="flow-step__content">
+                        <h3>Download Roadmap</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="cta-container">
+                <button id="start-eligibility-btn" class="cta-button">
+                    <i class="fas fa-rocket"></i>
+                    Start Eligibility Check
+                </button>
+            </div>
+
+            <!-- Eligibility Questionnaire -->
+            <div id="eligibility-modal" class="eligibility-questionnaire-container" style="display: none;">
+                <div class="questionnaire-form">
+                    
+                    <!-- Company Information -->
+                    <div class="form-section">
+                        <h3>Company Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="msme-registered">Registered with MSME? *</label>
+                            <div class="radio-group">
+                                <input type="radio" id="msme-yes" name="msme-registered" value="yes" required>
+                                <label for="msme-yes">Yes</label>
+                                <input type="radio" id="msme-no" name="msme-registered" value="no" required>
+                                <label for="msme-no">No</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company-name">Registered Company Name *</label>
+                            <input type="text" id="company-name" name="company-name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company-state">Company registered in which state? *</label>
+                            <select id="company-state" name="company-state" required>
+                                <option value="">Select State</option>
+                                <option value="haryana">Haryana</option>
+                                <option value="delhi">Delhi</option>
+                                <option value="punjab">Punjab</option>
+                                <option value="rajasthan">Rajasthan</option>
+                                <option value="uttar-pradesh">Uttar Pradesh</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="directors-partners">Number of Directors / Partners *</label>
+                            <div class="number-input-group">
+                                <button type="button" class="number-btn left" onclick="decrementValue('directors-partners')">-</button>
+                                <input type="number" id="directors-partners" name="directors-partners" value="1" min="1" required>
+                                <button type="button" class="number-btn right" onclick="incrementValue('directors-partners')">+</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="women-directors-equity">Do women directors own >51% equity? *</label>
+                            <div class="radio-group">
+                                <input type="radio" id="women-yes" name="women-directors-equity" value="yes" required>
+                                <label for="women-yes">Yes</label>
+                                <input type="radio" id="women-no" name="women-directors-equity" value="no" required>
+                                <label for="women-no">No</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sc-st-directors-equity">Do SC/ST directors own >51% equity? *</label>
+                            <div class="radio-group">
+                                <input type="radio" id="sc-st-yes" name="sc-st-directors-equity" value="yes" required>
+                                <label for="sc-st-yes">Yes</label>
+                                <input type="radio" id="sc-st-no" name="sc-st-directors-equity" value="no" required>
+                                <label for="sc-st-no">No</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="domestic-turnover-fy24-25">Domestic Turnover in IT Returns FY24-25 *</label>
+                            <select id="domestic-turnover-fy24-25" name="domestic-turnover-fy24-25" required>
+                                <option value="">Select Turnover Slab</option>
+                                <option value="micro">Up to ₹5 Crores (Micro)</option>
+                                <option value="small">₹5 Crores to ₹75 Crores (Small)</option>
+                                <option value="medium">₹75 Crores to ₹250 Crores (Medium)</option>
+                                <option value="large">Above ₹250 Crores (Large)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="primary-sector">Which Sector do you operate in? *</label>
+                            <select id="primary-sector" name="primary-sector" required>
+                                <option value="">Select Primary Sector</option>
+                                <option value="textile">Textile & Apparel</option>
+                                <option value="food-processing">Food Processing</option>
+                                <option value="renewable-energy">Renewable Energy</option>
+                                <option value="ict">Information & Communication Technology</option>
+                                <option value="traditional">Traditional Industries</option>
+                                <option value="general">General Manufacturing</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="operational-manufacturing-units">Number of Operational Manufacturing Units *</label>
+                            <div class="number-input-group">
+                                <button type="button" class="number-btn left" onclick="decrementValue('operational-manufacturing-units')">-</button>
+                                <input type="number" id="operational-manufacturing-units" name="operational-manufacturing-units" value="1" min="1" required>
+                                <button type="button" class="number-btn right" onclick="incrementValue('operational-manufacturing-units')">+</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="upcoming-manufacturing-units">Number of upcoming manufacturing units</label>
+                            <div class="number-input-group">
+                                <button type="button" class="number-btn left" onclick="decrementValue('upcoming-manufacturing-units')">-</button>
+                                <input type="number" id="upcoming-manufacturing-units" name="upcoming-manufacturing-units" value="0" min="0">
+                                <button type="button" class="number-btn right" onclick="incrementValue('upcoming-manufacturing-units')">+</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="startup-status">Are you a DPIIT Recognized Startup?</label>
+                            <div class="radio-group">
+                                <input type="radio" id="startup-yes" name="startup-status" value="yes">
+                                <label for="startup-yes">Yes</label>
+                                <input type="radio" id="startup-no" name="startup-status" value="no">
+                                <label for="startup-no">No</label>
+                                <input type="radio" id="startup-applied" name="startup-status" value="applied">
+                                <label for="startup-applied">Applied</label>
+                            </div>
+                            <small>For startup-specific and DPIIT recognized startup schemes</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="requires-listing">Have you filed for SME IPO?</label>
+                            <div class="radio-group">
+                                <input type="radio" id="sme-ipo-yes" name="requires-listing" value="true">
+                                <label for="sme-ipo-yes">Yes</label>
+                                <input type="radio" id="sme-ipo-no" name="requires-listing" value="false">
+                                <label for="sme-ipo-no">No</label>
+                            </div>
+                            <small>Required for SME Exchange Equity Scheme</small>
+                        </div>
+                    </div>
+
+                    <!-- Applicant's Information -->
+                    <div class="form-section">
+                        <h3>Applicant's Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="applicant-name">Name *</label>
+                            <input type="text" id="applicant-name" name="applicant-name" required>
+                            <small>Full name of the applicant</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="applicant-role">Role *</label>
+                            <select id="applicant-role" name="applicant-role" required>
+                                <option value="">Select Role</option>
+                                <option value="director">Director</option>
+                                <option value="cfo">CFO</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <small>Your role in the company</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="applicant-phone">Phone *</label>
+                            <input type="tel" id="applicant-phone" name="applicant-phone" required>
+                            <small>Contact number for communication</small>
+                        </div>
+                    </div>
+
+                    <!-- Project Information -->
+                    <div class="form-section">
+                        <h3>Project Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="district">Where is your Unit Located in Haryana *</label>
+                            <select id="district" name="district" required onchange="updateBlocks()">
+                                <option value="">Select District</option>
+                                <option value="ambala">Ambala</option>
+                                <option value="bhiwani">Bhiwani</option>
+                                <option value="charkhi-dadri">Charkhi Dadri</option>
+                                <option value="faridabad">Faridabad</option>
+                                <option value="fatehabad">Fatehabad</option>
+                                <option value="gurugram">Gurugram</option>
+                                <option value="hisar">Hisar</option>
+                                <option value="jhajjar">Jhajjar</option>
+                                <option value="jind">Jind</option>
+                                <option value="kaithal">Kaithal</option>
+                                <option value="karnal">Karnal</option>
+                                <option value="kurukshetra">Kurukshetra</option>
+                                <option value="mahendragarh">Mahendragarh</option>
+                                <option value="mewat">Mewat</option>
+                                <option value="palwal">Palwal</option>
+                                <option value="panchkula">Panchkula</option>
+                                <option value="panipat">Panipat</option>
+                                <option value="rewari">Rewari</option>
+                                <option value="rohtak">Rohtak</option>
+                                <option value="sirsa">Sirsa</option>
+                                <option value="sonipat">Sonipat</option>
+                                <option value="yamunanagar">Yamunanagar</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="block">Which block is it in? *</label>
+                            <select id="block" name="block" required>
+                                <option value="">First select a district</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commercial-production-month">Month of Commercial Production for Unit *</label>
+                            <input type="month" id="commercial-production-month" name="commercial-production-month" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="project-type">Project Type *</label>
+                            <select id="project-type" name="project-type" required>
+                                <option value="">Select Project Type</option>
+                                <option value="new">New Unit</option>
+                                <option value="expansion">Expansion in Existing Unit</option>
+                                <option value="upgrade">Upgrade in Existing Unit</option>
+                            </select>
+                            <small>Select your project type</small>
+                        </div>
+
+                        <!-- Land Ownership Questions (only for new projects) -->
+                        <div id="land-ownership-section" style="display: none;">
+                            <div class="form-group">
+                                <label for="land-ownership">Is your unit on own land or leased land? *</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="land-ownership" value="own"> Own Land</label>
+                                    <label><input type="radio" name="land-ownership" value="leased"> Leased Land</label>
+                                </div>
+                                <small>Select your land ownership type</small>
+                            </div>
+
+                            <!-- Own Land Questions -->
+                            <div id="own-land-questions" style="display: none;">
+                                <div class="form-group">
+                                    <label for="land-purchase-month">Month and Year of Purchase *</label>
+                                    <input type="month" id="land-purchase-month" name="land-purchase-month">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="stamp-duty-paid">How Much Stamp Duty was Paid (INR Lakhs) *</label>
+                                    <input type="number" id="stamp-duty-paid" name="stamp-duty-paid" step="0.01" min="0">
+                                    <small>Amount paid as stamp duty during land purchase</small>
+                                </div>
+                            </div>
+
+                            <!-- Leased Land Questions -->
+                            <div id="leased-land-questions" style="display: none;">
+                                <div class="form-group">
+                                    <label for="monthly-rent">What is the Monthly Rent (INR Lakhs) *</label>
+                                    <input type="number" id="monthly-rent" name="monthly-rent" step="0.01" min="0">
+                                    <small>Monthly rent amount for leased land</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="machinery-investment">Machinery & Plant Setup (INR Lakhs) *</label>
+                            <input type="number" id="machinery-investment" name="machinery-investment" step="0.01" required>
+                            <small>Investment in plant and machinery</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total-project-cost">Total Project Cost (INR Lakhs) *</label>
+                            <input type="number" id="total-project-cost" name="total-project-cost" step="0.01" required>
+                            <small>Total project cost (land + machinery + other expenses)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="interest-rate">Interest Rate on Term Loan (%)</label>
+                            <input type="number" id="interest-rate" name="interest-rate" step="0.1" min="0" max="20">
+                            <small>Required for interest subsidy calculations</small>
+                        </div>
+
+                    </div>
+
+                    <!-- Financial & Operational Details -->
+                    <div class="form-section">
+                        <h3>Mention the actual costs incurred or planning to incur in FY25-26 for the below items</h3>
+                        
+                        <div class="form-group">
+                            <label for="annual-electricity-consumption">Annual Electricity Consumption (Units)</label>
+                            <input type="number" id="annual-electricity-consumption" name="annual-electricity-consumption" min="0">
+                            <small>For electricity duty reimbursement</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="domestic-exhibition-cost">Cost of Costliest Domestic Exhibition attended (INR Lakhs)</label>
+                            <input type="number" id="domestic-exhibition-cost" name="domestic-exhibition-cost" step="0.01" min="0">
+                            <small>Cost of attending domestic exhibitions</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="international-exhibition-cost">Cost of Costliest International Exhibition attended (INR Lakhs)</label>
+                            <input type="number" id="international-exhibition-cost" name="international-exhibition-cost" step="0.01" min="0">
+                            <small>Cost of attending international exhibitions</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="international-airfare">Cost of Air Fare for Attending above International Exhibition (INR Lakhs)</label>
+                            <input type="number" id="international-airfare" name="international-airfare" step="0.01" min="0">
+                            <small>Air fare cost for international exhibition</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="energy-audit-cost">Cost of Energy Audit (INR Lakhs)</label>
+                            <input type="number" id="energy-audit-cost" name="energy-audit-cost" step="0.01" min="0">
+                            <small>Cost of energy audit services</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="water-conservation-audit-cost">Cost of Water Conservation Audit (INR Lakhs)</label>
+                            <input type="number" id="water-conservation-audit-cost" name="water-conservation-audit-cost" step="0.01" min="0">
+                            <small>Cost of water conservation audit</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="energy-efficient-equipment-cost">Cost of Energy Efficient Equipment (INR Lakhs)</label>
+                            <input type="number" id="energy-efficient-equipment-cost" name="energy-efficient-equipment-cost" step="0.01" min="0">
+                            <small>Cost of energy efficient equipment</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quality-certification-cost">Cost of Quality Certifications (INR Lakhs)</label>
+                            <input type="number" id="quality-certification-cost" name="quality-certification-cost" step="0.01" min="0">
+                            <small>Cost of quality certifications</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="erp-implementation-cost">Cost of ERP Implementation & Management (INR Lakhs)</label>
+                            <input type="number" id="erp-implementation-cost" name="erp-implementation-cost" step="0.01" min="0">
+                            <small>Cost of ERP implementation and management</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testing-measuring-equipment-cost">Cost of Testing & Measuring Equipments (INR Lakhs)</label>
+                            <input type="number" id="testing-measuring-equipment-cost" name="testing-measuring-equipment-cost" step="0.01" min="0">
+                            <small>Cost of testing and measuring equipment</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="barcoding-implementation-cost">Cost of Implementing Barcoding (INR Lakhs)</label>
+                            <input type="number" id="barcoding-implementation-cost" name="barcoding-implementation-cost" step="0.01" min="0">
+                            <small>Cost of implementing barcoding system</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="international-patent-filing-cost">Cost of International Patent Filing (INR Lakhs)</label>
+                            <input type="number" id="international-patent-filing-cost" name="international-patent-filing-cost" step="0.01" min="0">
+                            <small>Cost of international patent filing</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="national-patent-filing-cost">Cost of National Patent Filing (INR Lakhs)</label>
+                            <input type="number" id="national-patent-filing-cost" name="national-patent-filing-cost" step="0.01" min="0">
+                            <small>Cost of national patent filing</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="copyright-trademark-filing-cost">Cost of Copyright & Trademark Filing (INR Lakhs)</label>
+                            <input type="number" id="copyright-trademark-filing-cost" name="copyright-trademark-filing-cost" step="0.01" min="0">
+                            <small>Cost of copyright and trademark filing</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="haryana-domicile-employees">How many employees of Haryana Domicile under the salary of Rs. 40k/month</label>
+                            <input type="number" id="haryana-domicile-employees" name="haryana-domicile-employees" min="0">
+                            <small>Number of Haryana domicile employees with salary under Rs. 40k/month</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apprentices">Number of Apprentices under NAPS/NATS</label>
+                            <input type="number" id="apprentices" name="apprentices" min="0">
+                            <small>Number of apprentices enrolled under National Apprenticeship Promotion Scheme</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="safety-audit-cost">Cost of Safety Audit (INR Lakhs)</label>
+                            <input type="number" id="safety-audit-cost" name="safety-audit-cost" step="0.01" min="0">
+                            <small>Cost of safety audit services</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="safety-equipment-cost">Cost of Safety Equipment (INR Lakhs)</label>
+                            <input type="number" id="safety-equipment-cost" name="safety-equipment-cost" step="0.01" min="0">
+                            <small>Cost of safety equipment and PPE</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="etp-plant-cost">Cost of ETP Plant Installation (INR Lakhs)</label>
+                            <input type="number" id="etp-plant-cost" name="etp-plant-cost" step="0.01" min="0">
+                            <small>Cost of Effluent Treatment Plant installation</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rooftop-solar-cost">Cost of Rooftop Solar Installation (INR Lakhs)</label>
+                            <input type="number" id="rooftop-solar-cost" name="rooftop-solar-cost" step="0.01" min="0">
+                            <small>Cost of rooftop solar panel installation</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zero-liquid-discharge-cost">Cost of Zero Liquid Discharge System (INR Lakhs)</label>
+                            <input type="number" id="zero-liquid-discharge-cost" name="zero-liquid-discharge-cost" step="0.01" min="0">
+                            <small>Cost of Zero Liquid Discharge (ZLD) system</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equity-investment">Equity Investment Amount Sought (INR Lakhs)</label>
+                            <input type="number" id="equity-investment" name="equity-investment" step="0.01" min="0">
+                            <small>Amount of equity investment you are seeking</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="branding-marketing-cost">Annual Branding & Marketing Cost (INR Lakhs)</label>
+                            <input type="number" id="branding-marketing-cost" name="branding-marketing-cost" step="0.01" min="0">
+                            <small>Annual expenditure on branding and marketing</small>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">Check Eligibility</button>
+                        <a href="/user-dashboard.html" class="btn btn--secondary">Cancel</a>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="eligibility-results" style="display: none;">
+                    <div id="results-content"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="/js/auth-service.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/eligibility-engine.js"></script>
+    <script src="/js/eligibility-questionnaire.js"></script>
+    <script src="/js/eligibility-check.js"></script>
+    
+    <script>
+        // Number input button functions
+        function incrementValue(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                const currentValue = parseInt(field.value) || 0;
+                const min = parseInt(field.min) || 0;
+                field.value = currentValue + 1;
+                field.dispatchEvent(new Event('change'));
+            }
+        }
+
+        function decrementValue(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                const currentValue = parseInt(field.value) || 0;
+                const min = parseInt(field.min) || 0;
+                const newValue = Math.max(currentValue - 1, min);
+                field.value = newValue;
+                field.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Calendar field click handlers
+        function initCalendarFields() {
+            const calendarFields = document.querySelectorAll('input[type="month"]');
+            calendarFields.forEach(field => {
+                // Add click event to the entire field
+                field.addEventListener('click', function(e) {
+                    // Prevent default to avoid double-triggering
+                    e.preventDefault();
+                    // Focus the field to open the calendar
+                    this.focus();
+                    // Trigger the native calendar picker
+                    this.showPicker();
+                });
+                
+                // Also handle focus to ensure calendar opens
+                field.addEventListener('focus', function() {
+                    // Small delay to ensure the field is properly focused
+                    setTimeout(() => {
+                        if (this.showPicker) {
+                            this.showPicker();
+                        }
+                    }, 100);
+                });
+            });
+        }
+
+        // Initialize calendar fields when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            initCalendarFields();
+            initProjectTypeLogic();
+        });
+
+        // Project type logic for conditional land ownership questions
+        function initProjectTypeLogic() {
+            const projectTypeSelect = document.getElementById('project-type');
+            const landOwnershipSection = document.getElementById('land-ownership-section');
+            
+            if (projectTypeSelect) {
+                projectTypeSelect.addEventListener('change', function() {
+                    if (this.value === 'new') {
+                        landOwnershipSection.style.display = 'block';
+                    } else {
+                        landOwnershipSection.style.display = 'none';
+                        // Reset land ownership radio buttons when hidden
+                        const landOwnershipRadios = document.querySelectorAll('input[name="land-ownership"]');
+                        landOwnershipRadios.forEach(radio => radio.checked = false);
+                        // Hide conditional questions
+                        document.getElementById('own-land-questions').style.display = 'none';
+                        document.getElementById('leased-land-questions').style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // CTA Button Functionality
+        document.getElementById('start-eligibility-btn').addEventListener('click', function() {
+            console.log('Start eligibility button clicked');
+            
+            // Show the form
+            document.getElementById('eligibility-modal').style.display = 'block';
+            
+            // Initialize the eligibility questionnaire AFTER the form is shown
+            try {
+                console.log('Attempting to create EligibilityQuestionnaire...');
+                console.log('EligibilityQuestionnaire class defined:', typeof EligibilityQuestionnaire);
+                console.log('EligibilityEngine class defined:', typeof EligibilityEngine);
+                
+                const questionnaire = new EligibilityQuestionnaire();
+                console.log('EligibilityQuestionnaire created successfully:', questionnaire);
+            } catch (error) {
+                console.error('Error creating EligibilityQuestionnaire:', error);
+            }
+            
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Update flow step
+            document.querySelectorAll('.flow-step').forEach((step, index) => {
+                step.classList.remove('active');
+                if (index === 0) {
+                    step.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
