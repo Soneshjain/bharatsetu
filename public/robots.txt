@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://bharatsetu.com/sitemap.xml
+
+# Allow all pages
+Allow: /index.html
+Allow: /dashboard.html
+Allow: /add-company.html
+Allow: /eligibility-check.html
+
+# Allow all scheme pages
+Allow: /schemes/
+
+# Disallow admin or private areas (if any)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Crawl delay (optional)
+Crawl-delay: 1 

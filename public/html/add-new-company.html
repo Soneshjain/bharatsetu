@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="sitemap:changefreq" content="monthly">
+    <meta name="sitemap:priority" content="0.7">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Company - BharatSetu</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&family=Cambay:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Base CSS (Load First) -->
+    <link rel="stylesheet" href="/css/base.css">
+    
+    <!-- Page-Specific CSS (Load After) -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/company-form.css">
+    
+    <!-- Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar__content">
+                <div class="navbar__left">
+                    <div class="navbar__logo">
+                        <a href="/">
+                            <i class="fas fa-bridge"></i>
+                            <span class="navbar__logo-text">BharatSetu</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="navbar__right">
+                    <!-- Apply Now Button -->
+                    <a href="/user-dashboard.html" class="btn btn--primary">Apply Now</a>
+                    
+                    <!-- Hamburger Menu Button -->
+                    <button id="hamburger-btn" class="navbar__hamburger">
+                        <i class="fas fa-bars hamburger-icon"></i>
+                        <i class="fas fa-times close-icon"></i>
+                    </button>
+                    
+                    <!-- Mobile Menu Overlay -->
+                    <div id="mobile-menu" class="mobile-menu">
+                        <div class="mobile-menu__header">
+                            <div class="mobile-menu__user">
+                                <div id="mobile-user-picture" class="mobile-menu__user-pic">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="mobile-menu__user-info">
+                                    <span id="mobile-user-name">Guest</span>
+                                    <span id="mobile-user-email">Not logged in</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-menu__content">
+                            <a href="/user-dashboard.html" class="mobile-menu__item">
+                                <i class="fas fa-home"></i>
+                                Dashboard
+                            </a>
+                            <a href="/check-eligibility.html" class="mobile-menu__item">
+                                <i class="fas fa-check-circle"></i>
+                                Check Eligibility
+                            </a>
+                            <div class="mobile-menu__divider"></div>
+                            <button id="mobile-login-btn" class="mobile-menu__item mobile-menu__item--login">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login
+                            </button>
+                            <button id="mobile-logout-btn" class="mobile-menu__item mobile-menu__item--logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Company Form -->
+    <main class="company-form-main">
+        <div class="container">
+            <div class="form-header">
+                <h1>Add New Company</h1>
+                <p>Register your company details to get started</p>
+            </div>
+
+            <form id="company-form" class="company-form">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h3>Basic Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="company-name">Company Name *</label>
+                        <input type="text" id="company-name" name="company-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registration-number">Registration Number</label>
+                        <input type="text" id="registration-number" name="registration-number" placeholder="MSME/Udyam/Other registration number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="primary-sector">Primary Sector *</label>
+                        <select id="primary-sector" name="primary-sector" required>
+                            <option value="">Select Primary Sector</option>
+                            <option value="textile">Textile & Apparel</option>
+                            <option value="food-processing">Food Processing</option>
+                            <option value="renewable-energy">Renewable Energy</option>
+                            <option value="ict">Information & Communication Technology</option>
+                            <option value="traditional">Traditional Industries</option>
+                            <option value="general">General Manufacturing</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Location Information -->
+                <div class="form-section">
+                    <h3>Location Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="district">District *</label>
+                        <select id="district" name="district" required onchange="updateBlocks()">
+                            <option value="">Select District</option>
+                            <option value="ambala">Ambala</option>
+                            <option value="bhiwani">Bhiwani</option>
+                            <option value="charkhi-dadri">Charkhi Dadri</option>
+                            <option value="faridabad">Faridabad</option>
+                            <option value="fatehabad">Fatehabad</option>
+                            <option value="gurugram">Gurugram</option>
+                            <option value="hisar">Hisar</option>
+                            <option value="jhajjar">Jhajjar</option>
+                            <option value="jind">Jind</option>
+                            <option value="kaithal">Kaithal</option>
+                            <option value="karnal">Karnal</option>
+                            <option value="kurukshetra">Kurukshetra</option>
+                            <option value="mahendragarh">Mahendragarh</option>
+                            <option value="mewat">Mewat</option>
+                            <option value="palwal">Palwal</option>
+                            <option value="panchkula">Panchkula</option>
+                            <option value="panipat">Panipat</option>
+                            <option value="rewari">Rewari</option>
+                            <option value="rohtak">Rohtak</option>
+                            <option value="sirsa">Sirsa</option>
+                            <option value="sonipat">Sonipat</option>
+                            <option value="yamunanagar">Yamunanagar</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="block">Block *</label>
+                        <select id="block" name="block" required>
+                            <option value="">First select a district</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="commercial-production-date">Date of Commercial Production *</label>
+                        <input type="date" id="commercial-production-date" name="commercial-production-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="electricity-connection-date">Date of Electricity Connection</label>
+                        <input type="date" id="electricity-connection-date" name="electricity-connection-date">
+                    </div>
+                </div>
+
+                <!-- Project Information -->
+                <div class="form-section">
+                    <h3>Project Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="project-type">Project Type *</label>
+                        <select id="project-type" name="project-type" required>
+                            <option value="">Select Project Type</option>
+                            <option value="new">New Unit</option>
+                            <option value="expansion">Expansion</option>
+                            <option value="diversification">Diversification</option>
+                            <option value="modernization">Modernization</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="land-investment">Land Investment (INR Cr.) *</label>
+                        <input type="number" id="land-investment" name="land-investment" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="machinery-investment">Machinery & Plant Setup (INR Cr.) *</label>
+                        <input type="number" id="machinery-investment" name="machinery-investment" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="total-project-cost">Total Project Cost (INR Cr.) *</label>
+                        <input type="number" id="total-project-cost" name="total-project-cost" step="0.01" required>
+                    </div>
+                </div>
+
+                <!-- Financial Information -->
+                <div class="form-section">
+                    <h3>Financial Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="annual-turnover">Annual Turnover (INR Cr.)</label>
+                        <input type="number" id="annual-turnover" name="annual-turnover" step="0.01" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="has-term-loan">Do you have a term loan?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="has-term-loan" value="true"> Yes</label>
+                            <label><input type="radio" name="has-term-loan" value="false"> No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="term-loan-amount">Term Loan Amount (INR)</label>
+                        <input type="number" id="term-loan-amount" name="term-loan-amount" step="0.01" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest-rate">Interest Rate on Term Loan (%)</label>
+                        <input type="number" id="interest-rate" name="interest-rate" step="0.1" min="0" max="20">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary">Add Company</button>
+                    <a href="/user-dashboard.html" class="btn btn--secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="/js/auth-service.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/company-form.js"></script>
+</body>
+</html> 
