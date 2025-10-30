@@ -3,96 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check Eligibility - BharatSetu</title>
+    <title>Check Eligibility - GrantSetu</title>
+    <meta name="description" content="Check your eligibility for government schemes and incentives. Get instant results and expert guidance for your MSME applications.">
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&family=Cambay:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Base CSS (Load First) -->
+    <!-- Styles -->
     <link rel="stylesheet" href="css/base.css">
-    
-    <!-- Page-Specific CSS (Load After) -->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/eligibility-questionnaire.css">
     
-    <!-- Google OAuth -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/grantsetu-logo.svg">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar--hero">
+    <!-- Navigation Container -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="eligibility-hero section--dark">
         <div class="container">
-            <div class="navbar__content">
-                <div class="navbar__left">
-                    <div class="navbar__logo">
-                        <a href="index.html">
-                            <span class="navbar__logo-text">BharatSetu</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="navbar__right">
-                    <!-- Hamburger Menu Button -->
-                    <button id="hamburger-btn" class="navbar__hamburger">
-                        <i class="fas fa-bars hamburger-icon"></i>
-                        <i class="fas fa-times close-icon"></i>
-                    </button>
-                    
-                    <!-- Mobile Menu Overlay -->
-                    <div id="mobile-menu" class="mobile-menu">
-                        <div class="mobile-menu__header">
-                            <div class="mobile-menu__user">
-                                <div id="mobile-user-picture" class="mobile-menu__user-pic">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="mobile-menu__user-info">
-                                    <span id="mobile-user-name">Guest</span>
-                                    <span id="mobile-user-email">Not logged in</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mobile-menu__content">
-                            <a href="dashboard.html" class="mobile-menu__item">
-                                <i class="fas fa-home"></i>
-                                Dashboard
-                            </a>
-                            <a href="eligibility-check.html" class="mobile-menu__item">
-                                <i class="fas fa-check-circle"></i>
-                                Check Eligibility
-                            </a>
-                            <div class="mobile-menu__divider"></div>
-                            <button id="mobile-login-btn" class="mobile-menu__item mobile-menu__item--login">
-                                <i class="fas fa-sign-in-alt"></i>
-                                Login
-                            </button>
-                            <button id="mobile-logout-btn" class="mobile-menu__item mobile-menu__item--logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Logout
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="eligibility-hero__content">
+                <h1 class="eligibility-hero__title">Haryana based MSMEs are eligible for upto Rs. 25cr incentives & subsidies</h1>
+                <h4 class="eligibility-hero__subtitle">Check how much are you eligible for</h4>
             </div>
         </div>
-    </nav>
+    </section>
 
-    <!-- Eligibility Check Content -->
     <main class="eligibility-main">
         <div class="container">
 
-
-
-            <div class="eligibility-header">
-                <h1>Haryana based MSMEs are eligible for upto Rs. 25cr incentives & subsidies</h1>
-                <h4>Check how much are you eligible for</h4>
-            </div>
-
             <!-- Flow Map -->
-            <div class="flow-map">
+            <!-- <div class="flow-map">
                 <div class="flow-step active">
                     <div class="flow-step__icon">
                         <i class="fas fa-edit"></i>
@@ -117,23 +60,16 @@
                         <h3>Download Roadmap</h3>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <!-- CTA Button -->
-            <div class="cta-container">
-                <button id="start-eligibility-btn" class="cta-button">
-                    <i class="fas fa-rocket"></i>
-                    Start Eligibility Check
-                </button>
-            </div>
 
             <!-- Eligibility Questionnaire -->
-            <div id="eligibility-modal" class="eligibility-questionnaire-container" style="display: none;">
-                <div class="questionnaire-form">
+            <div id="eligibility-modal" class="eligibility-questionnaire-container">
+                <form class="questionnaire-form">
                     
                     <!-- Company Information -->
                     <div class="form-section">
-                        <h3>Company Information</h3>
+                        <h3>Step 1 of 3: Basic Details</h3>
                         
                         <div class="form-group">
                             <label for="msme-registered">Registered with MSME? *</label>
@@ -166,9 +102,7 @@
                         <div class="form-group">
                             <label for="directors-partners">Number of Directors / Partners *</label>
                             <div class="number-input-group">
-                                <button type="button" class="number-btn left" onclick="decrementValue('directors-partners')">-</button>
-                                <input type="number" id="directors-partners" name="directors-partners" value="1" min="1" required>
-                                <button type="button" class="number-btn right" onclick="incrementValue('directors-partners')">+</button>
+                                <input type="number" id="directors-partners" name="directors-partners" value="1" min="1" max="9" required>
                             </div>
                         </div>
 
@@ -220,18 +154,14 @@
                         <div class="form-group">
                             <label for="operational-manufacturing-units">Number of Operational Manufacturing Units *</label>
                             <div class="number-input-group">
-                                <button type="button" class="number-btn left" onclick="decrementValue('operational-manufacturing-units')">-</button>
-                                <input type="number" id="operational-manufacturing-units" name="operational-manufacturing-units" value="1" min="1" required>
-                                <button type="button" class="number-btn right" onclick="incrementValue('operational-manufacturing-units')">+</button>
+                                <input type="number" id="operational-manufacturing-units" name="operational-manufacturing-units" value="1" min="1" max="9" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="upcoming-manufacturing-units">Number of upcoming manufacturing units</label>
                             <div class="number-input-group">
-                                <button type="button" class="number-btn left" onclick="decrementValue('upcoming-manufacturing-units')">-</button>
-                                <input type="number" id="upcoming-manufacturing-units" name="upcoming-manufacturing-units" value="0" min="0">
-                                <button type="button" class="number-btn right" onclick="incrementValue('upcoming-manufacturing-units')">+</button>
+                                <input type="number" id="upcoming-manufacturing-units" name="upcoming-manufacturing-units" value="0" min="0" max="9">
                             </div>
                         </div>
 
@@ -258,43 +188,39 @@
                             </div>
                             <small>Required for SME Exchange Equity Scheme</small>
                         </div>
-                    </div>
-
-                    <!-- Applicant's Information -->
-                    <div class="form-section">
-                        <h3>Applicant's Information</h3>
+                    <!-- <h3>Applicant's Information</h3> -->
                         
                         <div class="form-group">
-                            <label for="applicant-name">Name *</label>
+                            <label for="applicant-name">You Name *</label>
                             <input type="text" id="applicant-name" name="applicant-name" required>
-                            <small>Full name of the applicant</small>
+                            <!-- <small>Full name of the applicant</small> -->
                         </div>
 
                         <div class="form-group">
-                            <label for="applicant-role">Role *</label>
+                            <label for="applicant-role">Your Role *</label>
                             <select id="applicant-role" name="applicant-role" required>
                                 <option value="">Select Role</option>
                                 <option value="director">Director</option>
                                 <option value="cfo">CFO</option>
                                 <option value="other">Other</option>
                             </select>
-                            <small>Your role in the company</small>
+                            <!-- <small>Your role in the company</small> -->
                         </div>
 
                         <div class="form-group">
-                            <label for="applicant-phone">Phone *</label>
+                            <label for="applicant-phone">Whatsapp Number *</label>
                             <input type="tel" id="applicant-phone" name="applicant-phone" required>
-                            <small>Contact number for communication</small>
+                            <!-- <small>Contact number for communication</small> -->
                         </div>
                     </div>
 
                     <!-- Project Information -->
-                    <div class="form-section">
+                    <div class="form-section" style="display: none;">
                         <h3>Project Information</h3>
                         
                         <div class="form-group">
                             <label for="district">Where is your Unit Located in Haryana *</label>
-                            <select id="district" name="district" required onchange="updateBlocks()">
+                            <select id="district" name="district" onchange="updateBlocks()">
                                 <option value="">Select District</option>
                                 <option value="ambala">Ambala</option>
                                 <option value="bhiwani">Bhiwani</option>
@@ -323,19 +249,19 @@
 
                         <div class="form-group">
                             <label for="block">Which block is it in? *</label>
-                            <select id="block" name="block" required>
+                            <select id="block" name="block">
                                 <option value="">First select a district</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="commercial-production-month">Month of Commercial Production for Unit *</label>
-                            <input type="month" id="commercial-production-month" name="commercial-production-month" required>
+                            <input type="month" id="commercial-production-month" name="commercial-production-month">
                         </div>
 
                         <div class="form-group">
                             <label for="project-type">Project Type *</label>
-                            <select id="project-type" name="project-type" required>
+                            <select id="project-type" name="project-type">
                                 <option value="">Select Project Type</option>
                                 <option value="new">New Unit</option>
                                 <option value="expansion">Expansion in Existing Unit</option>
@@ -381,13 +307,13 @@
 
                         <div class="form-group">
                             <label for="machinery-investment">Machinery & Plant Setup (INR Lakhs) *</label>
-                            <input type="number" id="machinery-investment" name="machinery-investment" step="0.01" required>
+                            <input type="number" id="machinery-investment" name="machinery-investment" step="0.01">
                             <small>Investment in plant and machinery</small>
                         </div>
 
                         <div class="form-group">
                             <label for="total-project-cost">Total Project Cost (INR Lakhs) *</label>
-                            <input type="number" id="total-project-cost" name="total-project-cost" step="0.01" required>
+                            <input type="number" id="total-project-cost" name="total-project-cost" step="0.01">
                             <small>Total project cost (land + machinery + other expenses)</small>
                         </div>
 
@@ -400,7 +326,7 @@
                     </div>
 
                     <!-- Financial & Operational Details -->
-                    <div class="form-section">
+                    <div class="form-section" style="display: none;">
                         <h3>Mention the actual costs incurred or planning to incur in FY25-26 for the below items</h3>
                         
                         <div class="form-group">
@@ -542,13 +468,10 @@
                         </div>
                     </div>
 
-
-
                     <div class="form-actions">
                         <button type="submit" class="btn btn--primary">Check Eligibility</button>
-                        <a href="dashboard.html" class="btn btn--secondary">Cancel</a>
                     </div>
-                </div>
+                </form>
 
                 <!-- Results Section -->
                 <div id="eligibility-results" style="display: none;">
@@ -558,36 +481,24 @@
         </div>
     </main>
 
-    <!-- JavaScript -->
-    <script src="js/auth-service.js"></script>
+    <!-- Footer -->
+    <footer class="footer" id="footer"></footer>
+
+    <!-- Scripts -->
     <script src="js/utils.js"></script>
+    <script src="js/auth-service.js"></script>
+    <script src="js/auth-flow.js"></script>
+    <script src="js/components.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/eligibility-engine.js"></script>
-    <script src="js/eligibility-questionnaire.js"></script>
-    <script src="js/eligibility-check.js"></script>
     
     <script>
-        // Number input button functions
-        function incrementValue(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                const currentValue = parseInt(field.value) || 0;
-                const min = parseInt(field.min) || 0;
-                field.value = currentValue + 1;
-                field.dispatchEvent(new Event('change'));
-            }
-        }
-
-        function decrementValue(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                const currentValue = parseInt(field.value) || 0;
-                const min = parseInt(field.min) || 0;
-                const newValue = Math.max(currentValue - 1, min);
-                field.value = newValue;
-                field.dispatchEvent(new Event('change'));
-            }
-        }
+        // Initialize page after all scripts are loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any page-specific functionality here
+        });
+    </script>
+    
+    <script>
 
         // Calendar field click handlers
         function initCalendarFields() {
@@ -644,39 +555,220 @@
             }
         }
 
-        // CTA Button Functionality
-        document.getElementById('start-eligibility-btn').addEventListener('click', function() {
-            console.log('Start eligibility button clicked');
+        // Initialize the eligibility questionnaire on page load
+
+        // AI Integration for Eligibility Check
+        async function processEligibilityCheck(formData) {
+            const API_BASE_URL = 'http://localhost:8001'; // Update with your backend URL
+            const sessionId = 'eligibility_' + Date.now();
             
-            // Show the form
-            document.getElementById('eligibility-modal').style.display = 'block';
-            
-            // Initialize the eligibility questionnaire AFTER the form is shown
             try {
-                console.log('Attempting to create EligibilityQuestionnaire...');
-                console.log('EligibilityQuestionnaire class defined:', typeof EligibilityQuestionnaire);
-                console.log('EligibilityEngine class defined:', typeof EligibilityEngine);
+                console.log('Submitting eligibility check to AI...');
                 
-                const questionnaire = new EligibilityQuestionnaire();
-                console.log('EligibilityQuestionnaire created successfully:', questionnaire);
+                const response = await fetch(`${API_BASE_URL}/eligibility-check`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Session-Id': sessionId
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('AI Eligibility Analysis:', result);
+                
+                // Display results to user
+                displayEligibilityResults(result);
+                
+                return result;
+                
             } catch (error) {
-                console.error('Error creating EligibilityQuestionnaire:', error);
+                console.error('Error processing eligibility check:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    stack: error.stack,
+                    name: error.name
+                });
+                
+                // Restore button state
+                const submitBtn = document.querySelector('button[type="submit"]');
+                if (submitBtn && submitBtn.dataset.originalText) {
+                    submitBtn.textContent = submitBtn.dataset.originalText;
+                    submitBtn.disabled = false;
+                }
+                
+                alert(`Sorry, there was an error processing your eligibility check: ${error.message}. Please try again.`);
+                return null;
+            }
+        }
+
+        function displayEligibilityResults(results) {
+            // Hide the form
+            document.getElementById('eligibility-modal').style.display = 'none';
+            
+            // Hide any static content that might interfere
+            const staticElements = [
+                '.hero',
+                '.flow-map', 
+                '.eligibility-hero',
+                '.static-content'
+            ];
+            
+            staticElements.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => el.style.display = 'none');
+            });
+            
+            // Create results section
+            const resultsSection = document.createElement('div');
+            resultsSection.id = 'eligibility-results';
+            resultsSection.innerHTML = `
+                <div class="eligibility-results-container">
+                    <h2>🎯 Your Eligibility Analysis</h2>
+                    <div class="results-summary">
+                        <h3>Total Estimated Benefits: ${results.total_estimated_benefits}</h3>
+                        ${results.benefit_breakdown ? `
+                        <div class="benefit-breakdown">
+                            <h4>Benefit Breakdown:</h4>
+                            <div class="breakdown-grid">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Direct Incentives:</span>
+                                    <span class="breakdown-amount">${results.benefit_breakdown.direct_incentives || '₹0 Lakhs'}</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Interest Subsidies:</span>
+                                    <span class="breakdown-amount">${results.benefit_breakdown.interest_subsidies || '₹0 Lakhs'}</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Loan Guarantees:</span>
+                                    <span class="breakdown-amount">${results.benefit_breakdown.loan_guarantees || '₹0 Lakhs'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="eligible-schemes">
+                        <h3>${results.company_name || 'Your Company'} is eligible for ${results.eligible_schemes.length} schemes</h3>
+                        
+                        ${results.eligible_schemes.map((scheme, index) => `
+                            <div class="scheme-card">
+                                <h4>${scheme.name}</h4>
+                                <p class="benefit-amount">${scheme.benefit_amount}</p>
+                                ${scheme.benefit_type ? `<p class="benefit-type">Type: ${scheme.benefit_type}</p>` : ''}
+                                <p class="eligibility-score">Eligibility: ${scheme.eligibility_score}</p>
+                                <p class="description">${scheme.description}</p>
+                                <div class="requirements">
+                                    <strong>Requirements:</strong>
+                                    <ul>
+                                        ${scheme.requirements.map(req => `<li>${req}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                <button class="btn btn--primary" onclick="selectScheme('${scheme.name}')">
+                                    Apply for this Scheme
+                                </button>
+                            </div>
+                            
+                            ${index === 2 ? `
+                            <!-- Sales Nudge - Strategic Placement After 3 Cards -->
+                            <div class="sales-nudge">
+                                <div class="discount-badge">
+                                    <span class="discount-text">🎉 Yay! Discount Unlocked!</span>
+                                </div>
+                                <div class="pricing-info">
+                                    <span class="original-price">₹49,995</span>
+                                    <span class="current-price">₹19,998</span>
+                                    <span class="savings">Save ₹30,000!</span>
+                                </div>
+                                <div class="offer-details">
+                                    Apply to 5 schemes for <strong>₹19,998/-</strong> (Actual Price: ₹49,995)
+                                </div>
+                            </div>
+                            ` : ''}
+                        `).join('')}
+                    </div>
+                    
+                    <div class="recommended-actions">
+                        <h3>Recommended Next Steps:</h3>
+                        <ul>
+                            ${results.recommended_actions.map(action => `<li>${action}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <button class="btn btn--secondary" onclick="startChatWithAI()">
+                            💬 Chat with AI Assistant
+                        </button>
+                        <button class="btn btn--primary" onclick="scheduleConsultation()">
+                            📞 Schedule Free Consultation
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Insert results at the top of the main content area (independent of any static content)
+            const mainContent = document.querySelector('.eligibility-main') || 
+                              document.querySelector('main') || 
+                              document.querySelector('.container') ||
+                              document.body;
+            
+            if (mainContent) {
+                // Insert at the beginning of main content for better visibility
+                mainContent.insertBefore(resultsSection, mainContent.firstChild);
+            } else {
+                document.body.appendChild(resultsSection);
             }
             
-            // Scroll to top
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-            
-            // Update flow step
-            document.querySelectorAll('.flow-step').forEach((step, index) => {
-                step.classList.remove('active');
-                if (index === 0) {
-                    step.classList.add('active');
-                }
-            });
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectScheme(schemeName) {
+            alert(`Great choice! You've selected: ${schemeName}\n\nOur team will contact you to help with the application process.`);
+        }
+
+        function startChatWithAI() {
+            // Redirect to chatbot or open in new tab
+            window.open('/schemes-chatbot', '_blank');
+        }
+
+        function scheduleConsultation() {
+            alert('📞 Consultation Request Sent!\n\nOur team will contact you within 24 hours to schedule your free consultation.');
+        }
+
+        // Update form submission to use AI
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.questionnaire-form');
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Collect form data
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    console.log('Form submitted with data:', data);
+                    
+                    // Show loading state
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.textContent;
+                        submitBtn.textContent = 'Processing with AI...';
+                        submitBtn.disabled = true;
+                        
+                        // Store original text for restoration
+                        submitBtn.dataset.originalText = originalText;
+                    }
+                    
+                    // Process with AI
+                    await processEligibilityCheck(data);
+                });
+            }
         });
     </script>
 </body>
-</html> 
+</html>

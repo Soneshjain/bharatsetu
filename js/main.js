@@ -1,87 +1,33 @@
 /* ===== BHARATSETU MAIN JAVASCRIPT ===== */
 /* Optimized main JavaScript using centralized utilities */
 
+// ===== UTILITY FUNCTIONS =====
+// Using debounce and throttle from utils.js (window.BharatSetuUtils)
+
 // ===== NAVBAR SCROLL HANDLER =====
 const handleNavbarScroll = () => {
-    const navbar = $('.navbar');
+    const navbar = document.querySelector('.navbar');
     if (!navbar) return;
     
     if (window.scrollY > 50) {
-        addClass(navbar, 'navbar--scrolled');
-        removeClass(navbar, 'navbar--transparent');
+        navbar.classList.add('navbar--scrolled');
+        navbar.classList.remove('navbar--transparent');
     } else {
-        addClass(navbar, 'navbar--transparent');
-        removeClass(navbar, 'navbar--scrolled');
+        navbar.classList.add('navbar--transparent');
+        navbar.classList.remove('navbar--scrolled');
     }
 };
 
 // ===== MOBILE MENU HANDLER =====
-const initMobileMenu = () => {
-    const hamburgerBtn = $('#hamburger-btn');
-    const mobileMenu = $('#mobile-menu');
-    const mobileLoginBtn = $('#mobile-login-btn');
-    const mobileLogoutBtn = $('#mobile-logout-btn');
-    
-    if (!hamburgerBtn || !mobileMenu) return;
-    
-    // Toggle mobile menu
-    hamburgerBtn.addEventListener('click', () => {
-        toggleClass(hamburgerBtn, 'active');
-        toggleClass(mobileMenu, 'active');
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!hamburgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-            removeClass(hamburgerBtn, 'active');
-            removeClass(mobileMenu, 'active');
-        }
-    });
-    
-    // Handle mobile login/logout
-    if (mobileLoginBtn) {
-        mobileLoginBtn.addEventListener('click', () => {
-            // Close mobile menu first
-            removeClass(hamburgerBtn, 'active');
-            removeClass(mobileMenu, 'active');
-            
-            // Trigger Google Auth login flow
-            if (window.authFlow) {
-                window.authFlow.showAuthModal();
-            } else if (window.initiateLogin) {
-                window.initiateLogin();
-            } else {
-                console.log('No authentication service available');
-            }
-        });
-    }
-    
-    if (mobileLogoutBtn) {
-        mobileLogoutBtn.addEventListener('click', () => {
-            // Close mobile menu first
-            removeClass(hamburgerBtn, 'active');
-            removeClass(mobileMenu, 'active');
-            
-            // Trigger Google Auth logout flow
-            if (window.authService) {
-                window.authService.logout();
-            } else if (window.logout) {
-                window.logout();
-            } else {
-                // Fallback test logout for demo
-                updateMobileMenuForAuth(false);
-            }
-        });
-    }
-};
+// Mobile menu handler moved to components.js to avoid conflicts
 
 // ===== MOBILE MENU AUTH STATE UPDATER =====
 const updateMobileMenuForAuth = (isAuthenticated, userData = null) => {
-    const mobileUserPicture = $('#mobile-user-picture');
-    const mobileUserName = $('#mobile-user-name');
-    const mobileUserEmail = $('#mobile-user-email');
-    const mobileLoginBtn = $('#mobile-login-btn');
-    const mobileLogoutBtn = $('#mobile-logout-btn');
+    const mobileUserPicture = document.getElementById('mobile-user-picture');
+    const mobileUserName = document.getElementById('mobile-user-name');
+    const mobileUserEmail = document.getElementById('mobile-user-email');
+    const mobileLoginBtn = document.getElementById('mobile-login-btn');
+    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
     
     if (isAuthenticated && userData) {
         console.log('Updating mobile menu with user data:', userData);
@@ -147,11 +93,14 @@ const initMobileMenuAuthPersistence = () => {
 
 // ===== SMOOTH SCROLLING =====
 const initSmoothScrolling = () => {
-    addEventListeners('a[href^="#"]', 'click', (e) => {
-        e.preventDefault();
-        const target = $(e.target.getAttribute('href'));
-        if (target && window.BharatSetuUtils && window.BharatSetuUtils.scroll) {
-            window.BharatSetuUtils.scroll.to(target, 80);
+    document.addEventListener('click', (e) => {
+        if (e.target.matches('a[href^="#"]')) {
+            e.preventDefault();
+            const targetId = e.target.getAttribute('href').substring(1);
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     });
 };
@@ -166,20 +115,20 @@ const initScrollAnimations = () => {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                addClass(entry.target, 'animate-in');
+                entry.target.classList.add('animate-in');
             }
         });
     }, observerOptions);
     
     // Observe elements with animation classes
-    $$('.problem-card, .consultant-card, .scheme-card, .service-card').forEach(el => {
+    document.querySelectorAll('.problem-card, .consultant-card, .scheme-card, .service-card').forEach(el => {
         observer.observe(el);
     });
 };
 
 // ===== FORM VALIDATION =====
 const initFormValidation = () => {
-    const forms = $$('form');
+    const forms = document.querySelectorAll('form');
     
     forms.forEach(form => {
         form.addEventListener('submit', (e) => {
@@ -243,7 +192,7 @@ const initLazyLoading = () => {
         });
     });
     
-    $$('img[data-src]').forEach(img => {
+    document.querySelectorAll('img[data-src]').forEach(img => {
         imageObserver.observe(img);
     });
 };
@@ -251,17 +200,17 @@ const initLazyLoading = () => {
 // ===== PERFORMANCE OPTIMIZATION =====
 const initPerformanceOptimizations = () => {
     // Throttle scroll events
-    const throttledScrollHandler = throttle(handleNavbarScroll, 16);
+    const throttledScrollHandler = window.BharatSetuUtils?.throttle(handleNavbarScroll, 16);
     window.addEventListener('scroll', throttledScrollHandler);
     
     // Debounce resize events
-    const debouncedResizeHandler = debounce(() => {
+    const debouncedResizeHandler = window.BharatSetuUtils?.debounce(() => {
         // Handle responsive layout changes
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            addClass(document.body, 'mobile-view');
+            document.body.classList.add('mobile-view');
         } else {
-            removeClass(document.body, 'mobile-view');
+            document.body.classList.remove('mobile-view');
         }
     }, 250);
     
@@ -278,7 +227,7 @@ const initAccessibility = () => {
     // document.body.insertBefore(skipLink, document.body.firstChild);
     
     // Keyboard navigation for mobile menu
-    const mobileMenu = $('#mobile-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
     if (mobileMenu) {
         const focusableElements = mobileMenu.querySelectorAll('a, button, input, textarea, select');
         const firstElement = focusableElements[0];
@@ -302,7 +251,7 @@ const initAccessibility = () => {
     }
     
     // ARIA labels for interactive elements
-    $$('button[aria-label], a[aria-label]').forEach(element => {
+    document.querySelectorAll('button[aria-label], a[aria-label]').forEach(element => {
         if (!element.getAttribute('aria-label')) {
             const text = element.textContent.trim();
             if (text) {
@@ -315,7 +264,7 @@ const initAccessibility = () => {
 // ===== ERROR HANDLING =====
 const initErrorHandling = () => {
     window.addEventListener('error', (e) => {
-        console.error('Global error:', e.error);
+        console.error('Global error:', e.error || e.message || 'Unknown error');
         // Could send to error tracking service here
     });
     
@@ -345,20 +294,24 @@ const initAnalytics = () => {
     };
     
     // Track form submissions
-    addEventListeners('form', 'submit', () => {
-        trackEvent('form_submit', {
-            form_name: 'contact_form',
-            page_location: window.location.pathname
-        });
+    document.addEventListener('submit', (e) => {
+        if (e.target.matches('form')) {
+            trackEvent('form_submit', {
+                form_name: 'contact_form',
+                page_location: window.location.pathname
+            });
+        }
     });
     
     // Track button clicks
-    addEventListeners('.btn', 'click', (e) => {
-        const buttonText = e.target.textContent.trim();
-        trackEvent('button_click', {
-            button_text: buttonText,
-            page_location: window.location.pathname
-        });
+    document.addEventListener('click', (e) => {
+        if (e.target.matches('.btn')) {
+            const buttonText = e.target.textContent.trim();
+            trackEvent('button_click', {
+                button_text: buttonText,
+                page_location: window.location.pathname
+            });
+        }
     });
     
     // Initial page view
@@ -421,10 +374,56 @@ const initEligibilityResultsAuth = () => {
     window.requireLoginForResults = requireLoginForResults;
 };
 
+// ===== SCROLL INDICATOR HANDLER =====
+const initScrollIndicator = () => {
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    if (!scrollIndicator) return;
+    
+    let hasScrolled = false;
+    let fadeOutTimeout;
+    
+    // Handle scroll events
+    const handleScroll = () => {
+        if (window.scrollY > 100 && !hasScrolled) {
+            hasScrolled = true;
+            scrollIndicator.classList.add('fade-out');
+            
+            // Remove the element after fade out animation
+            fadeOutTimeout = setTimeout(() => {
+                if (scrollIndicator.parentNode) {
+                    scrollIndicator.parentNode.removeChild(scrollIndicator);
+                }
+            }, 500);
+        }
+    };
+    
+    // Handle click to scroll down
+    scrollIndicator.addEventListener('click', () => {
+        const nextSection = document.querySelector('main');
+        if (nextSection) {
+            nextSection.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+    
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll);
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+        if (fadeOutTimeout) {
+            clearTimeout(fadeOutTimeout);
+        }
+        window.removeEventListener('scroll', handleScroll);
+    });
+};
+
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all modules
-    initMobileMenu();
+    // initMobileMenu(); // Commented out - handled by components.js
     initSmoothScrolling();
     initScrollAnimations();
     initFormValidation();
@@ -433,6 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initAccessibility();
     initErrorHandling();
     initAnalytics();
+    initScrollIndicator();
     initHeroButtonFlows();
     initEligibilityResultsAuth();
     
@@ -465,14 +465,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Call this when page loads
     setTimeout(initMobileMenuAuthPersistence, 1000); // Wait for auth service to load
     
-    console.log('BharatSetu main.js initialized successfully');
+    // Initialize navigation and footer components
+    if (window.GrantSetuComponents) {
+        window.GrantSetuComponents.initializeComponents();
+        
+        // Initialize scroll handler after navbar is rendered
+        setTimeout(() => {
+            window.addEventListener('scroll', handleNavbarScroll);
+            handleNavbarScroll(); // Set initial state
+        }, 200);
+    } else {
+        // Fallback: try to initialize components directly
+        console.log('GrantSetuComponents not found, trying direct initialization...');
+        
+        // Try to initialize components after a short delay
+        setTimeout(() => {
+            if (window.GrantSetuComponents) {
+                window.GrantSetuComponents.initializeComponents();
+                
+                setTimeout(() => {
+                    window.addEventListener('scroll', handleNavbarScroll);
+                    handleNavbarScroll(); // Set initial state
+                }, 100);
+            }
+        }, 100);
+    }
+    
+    // Main.js initialized successfully
 });
 
 // ===== EXPORT FOR MODULE USE =====
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         handleNavbarScroll,
-        initMobileMenu,
+        // initMobileMenu, // Commented out - handled by components.js
         updateMobileMenuForAuth,
         initSmoothScrolling,
         initScrollAnimations,

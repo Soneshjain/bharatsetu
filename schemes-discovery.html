@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Government Schemes - GrantSetu</title>
+    <meta name="description" content="Explore 200+ government schemes and incentives for Indian MSMEs. Find the perfect scheme for your business with our comprehensive database.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/grantsetu-logo.svg">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="schemes-hero section section--dark">
+        <div class="schemes-hero__background">
+            <div class="schemes-hero__overlay"></div>
+            <div class="schemes-hero__particles"></div>
+        </div>
+        
+        <div class="container">
+            <div class="schemes-hero__content">
+                
+                
+                <h1 class="schemes-hero__title">
+                    Discover Your Path to 
+                    <span class="schemes-hero__title-highlight">Government Funding</span>
+                </h1>
+                
+                <p class="schemes-hero__subtitle">
+                    Unlock access to 200+ verified government schemes, subsidies, and incentives. 
+                    Find the perfect funding opportunity for your business in just minutes.
+                </p>
+                
+                <div class="schemes-hero__cta">
+                    <button class="btn btn--primary btn--large" id="hero-start-search">
+                        <i class="fas fa-search"></i>
+                        Start Your Search
+                    </button>
+                    <button class="btn btn--secondary btn--large" id="hero-watch-demo">
+                        <i class="fas fa-play"></i>
+                        Watch Demo
+                    </button>
+                </div>
+                
+                <div class="schemes-hero__stats">
+                    <div class="stat stat--animated">
+                        <div class="stat__icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat__content">
+                            <span class="stat__number" data-count="200">0</span>
+                            <span class="stat__suffix">+</span>
+                            <span class="stat__label">Verified Schemes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat stat--animated">
+                        <div class="stat__icon">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="stat__content">
+                            <span class="stat__number" data-count="35000">0</span>
+                            <span class="stat__suffix">Cr</span>
+                            <span class="stat__label">Available Funds</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat stat--animated">
+                        <div class="stat__icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <div class="stat__content">
+                            <span class="stat__number" data-count="19">0</span>
+                            <span class="stat__label">Industry Categories</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat stat--animated">
+                        <div class="stat__icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat__content">
+                            <span class="stat__number" data-count="30">0</span>
+                            <span class="stat__suffix">min</span>
+                            <span class="stat__label">Average Processing</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="schemes-hero__features">
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>100% Government Verified</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>Instant Eligibility Check</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-headset"></i>
+                        <span>Expert Support Available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="schemes-hero__scroll-indicator">
+            <div class="scroll-indicator__text">Discover Schemes</div>
+            <div class="scroll-indicator__arrow">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search and Filter Section -->
+    <section class="schemes-filter section">
+        <div class="container">
+            <div class="schemes-filter__content">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search schemes by name, category, or benefit..." class="search-input" id="scheme-search">
+                </div>
+                
+                <div class="filters-toggle">
+                    <button class="btn btn--secondary" id="open-filters-drawer">
+                        <i class="fas fa-sliders-h"></i>
+                        Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filters Drawer -->
+        <div class="filters-drawer" id="filters-drawer">
+            <div class="filters-drawer__content">
+                <button class="filters-drawer__close" id="filters-drawer-close" aria-label="Close filters">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h3 class="filters-drawer__title">Filters</h3>
+                
+                <div class="advanced-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">States/UTs</label>
+                            <select class="filter-select" id="state-filter">
+                                <option value="all">All States/UTs</option>
+                                <option value="haryana">Haryana</option>
+                                <option value="delhi">Delhi</option>
+                                <option value="punjab">Punjab</option>
+                                <option value="rajasthan">Rajasthan</option>
+                                <option value="uttar-pradesh">Uttar Pradesh</option>
+                                <option value="maharashtra">Maharashtra</option>
+                                <option value="karnataka">Karnataka</option>
+                                <option value="tamil-nadu">Tamil Nadu</option>
+                                <option value="gujarat">Gujarat</option>
+                                <option value="national">National Schemes</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Industrial Category</label>
+                            <select class="filter-select" id="industry-filter">
+                                <option value="all">All Categories</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="technology">Technology & IT</option>
+                                <option value="agriculture">Agriculture</option>
+                                <option value="textile">Textile</option>
+                                <option value="food-processing">Food Processing</option>
+                                <option value="pharmaceuticals">Pharmaceuticals</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="renewable-energy">Renewable Energy</option>
+                                <option value="startup">Startup</option>
+                                <option value="msme">MSME</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Grant Percentage</label>
+                            <select class="filter-select" id="grant-filter">
+                                <option value="all">All Grant Types</option>
+                                <option value="0-25">0-25%</option>
+                                <option value="25-50">25-50%</option>
+                                <option value="50-75">50-75%</option>
+                                <option value="75-100">75-100%</option>
+                                <option value="fixed-amount">Fixed Amount</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Scheme Type</label>
+                            <select class="filter-select" id="type-filter">
+                                <option value="all">All Types</option>
+                                <option value="subsidy">Subsidy</option>
+                                <option value="grant">Grant</option>
+                                <option value="loan">Loan Support</option>
+                                <option value="reimbursement">Reimbursement</option>
+                                <option value="incentive">Incentive</option>
+                                <option value="exemption">Tax Exemption</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Investment Range (₹)</label>
+                            <select class="filter-select" id="investment-filter">
+                                <option value="all">All Investment Ranges</option>
+                                <option value="0-1lakh">0-1 Lakh</option>
+                                <option value="1lakh-10lakh">1-10 Lakh</option>
+                                <option value="10lakh-1cr">10 Lakh - 1 Cr</option>
+                                <option value="1cr-10cr">1-10 Cr</option>
+                                <option value="10cr+">10 Cr+</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Application Status</label>
+                            <select class="filter-select" id="status-filter">
+                                <option value="all">All Status</option>
+                                <option value="open">Currently Open</option>
+                                <option value="year-round">Year Round</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="closed">Closed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-actions">
+                            <button class="btn btn--secondary" id="clear-filters">Clear Filters</button>
+                            <button class="btn btn--primary" id="apply-filters">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Schemes Grid -->
+    <section class="schemes-grid-section section">
+        <div class="container">
+            <div class="schemes-results-header">
+                <h3 id="results-count">Showing 200+ Government Schemes</h3>
+                <div class="sort-options">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="name">Name (A-Z)</option>
+                        <option value="benefit">Benefit Amount</option>
+                        <option value="deadline">Application Deadline</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="schemes-grid" id="schemes-grid">
+                <!-- Scheme cards will be dynamically loaded here -->
+            </div>
+            
+            <div class="pagination">
+                <button class="pagination-btn" id="prev-page" disabled>Previous</button>
+                <span class="pagination-info">
+                    Page <span id="current-page">1</span> of <span id="total-pages">10</span>
+                </span>
+                <button class="pagination-btn" id="next-page">Next</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="schemes-cta-section section section--gray">
+        <div class="container">
+            <div class="schemes-cta__content">
+                <h2 class="section__title">Ready to Apply for Schemes?</h2>
+                <p class="section__subtitle">Get expert assistance to identify and apply for the most suitable schemes for your business</p>
+                <div class="schemes-cta__buttons">
+                    <a href="eligibility-check.html" class="btn btn--primary btn--large">
+                        Check Eligibility <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="dashboard.html" class="btn btn--secondary btn--large">
+                        Start Application
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/schemes-discovery.js"></script>
+</body>
+</html>

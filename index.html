@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BharatSetu - Simplify Government Applications for Indian SMEs</title>
+    <title>GrantSetu - Simplify Government Applications for Indian SMEs</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&family=Cambay:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,136 +19,160 @@
     
     <!-- Page-Specific CSS (Load After) -->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/eligibility-questionnaire.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/auth-flow.css">
-    <link rel="stylesheet" href="css/profile.css">
     
     <!-- Google OAuth -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+    <!-- Navigation Container -->
+    <div id="navbar-container"></div>
+    
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero__bg"></div>
         <div class="container hero__container">
-            <!-- Navigation Bar -->
-            <nav class="navbar navbar--transparent">
-                <div class="container">
-                    <div class="navbar__content">
-                        <div class="navbar__left">
-                            <div class="navbar__logo">
-                                <span class="navbar__logo-text">BharatSetu</span>
-                            </div>
-                        </div>
-                        
-                        <div class="navbar__right">
-                            <!-- Apply Now Button -->
-                            <a href="dashboard.html" class="btn btn--primary">Apply Now</a>
-                            
-                            <!-- Hamburger Menu Button -->
-                            <button id="hamburger-btn" class="navbar__hamburger">
-                                <i class="fas fa-bars hamburger-icon"></i>
-                                <i class="fas fa-times close-icon"></i>
-                            </button>
-                            
-                            <!-- Mobile Menu Overlay -->
-                            <div id="mobile-menu" class="mobile-menu">
-                                <div class="mobile-menu__header">
-                                    <div class="mobile-menu__user">
-                                        <div id="mobile-user-picture" class="mobile-menu__user-pic">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="mobile-menu__user-info">
-                                            <span id="mobile-user-name">Guest</span>
-                                            <span id="mobile-user-email">Not logged in</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mobile-menu__content">
-                                    <a href="dashboard.html" class="mobile-menu__item">
-                                        <i class="fas fa-home"></i>
-                                        Dashboard
-                                    </a>
-                                    <a href="eligibility-check.html" class="mobile-menu__item">
-                                        <i class="fas fa-check-circle"></i>
-                                        Check Eligibility
-                                    </a>
-                                    <div class="mobile-menu__divider"></div>
-                                    <button id="mobile-login-btn" class="mobile-menu__item mobile-menu__item--login">
-                                        <i class="fas fa-sign-in-alt"></i>
-                                        Login
-                                    </button>
-                                    <button id="mobile-logout-btn" class="mobile-menu__item mobile-menu__item--logout">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                        Logout
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
             
             <div class="hero__content">
                 <div class="hero__text">
                     <h1 class="hero__title">
-                        Avail <span class="highlight">10cr+</span> worth of govt incentives, grants & subsidies, guaranteed
+                        Apply to <span class="highlight">200+</span> Business Subsidies, Grants & Incentive Schemes in 30 mins
                     </h1>
-                    <div class="hero__subtext">
-                        <span class="hero__subtext-item">
-                            <i class="fas fa-shield-alt"></i>
-                            100% Refund Promise
-                        </span>
-                        <span class="hero__subtext-separator">|</span>
-                        <span class="hero__subtext-item">
-                            <i class="fas fa-lock"></i>
-                            Data Security
-                        </span>
-                        <span class="hero__subtext-separator">|</span>
-                        <span class="hero__subtext-item">
-                            <i class="fas fa-chart-line"></i>
-                            Application Tracking
-                        </span>
-                    </div>
-                    <div class="hero__cta">
-                        <a href="dashboard.html" class="btn btn--primary">
-                            Apply Now <i class="fas fa-arrow-right"></i>
-                        </a>
-                        <button id="eligibility-cta" class="btn btn--secondary" type="button">
-                            Check Eligibility
-                        </button>
-                    </div>
                 </div>
+            </div>
+            
+            <!-- Hero CTA Buttons - Positioned at bottom -->
+            <div class="hero__cta">
+                <a href="#" class="btn btn--primary" id="hero-start-application-btn">
+                    Start Your Application <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="http://localhost:5000" target="_blank" class="btn btn--secondary">
+                    Free AI Consultation
+                </a>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="hero__scroll-indicator" id="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
             </div>
         </div>
     </section>
 
     <main>
-        <!-- Problems We Solve Section -->
-        <section class="problems section" id="problems">
+       
+
+        <!-- Promise Section -->
+        <section class="promise section section--gray" id="promise">
             <div class="container">
-                <h2 class="section__title">Why choose BharatSetu over traditional agents?</h2>
-                <p class="section__subtitle">Direct communication with government departments to track applications and resolve any issues that arise. Get more value, better service, and guaranteed results</p>
+                <h2 class="section__title">A well drafted application maximizes the probability of success</h2>
+                <p class="section__subtitle">We help business in Haryana identify the best schemes, estimate a precise reward amount, carefully curate their application & manage their entire application process.</p>
+                
+                <div class="promise__tiles">
+                    <div class="promise__tile">
+                        <div class="promise__tile-icon">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="promise__tile-content">
+                            <h3>Rs. 9999+GST per scheme</h3>
+                            <p>Transparent pricing with no hidden costs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="promise__tile">
+                        <div class="promise__tile-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="promise__tile-content">
+                            <h3>We apply and track for you</h3>
+                            <p>Complete end-to-end application management</p>
+                        </div>
+                    </div>
+                    
+                    <div class="promise__tile">
+                        <div class="promise__tile-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="promise__tile-content">
+                            <h3>Maximize Sanction Probability</h3>
+                            <p>95% success rate with expert guidance</p>
+                        </div>
+                    </div>
+                    
+                    <div class="promise__tile">
+                        <div class="promise__tile-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="promise__tile-content">
+                            <h3>Rapid & Professional Turnaround</h3>
+                            <p>Quick processing with professional service</p>
+                        </div>
+                    </div>
+                    
+                    <div class="promise__tile">
+                        <div class="promise__tile-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="promise__tile-content">
+                            <h3>3-6 Months approval process*</h3>
+                            <p>Average consideration time for applications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="promise__tile">
+                        <div class="promise__tile-icon">
+                            <i class="fas fa-shield-check"></i>
+                        </div>
+                        <div class="promise__tile-content">
+                            <h3>5% Success Fee (100% Refundable)</h3>
+                            <p>Pay only when you receive the subsidy</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="promise__disclaimer">
+                    <p><em>*Average Consideration. Actual sanction time varies application to application.</em></p>
+                </div>
+            </div>
+        </section>
+
+         <!-- Enable MSMEs Section -->
+         <section class="enable-msme section " id="enable-msme">
+            <div class="container">
+                <h2 class="section__title">We enable Indian MSMEs access equity free capital</h2>
+                <p class="section__subtitle">Every year, thousands of businesses avail 50kcr+ worth of rebates, subsidies, grants, reimbursements & incentives from the central & state government. You could be next.</p>
+                <div class="enable-msme__cta">
+                    <a href="eligibility-check.html" class="btn btn--primary btn--large">
+                        Apply Now <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+       
+
+        <!-- Problems We Solve Section -->
+        <section class="problems section section--gray" id="why-us">
+            <div class="container">
+                <h2 class="section__title">Why Choose GrantSetu?</h2>
+                <p class="section__subtitle">Expert assistance at every step to maximize your chances of success</p>
                 
                 <div class="problems__grid">
                     <div class="problem-card">
                         <div class="problem-card__icon">
-                            <i class="fas fa-shield-alt"></i>
+                            <i class="fas fa-check-double"></i>
                         </div>
                         <div class="problem-card__content">
-                            <h3>100% Money-Back Guarantee</h3>
-                            <p>Pay only 10% success-based fee vs 15-20% upfront charges. Complete refund of commission if application is rejected. Zero risk.</p>
+                            <h3>95% Success Rate</h3>
+                            <p>Our deep domain expertise ensures your application is prepared correctly the first time, with a proven 95% approval rate.</p>
                         </div>
                     </div>
 
                     <div class="problem-card">
                         <div class="problem-card__icon">
-                            <i class="fas fa-lock"></i>
+                            <i class="fas fa-file-check"></i>
                         </div>
                         <div class="problem-card__content">
-                            <h3>Bank-Level Data Security</h3>
-                            <p>Your sensitive application data protected with enterprise-grade security protocols.</p>
+                            <h3>Complete Documentation Support</h3>
+                            <p>We handle all paperwork - from document preparation to verification and submission according to government guidelines.</p>
                         </div>
                     </div>
 
@@ -158,7 +182,7 @@
                         </div>
                         <div class="problem-card__content">
                             <h3>Real-Time Application Tracking</h3>
-                            <p>Track your application status in our app. No more anxiety, stay informed at every step.</p>
+                            <p>Track your application status 24/7 through our dashboard. Stay informed at every step of the process.</p>
                         </div>
                     </div>
 
@@ -167,45 +191,35 @@
                             <i class="fas fa-robot"></i>
                         </div>
                         <div class="problem-card__content">
-                            <h3>Your Personalized Incentives Roadmap</h3>
-                            <p>Discover the best schemes for your business using our AI parsing technology.</p>
+                            <h3>AI-Powered Scheme Matching</h3>
+                            <p>Our AI technology analyzes your business profile to recommend the most suitable schemes with maximum benefit potential.</p>
                         </div>
                     </div>
 
                     <div class="problem-card">
                         <div class="problem-card__icon">
-                            <i class="fas fa-check-double"></i>
+                            <i class="fas fa-handshake"></i>
                         </div>
                         <div class="problem-card__content">
-                            <h3>95% Success Rate</h3>
-                            <p>Deep domain knowledge ensures your application is filed correctly in the first attempt.</p>
+                            <h3>Government Liaison Services</h3>
+                            <p>Direct communication with government departments to expedite processing and resolve any queries or issues.</p>
                         </div>
                     </div>
 
                     <div class="problem-card">
                         <div class="problem-card__icon">
-                            <i class="fas fa-gavel"></i>
+                            <i class="fas fa-lock"></i>
                         </div>
                         <div class="problem-card__content">
-                            <h3>Liaising with Government Authorities</h3>
-                            <p>Direct communication with government departments to track applications and resolve any issues that arise.</p>
-                        </div>
-                    </div>
-
-                    <div class="problem-card">
-                        <div class="problem-card__icon">
-                            <i class="fas fa-cogs"></i>
-                        </div>
-                        <div class="problem-card__content">
-                            <h3>End-to-End Ownership</h3>
-                            <p>Ensuring all required documents are properly prepared, verified, and submitted according to government guidelines.</p>
+                            <h3>Bank-Level Data Security</h3>
+                            <p>Your sensitive business and application data is protected with enterprise-grade security protocols.</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="problems__cta">
-                    <a href="dashboard.html" class="btn btn--primary">
-                        Get Started Today <i class="fas fa-arrow-right"></i>
+                    <a href="eligibility-check.html" class="btn btn--primary">
+                        Check Eligibility Free <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -216,35 +230,41 @@
         <!-- Subsidies Section -->
         <section class="subsidies section section--dark" id="subsidies">
             <div class="container">
-                <h2 class="section__title">Popular Government Schemes</h2>
-                <p class="section__subtitle">Explore top schemes and incentives for your business</p>
+                <h2 class="section__title">Discover Eligible Schemes</h2>
+                <div class="schemes-stats">
+                    <span class="stat-item">200+ Schemes</span>
+                    <span class="stat-separator">|</span>
+                    <span class="stat-item">Rs. 35k Cr Committed</span>
+                    <span class="stat-separator">|</span>
+                    <span class="stat-item">19 Categories</span>
+                </div>
+                <div class="schemes-cta">
+                    <a href="schemes-discovery.html" class="btn btn--primary">
+                        Explore all Schemes <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="schemes-divider">
+                    <span>or</span>
+                </div>
+                <p class="schemes-subtitle">Explore from popular schemes below</p>
                 <div class="schemes-grid">
                     <!-- Haryana State Schemes -->
                     <a href="schemes/ict-promotion-scheme.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3fd9?auto=format&fit=crop&w=400&q=80" alt="ICT Promotion Scheme" />
+                            <img src="assets/images/erp.webp" alt="ICT Promotion Scheme" />
                         </div>
-                        <div class="scheme-card__body">
+                        <div class="scheme-card__overlay">
                             <div class="scheme-card__title">ICT Promotion</div>
                             <div class="scheme-card__subtext">ERP Solutions Support for MSMEs</div>
                         </div>
                     </a>
                     
-                    <a href="schemes/sme-exchange-equity.html" class="scheme-card">
-                        <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80" alt="SME Exchange Equity" />
-                        </div>
-                        <div class="scheme-card__body">
-                            <div class="scheme-card__title">SME Exchange Equity</div>
-                            <div class="scheme-card__subtext">Capital Market Access for SMEs</div>
-                        </div>
-                    </a>
-                    
+                                     
                     <a href="schemes/lean-manufacturing-competitiveness.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3fd9?auto=format&fit=crop&w=400&q=80" alt="Lean Manufacturing" />
+                            <img src="assets/images/lean.jpg" alt="Lean Manufacturing" />
                         </div>
-                        <div class="scheme-card__body">
+                        <div class="scheme-card__overlay">
                             <div class="scheme-card__title">Lean Manufacturing</div>
                             <div class="scheme-card__subtext">Competitiveness Scheme for Clusters</div>
                         </div>
@@ -252,9 +272,9 @@
                     
                     <a href="schemes/mini-sfurti.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80" alt="Mini-SFURTI" />
+                            <img src="assets/images/sfurti.jpeg" alt="Mini-SFURTI" />
                         </div>
-                        <div class="scheme-card__body">
+                        <div class="scheme-card__overlay">
                             <div class="scheme-card__title">Mini-SFURTI</div>
                             <div class="scheme-card__subtext">Traditional Industries Cluster Development</div>
                         </div>
@@ -262,7 +282,7 @@
                     
                     <a href="schemes/electricity-duty-reimbursement.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3fd9?auto=format&fit=crop&w=400&q=80" alt="Electricity Duty Reimbursement" />
+                            <img src="assets/images/electricity-duty.jpg" alt="Electricity Duty Reimbursement" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">100% Reimbursement</div>
@@ -272,7 +292,7 @@
                     
                     <a href="schemes/stamp-duty-refund.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80" alt="Stamp Duty Refund" />
+                            <img src="assets/images/stampduty.jpg" alt="Stamp Duty Refund" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">Stamp Duty Refund</div>
@@ -282,7 +302,7 @@
                     
                     <a href="schemes/promoting-green-sustainable-production.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=400&q=80" alt="Green Production Scheme" />
+                            <img src="assets/images/solar.jpeg" alt="Green Production Scheme" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">Green Production</div>
@@ -293,7 +313,7 @@
                     <!-- National MSME Schemes -->
                     <a href="schemes/testing-equipment.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Testing Equipment" />
+                            <img src="assets/images/Electronic-Test-Equipment.jpg" alt="Testing Equipment" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">50% Upto Rs. 20L</div>
@@ -303,7 +323,7 @@
                     
                     <a href="schemes/zero-defect.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Zero Defect" />
+                            <img src="assets/images/zed.jpg" alt="Zero Defect" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">50% Upto Rs. 5L</div>
@@ -313,7 +333,7 @@
                     
                     <a href="schemes/technology-adoption.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Tech Adoption" />
+                            <img src="assets/images/technology-adoption.jpg" alt="Tech Adoption" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">50% Upto Rs. 1Cr</div>
@@ -323,7 +343,7 @@
                     
                     <a href="schemes/quality-certifications.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80" alt="Certifications" />
+                            <img src="assets/images/quality.jpg" alt="Certifications" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">50% Upto Rs. 6L</div>
@@ -333,7 +353,7 @@
                     
                     <a href="schemes/productivity-improvement.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Productivity" />
+                            <img src="assets/images/productivity.jpg" alt="Productivity" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">90-100%</div>
@@ -343,7 +363,7 @@
                     
                     <a href="schemes/barcode-implementation.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="Barcodes" />
+                            <img src="assets/images/barcode.jpeg" alt="Barcodes" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">Upto 80%</div>
@@ -353,7 +373,7 @@
                     
                     <a href="schemes/patent-filing.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Patent Filing" />
+                            <img src="assets/images/ipr.jpg" alt="Patent Filing" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">50% Assistance</div>
@@ -363,7 +383,7 @@
                     
                     <a href="schemes/design-centre.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80" alt="Design Centres" />
+                            <img src="assets/images/design-centre.webp" alt="Design Centres" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">Upto Rs. 40L</div>
@@ -373,7 +393,7 @@
                     
                     <a href="schemes/exhibition-support.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Domestic Exhibitions" />
+                            <img src="assets/images/exhibitions.jpg" alt="Domestic Exhibitions" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">Upto Rs. 3L</div>
@@ -383,7 +403,7 @@
                     
                     <a href="schemes/sme-exchange.html" class="scheme-card">
                         <div class="scheme-card__image">
-                            <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3fd9?auto=format&fit=crop&w=400&q=80" alt="SME Exchange" />
+                            <img src="assets/images/sensex-featured.png" alt="SME Exchange" />
                         </div>
                         <div class="scheme-card__body">
                             <div class="scheme-card__title">SME Exchange Support</div>
@@ -391,9 +411,10 @@
                         </div>
                     </a>
                 </div>
-                <div class="subsidies__cta">
-                    <a href="eligibility-check.html" class="btn btn--primary">
-                        Check Your Eligibility <i class="fas fa-arrow-right"></i>
+                
+                <div class="schemes-cta">
+                    <a href="schemes-discovery.html" class="btn btn--primary">
+                        Explore all Schemes <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -465,53 +486,8 @@
 
 
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <!-- <div class="footer__content">
-                <div class="footer__info">
-                    <div class="footer__logo">
-                        <span>BharatSetu</span>
-                    </div>
-                    <div class="footer__contact">
-                        <span><i class="fas fa-phone"></i> 7895211541</span><br>
-                        <span><i class="fas fa-map-marker-alt"></i> Gurgaon, India</span>
-                    </div>
-                    <p class="footer__desc">
-                        Simplifying government applications for Indian SMEs. One platform, multiple benefits, maximum success.
-                    </p>
-                </div>
-                
-                <div class="footer__links">
-                    <div class="footer__column">
-                        <h4>Services</h4>
-                        <a href="#services">Government Subsidies</a>
-                        <a href="#services">Collateral-Free Loans</a>
-                        <a href="#services">Payment Recovery</a>
-                        <a href="#services">Financial Grants</a>
-                    </div>
-                    <div class="footer__column">
-                        <h4>Company</h4>
-                        <a href="#problems">Problems We Solve</a>
-                        <a href="#success">Success Stories</a>
-                        <a href="#contact">Contact</a>
-                        <a href="#about">About</a>
-                    </div>
-                    <div class="footer__column">
-                        <h4>Support</h4>
-                        <a href="#help">Help Center</a>
-                        <a href="#tracking">Application Tracking</a>
-                        <a href="#contact">Get Support</a>
-                        <a href="#faq">FAQs</a>
-                    </div>
-                </div>
-            </div> -->
-            
-            <div class="footer__bottom">
-                <p>&copy; 2025 BharatSetu. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <!-- Footer Container -->
+    <div id="footer"></div>
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -520,9 +496,7 @@
     <script src="js/utils.js"></script>
     <script src="js/auth-service.js"></script>
     <script src="js/auth-flow.js"></script>
-    <script src="js/company-profile.js"></script>
+    <script src="js/components.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/eligibility-engine.js?v=2"></script>
-    <script src="js/eligibility-questionnaire.js?v=5"></script>
 </body>
 </html> 

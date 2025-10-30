@@ -63,23 +63,8 @@
     </script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="../index.html">
-                    <img src="../assets/images/logo.png" alt="BharatSetu Logo">
-                    <span>BharatSetu</span>
-                </a>
-            </div>
-            <div class="nav-menu">
-                <a href="../index.html">Home</a>
-                <a href="../dashboard.html">Dashboard</a>
-                <a href="../eligibility-check.html">Check Eligibility</a>
-                <a href="../add-company.html">Add Company</a>
-            </div>
-        </div>
-    </nav>
+    <!-- Navigation Container -->
+    <div id="navbar-container"></div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -537,6 +522,25 @@
             document.getElementById('solar-subsidy').textContent = '₹' + subsidyAmount.toLocaleString();
             document.getElementById('solar-cap').textContent = '₹' + maxCap.toLocaleString();
         }
+    </script>
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+    
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/auth-flow.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <!-- Initialize Components -->
+    <script>
+        // Initialize components when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.BharatSetuComponents) {
+                window.BharatSetuComponents.initializeComponents();
+            }
+        });
     </script>
 </body>
 </html> 

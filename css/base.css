@@ -3,25 +3,53 @@
 
 /* ===== CSS VARIABLES (DESIGN TOKENS) ===== */
 :root {
-    /* ===== COLORS ===== */
-    --primary-blue: #1fa2ff;
-    --primary-blue-dark: #0fd9d6;
-    --primary-blue-light: #e6f7fa;
-    --secondary-blue: #3182ce;
-    --accent-blue: #3c82f6;
+    /* ===== OLIVE GREEN / ROYAL GREEN THEME ===== */
+    --primary-green: #365314;
+    --primary-green-dark: #3f6212;
+    --primary-green-light: #65a30d;
+    --royal-green: #166534;
+    --royal-green-dark: #14532d;
+    --royal-green-light: #4ade80;
+    --olive-green: #6b7280;
+    --olive-green-dark: #4b5563;
+    --olive-green-light: #9ca3af;
     
-    /* ===== GOLDEN/MUSTARD COLORS ===== */
-    --golden-primary: #ffd700;
-    --golden-secondary: #ffb347;
-    --golden-light: #fff4b3;
-    --mustard-primary: #ffdb4d;
-    --mustard-secondary: #f4a261;
-    --mustard-light: #fef3c7;
+    /* ===== GOLDEN ACCENT COLORS ===== */
+    --golden-primary: #fbbf24;
+    --golden-secondary: #f59e0b;
+    --golden-dark: #d97706;
+    --golden-light: #fde68a;
+    --golden-accent: #fbbf24;
     
-    /* ===== GRADIENTS ===== */
-    --gradient-primary: linear-gradient(135deg, rgba(2, 0, 23, 1) 0%, rgba(9, 9, 121, 1) 50%, rgba(60, 0, 255, 1) 100%);
-    --gradient-secondary: linear-gradient(135deg, rgba(60, 0, 255, 1) 0%, rgba(9, 9, 121, 1) 50%, rgba(2, 0, 23, 1) 100%);
-    --gradient-hover: linear-gradient(135deg, rgba(2, 0, 23, 0.95) 0%, rgba(9, 9, 121, 0.95) 50%, rgba(60, 0, 255, 0.95) 100%);
+    /* ===== CAPTIVATING GREEN GRADIENTS ===== */
+    --gradient-primary: linear-gradient(135deg, #365314 0%, #166534 50%, #65a30d 100%);
+    --gradient-secondary: linear-gradient(135deg, #3f6212 0%, #166534 50%, #4ade80 100%);
+    --gradient-tertiary: linear-gradient(135deg, #166534 0%, #65a30d 50%, #84cc16 100%);
+    --gradient-quaternary: linear-gradient(135deg, #4ade80 0%, #65a30d 50%, #a3e635 100%);
+    --gradient-quinary: linear-gradient(135deg, #365314 0%, #65a30d 100%);
+    
+    /* ===== HERO GRADIENTS ===== */
+    --gradient-hero: linear-gradient(135deg, #365314 0%, #166534 30%, #65a30d 70%, #4ade80 100%);
+    --gradient-hero-dark: linear-gradient(135deg, #365314 0%, #166534 50%, #3f6212 100%);
+    --gradient-hero-light: linear-gradient(135deg, #65a30d 0%, #4ade80 50%, #84cc16 100%);
+    
+    /* ===== GOLDEN GRADIENTS ===== */
+    --gradient-golden: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+    --gradient-golden-light: linear-gradient(135deg, #fde68a 0%, #fbbf24 50%, #f59e0b 100%);
+    --gradient-golden-dark: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    
+    /* ===== ACCENT COLORS ===== */
+    --accent-emerald: #10b981;
+    --accent-teal: #14b8a6;
+    --accent-cyan: #06b6d4;
+    --accent-lime: #84cc16;
+    --accent-sage: #6b7280;
+    --accent-forest: #15803d;
+    
+    /* ===== NEUTRAL ACCENTS ===== */
+    --neutral-slate: #64748b;
+    --neutral-stone: #78716c;
+    --neutral-zinc: #71717a;
     
     /* ===== NEUTRAL COLORS ===== */
     --white: #ffffff;
@@ -130,6 +158,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    list-style-type: none;
+
 }
 
 html {
@@ -252,17 +282,34 @@ a:hover {
 
 /* Primary Button */
 .btn--primary {
-    background: var(--primary-blue);
+    background: var(--gradient-golden);
     color: var(--white);
-    border: 1px solid var(--primary-blue);
+    border: none;
     box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+    font-weight: var(--font-bold);
 }
 
 .btn--primary:hover:not(:disabled) {
-    background: var(--primary-blue-dark);
-    border-color: var(--primary-blue-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-lg);
+    background: var(--gradient-golden-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.btn--primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn--primary:hover::before {
+    left: 100%;
 }
 
 .btn--primary:active {
@@ -271,15 +318,34 @@ a:hover {
 
 /* Secondary Button */
 .btn--secondary {
-    background: transparent;
+    background: var(--gradient-primary);
     color: var(--white);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: none;
     backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    font-weight: var(--font-semibold);
 }
 
 .btn--secondary:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: var(--gradient-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.btn--secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn--secondary:hover::before {
+    left: 100%;
 }
 
 /* Success Button */
@@ -681,18 +747,26 @@ a:hover {
 .text-gray-500 { color: var(--gray-500) !important; }
 .text-gray-700 { color: var(--gray-700) !important; }
 .text-gray-900 { color: var(--gray-900) !important; }
-.text-primary { color: var(--primary-blue) !important; }
+.text-primary { color: var(--primary-green) !important; }
 .text-success { color: var(--success) !important; }
 .text-warning { color: var(--warning) !important; }
 .text-error { color: var(--error) !important; }
+.text-golden { color: var(--golden-primary) !important; }
+.text-green { color: var(--primary-green) !important; }
+.text-royal { color: var(--royal-green) !important; }
+.text-olive { color: var(--olive-green) !important; }
 
 .bg-white { background-color: var(--white) !important; }
 .bg-gray-50 { background-color: var(--gray-50) !important; }
 .bg-gray-100 { background-color: var(--gray-100) !important; }
-.bg-primary { background-color: var(--primary-blue) !important; }
+.bg-primary { background-color: var(--primary-green) !important; }
 .bg-success { background-color: var(--success) !important; }
 .bg-warning { background-color: var(--warning) !important; }
 .bg-error { background-color: var(--error) !important; }
+.bg-golden { background-color: var(--golden-primary) !important; }
+.bg-green { background-color: var(--primary-green) !important; }
+.bg-royal { background-color: var(--royal-green) !important; }
+.bg-olive { background-color: var(--olive-green) !important; }
 
 /* ===== RESPONSIVE UTILITIES ===== */
 @media (max-width: 768px) {

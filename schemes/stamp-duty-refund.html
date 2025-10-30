@@ -32,25 +32,16 @@
     }
     </script>
     
-    <link rel="stylesheet" href="../css/scheme-detail.css">
+    <!-- Base CSS (Load First) -->
+    <link rel="stylesheet" href="../css/base.css">
+    
+    <!-- Page-Specific CSS (Load After) -->
     <link rel="stylesheet" href="../css/main.css">
     <link rel="canonical" href="https://bharatsetu.in/schemes/stamp-duty-refund">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="../index.html">BharatSetu</a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../schemes.html">Schemes</a></li>
-                <li><a href="../eligibility-check.html">Check Eligibility</a></li>
-                <li><a href="../dashboard.html">Dashboard</a></li>
-            </ul>
-        </div>
-    </nav>
+    <!-- Navigation Container -->
+    <div id="navbar-container"></div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -315,6 +306,25 @@
             localStorage.setItem('stamp_duty_draft', JSON.stringify(draftData));
             alert('Draft saved successfully!');
         }
+    </script>
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+    
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/auth-flow.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/main.js"></script>
+    
+    <!-- Initialize Components -->
+    <script>
+        // Initialize components when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.BharatSetuComponents) {
+                window.BharatSetuComponents.initializeComponents();
+            }
+        });
     </script>
 </body>
 </html> 

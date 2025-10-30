@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BharatSetu Schemes Database Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .admin-nav {
+            background: #f8fafc;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-tab.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .nav-tab:hover {
+            background: #f1f5f9;
+        }
+        
+        .admin-content {
+            padding: 2rem;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            opacity: 0.9;
+        }
+        
+        .search-filters {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .search-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        /* Disabled state */
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            filter: grayscale(30%);
+        }
+        
+        .schemes-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-header {
+            background: #f8fafc;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-header h3 {
+            color: #1f2937;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        tr:hover {
+            background: #f9fafb;
+        }
+        
+        .scheme-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .scheme-type {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .scheme-type.subsidy {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .scheme-type.grant {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .scheme-type.loan_guarantee {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .scheme-type.tax_incentive {
+            background: #fce7f3;
+            color: #be185d;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-badge.closed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .status-badge.upcoming {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .quality-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quality-bar {
+            width: 60px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .quality-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+            transition: width 0.3s ease;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h3 {
+            color: #1f2937;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .page-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>🗄️ BharatSetu Schemes Database</h1>
+            <p>Comprehensive Government Schemes Management System</p>
+        </div>
+        
+        <div class="admin-nav">
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-tab="dashboard">📊 Dashboard</div>
+                <div class="nav-tab" data-tab="schemes">🏛️ Schemes</div>
+                <div class="nav-tab" data-tab="scraper">🕷️ Web Scraper</div>
+                <div class="nav-tab" data-tab="analytics">📈 Analytics</div>
+                <div class="nav-tab" data-tab="settings">⚙️ Settings</div>
+            </div>
+        </div>
+        
+        <div class="admin-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="total-schemes">0</h3>
+                        <p>Total Schemes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="active-schemes">0</h3>
+                        <p>Active Schemes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="state-schemes">0</h3>
+                        <p>State Schemes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="central-schemes">0</h3>
+                        <p>Central Schemes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="women-schemes">0</h3>
+                        <p>Women-Focused</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="sc-st-schemes">0</h3>
+                        <p>SC/ST Schemes</p>
+                    </div>
+                </div>
+                
+                <div class="search-filters">
+                    <h3>Quick Actions</h3>
+                    <div class="search-actions">
+                        <button class="btn btn-primary" onclick="startScraping()" disabled title="Coming soon">🕷️ Start Scraping</button>
+                        <button class="btn btn-secondary" onclick="refreshData()">🔄 Refresh Data</button>
+                        <button class="btn btn-success" onclick="exportData()" disabled title="Coming soon">📤 Export Data</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Schemes Tab -->
+            <div id="schemes" class="tab-content">
+                <div class="search-filters">
+                    <h3>Filter Schemes</h3>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Search</label>
+                            <input type="text" id="search-input" placeholder="Search schemes...">
+                        </div>
+                        <div class="filter-group">
+                            <label>Ministry</label>
+                            <select id="ministry-filter">
+                                <option value="">All Ministries</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Scheme Type</label>
+                            <select id="type-filter">
+                                <option value="">All Types</option>
+                                <option value="subsidy">Subsidy</option>
+                                <option value="grant">Grant</option>
+                                <option value="loan_guarantee">Loan Guarantee</option>
+                                <option value="tax_incentive">Tax Incentive</option>
+                                <option value="certification">Certification</option>
+                                <option value="training">Training</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Category</label>
+                            <select id="category-filter">
+                                <option value="">All Categories</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="export">Export</option>
+                                <option value="technology">Technology</option>
+                                <option value="green_energy">Green Energy</option>
+                                <option value="women_entrepreneurs">Women Entrepreneurs</option>
+                                <option value="sc_st">SC/ST</option>
+                                <option value="textile">Textile</option>
+                                <option value="agriculture">Agriculture</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="status-filter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="closed">Closed</option>
+                                <option value="upcoming">Upcoming</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-actions">
+                        <button class="btn btn-primary" onclick="searchSchemes()">🔍 Search</button>
+                        <button class="btn btn-secondary" onclick="clearFilters()">🗑️ Clear</button>
+                        <button class="btn btn-success" onclick="addScheme()">➕ Add Scheme</button>
+                    </div>
+                </div>
+                
+                <div class="schemes-table">
+                    <div class="table-header">
+                        <h3>Government Schemes</h3>
+                        <div class="table-actions">
+                            <button class="btn btn-success" onclick="openAddSchemeModal()">➕ Add Scheme</button>
+                            <button class="btn btn-primary" onclick="bulkEdit" disabled title="Coming soon">✏️ Bulk Edit</button>
+                            <button class="btn btn-danger" onclick="bulkDelete()" disabled title="Coming soon">🗑️ Bulk Delete</button>
+                        </div>
+                    </div>
+                    <div class="loading" id="schemes-loading">
+                        <div class="spinner"></div>
+                        <p>Loading schemes...</p>
+                    </div>
+                    <table id="schemes-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all"></th>
+                                <th>Scheme Name</th>
+                                <th>Ministry</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Quality</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schemes-tbody">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="pagination">
+                </div>
+            </div>
+            
+            <!-- Web Scraper Tab -->
+            <div id="scraper" class="tab-content">
+                <div class="search-filters">
+                    <h3>Web Scraping Configuration</h3>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Source Selection</label>
+                            <select id="scraper-sources" multiple>
+                                <option value="msme_gov" selected>MSME Portal</option>
+                                <option value="dcmsme" selected>DC-MSME</option>
+                                <option value="startup_india" selected>Startup India</option>
+                                <option value="data_gov" selected>Data.gov.in</option>
+                                <option value="haryana">Haryana Government</option>
+                                <option value="maharashtra">Maharashtra Government</option>
+                                <option value="gujarat">Gujarat Government</option>
+                                <option value="karnataka">Karnataka Government</option>
+                                <option value="tamil_nadu">Tamil Nadu Government</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Scraping Mode</label>
+                            <select id="scraping-mode">
+                                <option value="full">Full Scrape</option>
+                                <option value="incremental">Incremental</option>
+                                <option value="test">Test Mode</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Concurrent Requests</label>
+                            <input type="number" id="concurrent-requests" value="5" min="1" max="20">
+                        </div>
+                    </div>
+                    <div class="search-actions">
+                        <button class="btn btn-primary" onclick="startScraping()" disabled title="Coming soon">🚀 Start Scraping</button>
+                        <button class="btn btn-secondary" onclick="stopScraping()" disabled title="Coming soon">⏹️ Stop</button>
+                        <button class="btn btn-success" onclick="viewScrapingLogs()" disabled title="Coming soon">📋 View Logs</button>
+                    </div>
+                </div>
+                
+                <div class="schemes-table">
+                    <div class="table-header">
+                        <h3>Scraping Progress</h3>
+                    </div>
+                    <div id="scraping-progress">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Initializing scraper...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="scraping-success-rate">0%</h3>
+                        <p>Scraping Success Rate</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="data-quality-avg">0.0</h3>
+                        <p>Average Data Quality</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="last-updated">Never</h3>
+                        <p>Last Updated</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="schemes-by-state">0</h3>
+                        <p>States Covered</p>
+                    </div>
+                </div>
+                
+                <div class="search-filters">
+                    <h3>Analytics Dashboard</h3>
+                    <p>Comprehensive insights into scheme data quality, coverage, and performance metrics.</p>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="search-filters">
+                    <h3>Database Settings</h3>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Database URL</label>
+                            <input type="text" id="db-url" value="postgresql://user:password@localhost:5432/schemes_db">
+                        </div>
+                        <div class="filter-group">
+                            <label>API Endpoint</label>
+                            <input type="text" id="api-endpoint" value="http://localhost:8001">
+                        </div>
+                        <div class="filter-group">
+                            <label>Scraping Interval (hours)</label>
+                            <input type="number" id="scraping-interval" value="24" min="1" max="168">
+                        </div>
+                    </div>
+                    <div class="search-actions">
+                        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+                        <button class="btn btn-secondary" onclick="testConnection()">🔗 Test Connection</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scheme Detail Modal -->
+    <div id="scheme-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Scheme Details</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="scheme-details">
+                <!-- Scheme details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Scheme Modal -->
+    <div id="add-scheme-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Scheme</h3>
+                <button class="close-btn" onclick="closeAddSchemeModal()">&times;</button>
+            </div>
+            <div class="form-group"><label>Scheme Name</label><input id="add-name"></div>
+            <div class="form-group"><label>Ministry</label><input id="add-ministry"></div>
+            <div class="form-group"><label>Department</label><input id="add-dept"></div>
+            <div class="form-group"><label>Short Description</label><textarea id="add-short"></textarea></div>
+            <div class="form-group"><label>Long Description</label><textarea id="add-long"></textarea></div>
+            <div class="form-group"><label>Scheme Type</label><input id="add-type" placeholder="subsidy/grant/loan_guarantee"></div>
+            <div class="form-group"><label>Category</label><input id="add-cat" placeholder="manufacturing/export/technology"></div>
+            <div class="form-group"><label>Coverage Type</label><input id="add-coverage" value="national"></div>
+            <div class="form-group"><label>Official Website</label><input id="add-site"></div>
+            <div class="form-group"><label>Application Portal</label><input id="add-portal"></div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" onclick="closeAddSchemeModal()">Cancel</button>
+                <button class="btn btn-success" onclick="submitAddScheme()">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let currentPage = 1;
+        let totalPages = 1;
+        let schemes = [];
+        let filteredSchemes = [];
+        
+        // Initialize admin interface
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdmin();
+            loadDashboard();
+        });
+        
+        // Tab switching
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                switchTab(tabId);
+            });
+        });
+        
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Load tab-specific data
+            if (tabId === 'schemes') {
+                loadSchemes();
+            } else if (tabId === 'dashboard') {
+                loadDashboard();
+            }
+        }
+        
+        // API Base URL - adjust based on your server
+        const API_BASE_URL = (() => {
+            try {
+                const input = document.getElementById('api-endpoint');
+                const stored = localStorage.getItem('apiEndpoint') || '';
+                const fromInput = input && input.value ? input.value.trim() : '';
+                const val = fromInput || stored || 'http://localhost:8001';
+                if (input && input.value !== val) input.value = val;
+                localStorage.setItem('apiEndpoint', val);
+                return val;
+            } catch (e) {
+                return 'http://localhost:8001';
+            }
+        })();
+
+        // Keep API endpoint in sync when user edits the Settings field
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('api-endpoint');
+            if (input) {
+                input.addEventListener('change', (e) => {
+                    const v = e.target.value.trim();
+                    if (v) localStorage.setItem('apiEndpoint', v);
+                });
+            }
+        });
+        
+        async function initializeAdmin() {
+            try {
+                // Test API connection
+                const response = await fetch(`${API_BASE_URL}/api/health`);
+                if (!response.ok) {
+                    throw new Error('API connection failed');
+                }
+                console.log('Admin interface initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize admin interface:', error);
+                showAlert('Failed to connect to API. Please check your connection.', 'error');
+            }
+        }
+        
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/dashboard`);
+                const data = await response.json();
+                
+                document.getElementById('total-schemes').textContent = data.total_schemes || 0;
+                document.getElementById('active-schemes').textContent = data.active_schemes || 0;
+                document.getElementById('state-schemes').textContent = data.state_schemes || 0;
+                document.getElementById('central-schemes').textContent = data.central_schemes || 0;
+                document.getElementById('women-schemes').textContent = data.women_schemes || 0;
+                document.getElementById('sc-st-schemes').textContent = data.sc_st_schemes || 0;
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+            }
+        }
+        
+        async function loadSchemes() {
+            const loading = document.getElementById('schemes-loading');
+            const table = document.getElementById('schemes-table');
+            
+            loading.classList.add('active');
+            table.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/schemes`);
+                const data = await response.json();
+                
+                schemes = data.schemes || [];
+                filteredSchemes = [...schemes];
+                
+                renderSchemesTable();
+                updatePagination();
+                
+                loading.classList.remove('active');
+                table.style.display = 'table';
+            } catch (error) {
+                console.error('Failed to load schemes:', error);
+                loading.classList.remove('active');
+                showAlert('Failed to load schemes. Please try again.', 'error');
+            }
+        }
+        
+        function renderSchemesTable() {
+            const tbody = document.getElementById('schemes-tbody');
+            tbody.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * 20;
+            const endIndex = startIndex + 20;
+            const pageSchemes = filteredSchemes.slice(startIndex, endIndex);
+            
+            pageSchemes.forEach(scheme => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="scheme-checkbox" value="${scheme.scheme_id}"></td>
+                    <td>
+                        <div class="scheme-name">${scheme.scheme_name}</div>
+                        <small style="color: #6b7280;">${scheme.short_description || ''}</small>
+                    </td>
+                    <td>${scheme.ministry || 'N/A'}</td>
+                    <td><span class="scheme-type ${scheme.scheme_type || ''}">${scheme.scheme_type || 'N/A'}</span></td>
+                    <td>${scheme.category || 'N/A'}</td>
+                    <td><span class="status-badge ${scheme.status}">${scheme.status}</span></td>
+                    <td>
+                        <div class="quality-score">
+                            <div class="quality-bar">
+                                <div class="quality-fill" style="width: ${(scheme.data_quality_score || 0) * 100}%"></div>
+                            </div>
+                            <span>${(scheme.data_quality_score || 0).toFixed(1)}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewScheme('${scheme.scheme_id}')">👁️</button>
+                        <button class="btn btn-secondary" onclick="editScheme('${scheme.scheme_id}')">✏️</button>
+                        <button class="btn btn-danger" onclick="deleteScheme('${scheme.scheme_id}')">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function updatePagination() {
+            const pagination = document.getElementById('pagination');
+            totalPages = Math.ceil(filteredSchemes.length / 20);
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let paginationHTML = `
+                <button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>Previous</button>
+            `;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage || i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    paginationHTML += `
+                        <button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>
+                    `;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += `<span>...</span>`;
+                }
+            }
+            
+            paginationHTML += `
+                <button class="page-btn" onclick="changePage(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>Next</button>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+        
+        function changePage(page) {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderSchemesTable();
+                updatePagination();
+            }
+        }
+        
+        function searchSchemes() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const ministry = document.getElementById('ministry-filter').value;
+            const type = document.getElementById('type-filter').value;
+            const category = document.getElementById('category-filter').value;
+            const status = document.getElementById('status-filter').value;
+            
+            filteredSchemes = schemes.filter(scheme => {
+                const matchesSearch = !searchTerm || 
+                    scheme.scheme_name.toLowerCase().includes(searchTerm) ||
+                    (scheme.short_description && scheme.short_description.toLowerCase().includes(searchTerm));
+                
+                const matchesMinistry = !ministry || scheme.ministry === ministry;
+                const matchesType = !type || scheme.scheme_type === type;
+                const matchesCategory = !category || scheme.category === category;
+                const matchesStatus = !status || scheme.status === status;
+                
+                return matchesSearch && matchesMinistry && matchesType && matchesCategory && matchesStatus;
+            });
+            
+            currentPage = 1;
+            renderSchemesTable();
+            updatePagination();
+        }
+        
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('ministry-filter').value = '';
+            document.getElementById('type-filter').value = '';
+            document.getElementById('category-filter').value = '';
+            document.getElementById('status-filter').value = '';
+            
+            filteredSchemes = [...schemes];
+            currentPage = 1;
+            renderSchemesTable();
+            updatePagination();
+        }
+        
+        async function startScraping() {
+            try {
+                const sources = Array.from(document.getElementById('scraper-sources').selectedOptions).map(opt => opt.value);
+                const mode = document.getElementById('scraping-mode').value;
+                const concurrent = document.getElementById('concurrent-requests').value;
+                
+                const response = await fetch(`${API_BASE_URL}/api/admin/scraper/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        sources: sources,
+                        mode: mode,
+                        concurrent_requests: parseInt(concurrent)
+                    })
+                });
+                
+                if (response.ok) {
+                    showAlert('Scraping started successfully!', 'success');
+                    // Update scraping progress
+                    updateScrapingProgress();
+                } else {
+                    throw new Error('Failed to start scraping');
+                }
+            } catch (error) {
+                console.error('Failed to start scraping:', error);
+                showAlert('Failed to start scraping. Please try again.', 'error');
+            }
+        }
+        
+        async function updateScrapingProgress() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/scraper/status`);
+                const data = await response.json();
+                
+                const progressDiv = document.getElementById('scraping-progress');
+                progressDiv.innerHTML = `
+                    <div class="search-filters">
+                        <h3>Scraping Status</h3>
+                        <p>Status: ${data.status}</p>
+                        <p>Schemes Found: ${data.schemes_found || 0}</p>
+                        <p>Schemes Added: ${data.schemes_added || 0}</p>
+                        <p>Schemes Updated: ${data.schemes_updated || 0}</p>
+                        <p>Errors: ${data.errors || 0}</p>
+                        <div class="search-actions">
+                            <button class="btn btn-danger" onclick="stopScraping()">⏹️ Stop Scraping</button>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Failed to update scraping progress:', error);
+            }
+        }
+        
+        function viewScheme(schemeId) {
+            // Load and display scheme details in modal
+            fetch(`${API_BASE_URL}/api/admin/schemes/${schemeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('scheme-details').innerHTML = `
+                        <div class="form-group">
+                            <label>Scheme Name</label>
+                            <input type="text" value="${data.scheme_name}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Ministry</label>
+                            <input type="text" value="${data.ministry || ''}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea readonly>${data.long_description || data.short_description || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Scheme Type</label>
+                            <input type="text" value="${data.scheme_type || ''}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <input type="text" value="${data.category || ''}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <input type="text" value="${data.status}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Data Quality Score</label>
+                            <input type="text" value="${data.data_quality_score || 0}" readonly>
+                        </div>
+                    `;
+                    document.getElementById('scheme-modal').classList.add('active');
+                })
+                .catch(error => {
+                    console.error('Failed to load scheme details:', error);
+                    showAlert('Failed to load scheme details.', 'error');
+                });
+        }
+        
+        function closeModal() {
+            document.getElementById('scheme-modal').classList.remove('active');
+        }
+
+        function openAddSchemeModal() {
+            document.getElementById('add-scheme-modal').classList.add('active');
+        }
+        function closeAddSchemeModal() {
+            document.getElementById('add-scheme-modal').classList.remove('active');
+        }
+        async function submitAddScheme() {
+            const payload = {
+                scheme_name: document.getElementById('add-name').value.trim(),
+                ministry: document.getElementById('add-ministry').value.trim(),
+                department: document.getElementById('add-dept').value.trim(),
+                short_description: document.getElementById('add-short').value.trim(),
+                long_description: document.getElementById('add-long').value.trim(),
+                scheme_type: document.getElementById('add-type').value.trim(),
+                category: document.getElementById('add-cat').value.trim(),
+                coverage_type: document.getElementById('add-coverage').value.trim() || 'national',
+                official_website: document.getElementById('add-site').value.trim(),
+                application_portal: document.getElementById('add-portal').value.trim()
+            }
+            try {
+                const resp = await fetch(`${API_BASE_URL}/api/admin/schemes`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+                if (!resp.ok) throw new Error('Failed to create scheme')
+                closeAddSchemeModal()
+                loadSchemes()
+                showAlert('Scheme added successfully','success')
+            } catch (e) {
+                console.error(e)
+                showAlert('Failed to add scheme','error')
+            }
+        }
+        
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            document.querySelector('.admin-content').insertBefore(alertDiv, document.querySelector('.admin-content').firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+        
+        // Additional functions for admin operations
+        function addScheme() {
+            // Implementation for adding new scheme
+            console.log('Add scheme functionality');
+        }
+        
+        function editScheme(schemeId) {
+            // Implementation for editing scheme
+            console.log('Edit scheme:', schemeId);
+        }
+        
+        function deleteScheme(schemeId) {
+            if (confirm('Are you sure you want to delete this scheme?')) {
+                // Implementation for deleting scheme
+                console.log('Delete scheme:', schemeId);
+            }
+        }
+        
+        function bulkEdit() {
+            // Implementation for bulk editing
+            console.log('Bulk edit functionality');
+        }
+        
+        function bulkDelete() {
+            // Implementation for bulk deletion
+            console.log('Bulk delete functionality');
+        }
+        
+        function refreshData() {
+            loadDashboard();
+            if (document.getElementById('schemes').classList.contains('active')) {
+                loadSchemes();
+            }
+        }
+        
+        function exportData() {
+            // Implementation for data export
+            console.log('Export data functionality');
+        }
+        
+        function stopScraping() {
+            // Implementation for stopping scraper
+            console.log('Stop scraping');
+        }
+        
+        function viewScrapingLogs() {
+            // Implementation for viewing scraping logs
+            console.log('View scraping logs');
+        }
+        
+        function saveSettings() {
+            // Implementation for saving settings
+            console.log('Save settings');
+        }
+        
+        function testConnection() {
+            // Implementation for testing database connection
+            console.log('Test connection');
+        }
+    </script>
+</body>
+</html>

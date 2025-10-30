@@ -120,6 +120,7 @@ const validators = {
     },
     
     phone: (phone) => {
+        if (!phone || typeof phone !== 'string') return false;
         const phoneRegex = /^[6-9]\d{9}$/;
         return phoneRegex.test(phone.replace(/\D/g, ''));
     },

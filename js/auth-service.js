@@ -1,11 +1,9 @@
 // Authentication Service for BharatSetu
 class AuthService {
     constructor() {
-        console.log('AuthService constructor called');
         this.token = localStorage.getItem('bharatsetu_token');
         this.user = JSON.parse(localStorage.getItem('bharatsetu_user') || 'null');
         this.apiBase = '/api';
-        console.log('AuthService constructor completed');
         
         // Initialize Google Auth
         this.initGoogleAuth().catch(error => {
@@ -18,31 +16,24 @@ class AuthService {
 
     // Check authentication state when page loads
     checkAuthStateOnLoad() {
-        console.log('Checking auth state on page load...');
         if (this.isAuthenticated()) {
-            console.log('User is authenticated, updating UI...');
             this.updateUIForAuthenticatedUser();
         } else {
-            console.log('User is not authenticated, updating UI...');
             this.updateUIForUnauthenticatedUser();
         }
     }
 
     // Initialize Google OAuth
     initGoogleAuth() {
-        console.log('AuthService.initGoogleAuth() called');
         return new Promise((resolve, reject) => {
             // Load Google OAuth script
             if (window.google && window.google.accounts && window.google.accounts.id) {
-                console.log('Google library already available');
                 this.initializeGoogleSignIn();
                 resolve();
             } else {
-                console.log('Loading Google OAuth script...');
                 const script = document.createElement('script');
                 script.src = 'https://accounts.google.com/gsi/client';
                 script.onload = () => {
-                    console.log('Google OAuth script loaded');
                     // Wait a bit for the library to fully initialize
                     setTimeout(() => {
                         this.initializeGoogleSignIn();
@@ -74,7 +65,7 @@ class AuthService {
                     prompt_parent_id: 'google-signin-modal'
                 });
                 AuthService.googleInitialized = true;
-                console.log('Google OAuth initialized successfully');
+                // Google OAuth initialized successfully
             }
 
             // Render the Google Sign-In button
@@ -102,12 +93,11 @@ class AuthService {
                     logo_alignment: 'left',
                     width: '100%',
                     click_listener: (response) => {
-                        console.log('Google Sign-In response received');
                         this.handleGoogleSignIn(response);
                     }
                 });
                 
-                console.log('Google Sign-In button rendered successfully');
+                // Google Sign-In button rendered successfully
             }
         } catch (error) {
             console.error('Failed to render Google Sign-In button:', error);
@@ -118,7 +108,7 @@ class AuthService {
     triggerGoogleSignIn() {
         try {
             // This method is now handled by the renderButton click_listener
-            console.log('Google Sign-In triggered via renderButton');
+            // Google Sign-In triggered via renderButton
         } catch (error) {
             console.error('Failed to trigger Google Sign-In:', error);
             this.showAuthError('Failed to start Google Sign-In');
@@ -128,25 +118,20 @@ class AuthService {
     // Handle Google Sign-In
     async handleGoogleSignIn(response) {
         try {
-            console.log('Google Sign-In response received:', response);
-            
             // Check if we have a credential
             if (!response.credential) {
-                console.log('No credential in response - this is normal for cancelled sign-in');
                 // Don't create mock user - just return
                 return;
             }
-            
+
             // Decode the JWT token to get user information
             const userInfo = this.decodeJwtToken(response.credential);
-            console.log('Decoded user info:', userInfo);
-            console.log('Profile picture URL:', userInfo.picture);
             
             // Store the credential as the token
             this.setAuthData(response.credential, userInfo);
             this.onAuthSuccess(userInfo);
             
-            console.log('Google Sign-In completed successfully');
+            // Google Sign-In completed successfully
         } catch (error) {
             console.error('Google sign-in failed:', error);
             this.onAuthError(error);
@@ -274,13 +259,13 @@ class AuthService {
     }
 
     logout() {
-        console.log('Logging out user...');
+        // Logging out user
         this.clearAuthData();
         this.onLogout();
     }
 
     onAuthSuccess(user) {
-        console.log('Authentication successful:', user);
+        // Authentication successful
         // Update UI to show authenticated state
         this.updateUIForAuthenticatedUser();
         
@@ -297,7 +282,7 @@ class AuthService {
     }
 
     onLogout() {
-        console.log('User logged out');
+        // User logged out
         // Update UI to show unauthenticated state
         this.updateUIForUnauthenticatedUser();
         
@@ -309,7 +294,7 @@ class AuthService {
 
     // UI update methods
     updateUIForAuthenticatedUser() {
-        console.log('Updating UI for authenticated user:', this.user);
+        // Updating UI for authenticated user
         
         // Update mobile menu for authenticated state
         if (typeof window.updateMobileMenuForAuth === 'function') {
@@ -318,7 +303,7 @@ class AuthService {
     }
 
     updateUIForUnauthenticatedUser() {
-        console.log('Updating UI for unauthenticated user');
+        // Updating UI for unauthenticated user
         
         // Update mobile menu for guest state
         if (typeof window.updateMobileMenuForAuth === 'function') {
@@ -328,11 +313,11 @@ class AuthService {
 
     updateUserInfo() {
         if (!this.user) {
-            console.log('No user data available for UI update');
+            // No user data available for UI update
             return;
         }
 
-        console.log('Updating user info in UI:', this.user);
+        // Updating user info in UI
 
         // Update all possible user info elements
         const userNameElements = document.querySelectorAll('#user-name, .user-name, [data-user-name]');
@@ -355,11 +340,11 @@ class AuthService {
                 element.src = this.user.picture;
                 element.style.display = 'block';
                 element.onerror = () => {
-                    console.log('Failed to load profile picture, showing default');
+                    // Failed to load profile picture, showing default
                     element.style.display = 'none';
                 };
             } else {
-                console.log('No profile picture available');
+                // No profile picture available
                 element.style.display = 'none';
             }
         });
@@ -410,13 +395,11 @@ class AuthService {
 }
 
 // Initialize auth service
-console.log('Creating AuthService instance...');
+// Creating AuthService instance
 const authService = new AuthService();
-console.log('AuthService instance created:', authService);
 
 // Assign to window for global access
 window.authService = authService;
-console.log('AuthService assigned to window.authService:', !!window.authService);
 
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
